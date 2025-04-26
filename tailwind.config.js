@@ -2,11 +2,23 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#341C1C",
+        secondary: "#FFFFF",
+        keunggulan: "#F4FDAF",
+      },
+      container: {
+        center: true,
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+    require('tailwind-scrollbar-hide'),
+  ],
 }
-
