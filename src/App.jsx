@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Navbar from './components/navbar/Navbar';
 import Homepage from './pages/Homepage';
 import Footer from './components/footer/Footer';
+import WhatsApp from './components/whatsapp/WhatsApp';
 
 const AppContent = () => {
   const location = useLocation();
@@ -11,6 +12,7 @@ const AppContent = () => {
   return (
     <div className="overflow-x-hidden flex flex-col min-h-screen">
       {!hideLayout && <Navbar />}
+      {!hideLayout && <WhatsApp />}
 
       <Routes>
         <Route path="/" element={<Homepage />} />
