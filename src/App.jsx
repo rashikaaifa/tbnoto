@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/navbar/Navbar';
 import Homepage from './pages/Homepage';
+import Footer from './components/footer/Footer';
 
 const AppContent = () => {
   const location = useLocation();
@@ -14,6 +15,8 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<Homepage />} />
       </Routes>
+
+      {!hideLayout && <Footer />}
     </div>
   );
 };
