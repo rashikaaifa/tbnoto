@@ -41,17 +41,18 @@ const Navbar = () => {
         if (dropdownOpen) document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [dropdownOpen]);
+
     useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > window.innerHeight - 100) { 
-                setIsScrolled(true); // scroll melewati hero section, ubah state
-            } else {
-                setIsScrolled(false); // masih di hero section, tetap transparan
-            }
-        };
-    
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+        if (window.scrollY > window.innerHeight - 100 || !window.location.pathname.includes('/')) {
+            setIsScrolled(true); // scroll melewati hero section atau jika bukan di homepage
+        } else {
+            setIsScrolled(false); // tetap transparan di homepage
+        }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
     }, []);
     
     // tutup dropdown kategori di mobile
