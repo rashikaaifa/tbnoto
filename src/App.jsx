@@ -6,6 +6,7 @@ import Footer from './components/footer/Footer';
 import WhatsApp from './components/whatsapp/WhatsApp';
 import Daftar from './pages/Daftar';
 import Masuk from './pages/Masuk';
+import Bantuan from './pages/Bantuan';
 
 const AppContent = () => {
   const location = useLocation();
@@ -20,6 +21,7 @@ const AppContent = () => {
         <Route path="/" element={<Homepage />} />
         <Route path="/daftar" element={<Daftar />} />
         <Route path="/masuk" element={<Masuk />} />
+        <Route path="/bantuan" element={<Bantuan />} />
       </Routes>
 
       {!hideLayout && <Footer />}
