@@ -14,7 +14,7 @@ const Navbar = () => {
     const mobileDropdownRef = useRef(null);
     const [isScrolled, setIsScrolled] = useState(false); 
     const [isMobile, setIsMobile] = useState(false);
-    const location = useLocation(); // Mendapatkan informasi path saat ini
+    const location = useLocation(); // untuk mengetahui path
 
     const NavbarMenu = [
         { id: 1, title: "Kategori", link: "#" },
@@ -23,17 +23,13 @@ const Navbar = () => {
         { id: 4, title: "Bantuan", link: "/bantuan" },
     ];
 
-    // Cek ukuran layar untuk mobile
     useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-        handleResize(); 
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        handleResize();
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    // Dropdown untuk desktop
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -44,21 +40,18 @@ const Navbar = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [dropdownOpen]);
 
-    // Mengubah navbar menjadi solid saat scroll atau di halaman selain homepage
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY > window.innerHeight - 100 || location.pathname !== '/') {
-                setIsScrolled(true); // navbar solid saat scroll atau bukan di homepage
+                setIsScrolled(true);
             } else {
-                setIsScrolled(false); // navbar transparan di homepage
+                setIsScrolled(false);
             }
         };
-
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, [location.pathname]);
 
-    // Tutup dropdown kategori di mobile
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (mobileDropdownRef.current && !mobileDropdownRef.current.contains(event.target)) {
@@ -69,11 +62,11 @@ const Navbar = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [mobileDropdownOpen]);
 
-    // Memeriksa apakah saat ini berada di homepage
     const isHomepage = location.pathname === '/';
 
     return (
-        <>
+        <div className="relative">
+            {/* NAVBAR */}
             <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
                 (isMobile || isScrolled || !isHomepage) ? "bg-primary" : "bg-transparent"
             }`}>
@@ -84,7 +77,7 @@ const Navbar = () => {
                         <a href="/">TB. NOTO 19</a>
                     </div>
 
-                    {/* Navbar Desktop */}
+                    {/* Menu Desktop */}
                     <div className="hidden md:flex text-white items-center gap-6 font-regular">
                         {NavbarMenu.map((item) => (
                             item.title === "Kategori" ? (
@@ -93,11 +86,11 @@ const Navbar = () => {
                                         onClick={() => setDropdownOpen(!dropdownOpen)}
                                         className="flex items-center gap-1 py-1 px-3 border-b-2 border-transparent hover:border-white transition duration-300"
                                     >
-                                        {item.title}  
+                                        {item.title}
                                         <IoChevronDown className={`text-lg transition-transform duration-300 ${dropdownOpen ? "rotate-180" : ""}`} />
                                     </button>
 
-                                    {/* Dropdown */}
+                                    {/* Dropdown Desktop */}
                                     <AnimatePresence>
                                         {dropdownOpen && (
                                             <motion.div 
@@ -129,17 +122,18 @@ const Navbar = () => {
                         ))}
                     </div>
 
-                    {/* Icon dan Button di Menu */}
+                    {/* Right Buttons */}
                     <div className="hidden md:flex items-center gap-4 text-white">
-                        <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-4">
-                            <FaShoppingCart />
-                        </button>
+                        <a href="/keranjang">
+                            <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-4">
+                                <FaShoppingCart />
+                            </button>
+                        </a>
 
-                        {/* Button Profil */}
                         {!isLoggedIn ? (
                             <button 
                                 onClick={() => setIsLoggedIn(true)} 
-                                className="font-medium bg-white text-primary px-4 py-2 rounded-[8vw] border-2 border-transparent hover:border-white hover:bg-transparent hover:text-white transition"
+                                className="font-medium bg-white text-primary px-4 py-2 rounded-full border-2 border-transparent hover:border-white hover:bg-transparent hover:text-white transition"
                             >
                                 Daftar / Masuk
                             </button>
@@ -150,7 +144,7 @@ const Navbar = () => {
                         )}
                     </div>
 
-                    {/* Button Hamburger */}
+                    {/* Hamburger Mobile */}
                     <div className="md:hidden flex items-center gap-4 text-white">
                         <button onClick={() => setOpen(!open)}>
                             <motion.div 
@@ -165,21 +159,21 @@ const Navbar = () => {
                 </div>
             </nav>
 
-            {/* Navbar untuk Mobile */}
+            {/* MOBILE MENU */}
             <AnimatePresence>
                 {open && (
                     <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden absolute top-16 left-0 w-full bg-white text-black shadow-lg rounded-b-lg overflow-hidden"
+                        className="md:hidden fixed top-16 left-0 w-full bg-white text-black shadow-lg rounded-b-lg overflow-hidden z-40"
                     >
                         <ul className="flex flex-col text-center">
-                            {/* Dropdown */}
+                            {/* Dropdown Mobile */}
                             <li ref={mobileDropdownRef} className="relative">
                                 <button
                                     onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
-                                    className="w-full relative flex items-center justify-center transition-all duration-300 border-b bg-white hover:bg-gray-100 p-4"
+                                    className="w-full flex items-center justify-center p-4 border-b bg-white hover:bg-gray-100"
                                 >
                                     <motion.span
                                         initial={{ opacity: 1, x: 0 }}
@@ -187,8 +181,7 @@ const Navbar = () => {
                                             opacity: 1,
                                             x: mobileDropdownOpen ? "-230%" : "0%",
                                         }}
-                                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                                        className="text-center"
+                                        transition={{ duration: 0.3 }}
                                     >
                                         Kategori
                                     </motion.span>
@@ -210,11 +203,9 @@ const Navbar = () => {
                                                 (category, index) => (
                                                     <li
                                                         key={index}
-                                                        className="px-6 py-3 text-left hover:bg-gray-200 transition-all border-b last:border-none"
+                                                        className="px-6 py-3 text-left hover:bg-gray-200 border-b last:border-none"
                                                     >
-                                                        <a href="#" className="block">
-                                                            {category}
-                                                        </a>
+                                                        <a href="#">{category}</a>
                                                     </li>
                                                 )
                                             )}
@@ -223,16 +214,16 @@ const Navbar = () => {
                                 </AnimatePresence>
                             </li>
 
-                            {/* Menu Mobile */}
-                            <li className="p-4 border-b hover:bg-gray-200"><a href="#">Katalog Produk</a></li>
-                            <li className="p-4 border-b hover:bg-gray-200"><a href="#">Riwayat</a></li>
-                            <li className="p-4 border-b hover:bg-gray-200"><a href="#">Bantuan</a></li>
-                            <li className="p-4 border-b hover:bg-gray-200"><a href="#">Profil</a></li>
+                            {/* Other Menu */}
+                            <li className="p-4 border-b hover:bg-gray-200"><a href="/katalog">Katalog Produk</a></li>
+                            <li className="p-4 border-b hover:bg-gray-200"><a href="/riwayat">Riwayat</a></li>
+                            <li className="p-4 border-b hover:bg-gray-200"><a href="/bantuan">Bantuan</a></li>
+                            <li className="p-4 border-b hover:bg-gray-200"><a href="/profil">Profil</a></li>
                         </ul>
                     </motion.div>
                 )}
             </AnimatePresence>
-        </>
+        </div>
     );
 };
 
