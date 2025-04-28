@@ -3,16 +3,18 @@ import { HiBuildingStorefront } from "react-icons/hi2";
 import { IoMenu, IoChevronDown } from "react-icons/io5";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from 'react-router-dom'; // Import useLocation
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // kondisi login/logout
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const dropdownRef = useRef(null);
     const mobileDropdownRef = useRef(null);
-    const [isScrolled, setIsScrolled] = useState(false); // cek navbar sudah di-scroll
+    const [isScrolled, setIsScrolled] = useState(false); 
     const [isMobile, setIsMobile] = useState(false);
+    const location = useLocation(); // Mendapatkan informasi path saat ini
 
     const NavbarMenu = [
         { id: 1, title: "Kategori", link: "#" },
@@ -21,17 +23,17 @@ const Navbar = () => {
         { id: 4, title: "Bantuan", link: "/bantuan" },
     ];
 
-    // jika mobile, warna selalu solid
+    // Cek ukuran layar untuk mobile
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth < 768);
         };
-        handleResize(); // initial
+        handleResize(); 
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    // dropdown desktop 
+    // Dropdown untuk desktop
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -42,20 +44,21 @@ const Navbar = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [dropdownOpen]);
 
+    // Mengubah navbar menjadi solid saat scroll atau di halaman selain homepage
     useEffect(() => {
-    const handleScroll = () => {
-        if (window.scrollY > window.innerHeight - 100 || !window.location.pathname.includes('/')) {
-            setIsScrolled(true); // scroll melewati hero section atau jika bukan di homepage
-        } else {
-            setIsScrolled(false); // tetap transparan di homepage
-        }
-    };
+        const handleScroll = () => {
+            if (window.scrollY > window.innerHeight - 100 || location.pathname !== '/') {
+                setIsScrolled(true); // navbar solid saat scroll atau bukan di homepage
+            } else {
+                setIsScrolled(false); // navbar transparan di homepage
+            }
+        };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-    
-    // tutup dropdown kategori di mobile
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [location.pathname]);
+
+    // Tutup dropdown kategori di mobile
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (mobileDropdownRef.current && !mobileDropdownRef.current.contains(event.target)) {
@@ -66,167 +69,170 @@ const Navbar = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [mobileDropdownOpen]);
 
+    // Memeriksa apakah saat ini berada di homepage
+    const isHomepage = location.pathname === '/';
+
     return (
-        <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-            isMobile || isScrolled ? "bg-primary" : "bg-transparent"
-        }`}>        
-            <div className="container flex justify-between items-center py-4 px-4 md:px-8">
-                {/* logo */}
-                <div className="text-2xl flex items-center gap-4 font-bold uppercase text-white">
-                    <HiBuildingStorefront />
-                    <a href="/">TB. NOTO 19</a>
-                </div>
+        <>
+            <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+                (isMobile || isScrolled || !isHomepage) ? "bg-primary" : "bg-transparent"
+            }`}>
+                <div className="container flex justify-between items-center py-4 px-4 md:px-8">
+                    {/* Logo */}
+                    <div className="text-2xl flex items-center gap-4 font-bold uppercase text-white">
+                        <HiBuildingStorefront />
+                        <a href="/">TB. NOTO 19</a>
+                    </div>
 
-                {/* versi desktop */}
-                <div className="hidden md:flex text-white items-center gap-6 font-regular">
-                    {NavbarMenu.map((item) => (
-                        item.title === "Kategori" ? (
-                            <div key={item.id} className="relative" ref={dropdownRef}>
-                                <button 
-                                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                                    className="flex items-center gap-1 py-1 px-3 border-b-2 border-transparent hover:border-white transition duration-300"
-                                >
-                                    {item.title}  
-                                    <IoChevronDown className={`text-lg transition-transform duration-300 ${dropdownOpen ? "rotate-180" : ""}`} />
-                                </button>
-
-                                {/* dropdown */}
-                                <AnimatePresence>
-                                    {dropdownOpen && (
-                                        <motion.div 
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: "auto" }}
-                                            exit={{ opacity: 0, height: 0 }}
-                                            className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-36 bg-white text-black rounded-lg shadow-lg overflow-hidden"
-                                        >
-                                            <ul className="flex flex-col py-2 font-light">
-                                                {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map((category, index) => (
-                                                    <li key={index} className="hover:bg-gray-200 px-4 py-2 text-center">
-                                                        <a href="#">{category}</a>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </div>
-                        ) : (
-                            <a 
-                                key={item.id} 
-                                href={item.link} 
-                                className="inline-block py-1 px-3 border-b-2 border-transparent hover:border-white transition duration-300"
-                            >
-                                {item.title}
-                            </a>
-                        )
-                    ))}
-                </div>
-
-                {/* icon dan button di menu */}
-                <div className="hidden md:flex items-center gap-4 text-white">
-                    <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-4">
-                        <FaShoppingCart />
-                    </button>
-
-                    {/* if else button profil */}
-                    {!isLoggedIn ? (
-                        <button 
-                            onClick={() => setIsLoggedIn(true)} 
-                            className="font-medium bg-white text-primary px-4 py-2 rounded-[8vw] border-2 border-transparent hover:border-white hover:bg-transparent hover:text-white transition"
-                        >
-                            Daftar / Masuk
-                        </button>
-                    ) : (
-                        <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-8">
-                            <FaUser />
-                        </button>
-                    )}
-                </div>
-
-                {/* button hamburger */}
-                <div className="md:hidden flex items-center gap-4 text-white">
-                    <button onClick={() => setOpen(!open)}>
-                        <motion.div 
-                            initial={{ rotate: 0 }}
-                            animate={{ rotate: open ? 90 : 0 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <IoMenu className="text-4xl" />
-                        </motion.div>
-                    </button>
-                </div>
-            </div>
-
-                {/* versi mobile */} 
-                <AnimatePresence>
-                    {open && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="md:hidden absolute top-16 left-0 w-full bg-white text-black shadow-lg rounded-b-lg overflow-hidden"
-                        >
-                            <ul className="flex flex-col text-center">
-                                {/* dropdown */}
-                                <li ref={mobileDropdownRef} className="relative">
-                                    <button
-                                        onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
-                                        className="w-full relative flex items-center justify-center transition-all duration-300 border-b bg-white hover:bg-gray-100 p-4"
+                    {/* Navbar Desktop */}
+                    <div className="hidden md:flex text-white items-center gap-6 font-regular">
+                        {NavbarMenu.map((item) => (
+                            item.title === "Kategori" ? (
+                                <div key={item.id} className="relative" ref={dropdownRef}>
+                                    <button 
+                                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                                        className="flex items-center gap-1 py-1 px-3 border-b-2 border-transparent hover:border-white transition duration-300"
                                     >
-                                        <motion.span
-                                            initial={{ opacity: 1, x: 0 }}
-                                            animate={{
-                                            opacity: 1,
-                                            x: mobileDropdownOpen ? "-230%" : "0%", // adjust kalau perlu
-                                            }}
-                                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                                            className="text-center"
-                                        >
-                                            Kategori
-                                        </motion.span>
-                                        <IoChevronDown
-                                            className={`absolute right-4 text-lg transition-transform duration-300 ${
-                                            mobileDropdownOpen ? "rotate-180" : ""
-                                            }`}
-                                        />
+                                        {item.title}  
+                                        <IoChevronDown className={`text-lg transition-transform duration-300 ${dropdownOpen ? "rotate-180" : ""}`} />
                                     </button>
+
+                                    {/* Dropdown */}
                                     <AnimatePresence>
-                                        {mobileDropdownOpen && (
-                                            <motion.ul
+                                        {dropdownOpen && (
+                                            <motion.div 
                                                 initial={{ opacity: 0, height: 0 }}
                                                 animate={{ opacity: 1, height: "auto" }}
                                                 exit={{ opacity: 0, height: 0 }}
-                                                className="overflow-hidden bg-gray-100 text-black"
+                                                className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-36 bg-white text-black rounded-lg shadow-lg overflow-hidden"
                                             >
-                                                {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map(
-                                                (category, index) => (
-                                                    <li
-                                                    key={index}
-                                                    className="px-6 py-3 text-left hover:bg-gray-200 transition-all border-b last:border-none"
-                                                    >
-                                                    <a href="#" className="block">
-                                                        {category}
-                                                    </a>
-                                                    </li>
-                                                )
-                                                )}
-                                            </motion.ul>
+                                                <ul className="flex flex-col py-2 font-light">
+                                                    {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map((category, index) => (
+                                                        <li key={index} className="hover:bg-gray-200 px-4 py-2 text-center">
+                                                            <a href="#">{category}</a>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </motion.div>
                                         )}
                                     </AnimatePresence>
-                                </li>
-
-                                {/* menu mobile */}
-                                <div className="">
-                                    <li className="p-4 border-b hover:bg-gray-200"><a href="#">Katalog Produk</a></li>
-                                    <li className="p-4 border-b hover:bg-gray-200"><a href="#">Riwayat</a></li>
-                                    <li className="p-4 border-b hover:bg-gray-200"><a href="#">Bantuan</a></li>
-                                    <li className= "p-4 border-b hover:bg-gray-200"><a href="#">Profil</a></li>
                                 </div>
-                            </ul>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-        </nav>
+                            ) : (
+                                <a 
+                                    key={item.id} 
+                                    href={item.link} 
+                                    className="inline-block py-1 px-3 border-b-2 border-transparent hover:border-white transition duration-300"
+                                >
+                                    {item.title}
+                                </a>
+                            )
+                        ))}
+                    </div>
+
+                    {/* Icon dan Button di Menu */}
+                    <div className="hidden md:flex items-center gap-4 text-white">
+                        <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-4">
+                            <FaShoppingCart />
+                        </button>
+
+                        {/* Button Profil */}
+                        {!isLoggedIn ? (
+                            <button 
+                                onClick={() => setIsLoggedIn(true)} 
+                                className="font-medium bg-white text-primary px-4 py-2 rounded-[8vw] border-2 border-transparent hover:border-white hover:bg-transparent hover:text-white transition"
+                            >
+                                Daftar / Masuk
+                            </button>
+                        ) : (
+                            <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-8">
+                                <FaUser />
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Button Hamburger */}
+                    <div className="md:hidden flex items-center gap-4 text-white">
+                        <button onClick={() => setOpen(!open)}>
+                            <motion.div 
+                                initial={{ rotate: 0 }}
+                                animate={{ rotate: open ? 90 : 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <IoMenu className="text-4xl" />
+                            </motion.div>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Navbar untuk Mobile */}
+            <AnimatePresence>
+                {open && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="md:hidden absolute top-16 left-0 w-full bg-white text-black shadow-lg rounded-b-lg overflow-hidden"
+                    >
+                        <ul className="flex flex-col text-center">
+                            {/* Dropdown */}
+                            <li ref={mobileDropdownRef} className="relative">
+                                <button
+                                    onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
+                                    className="w-full relative flex items-center justify-center transition-all duration-300 border-b bg-white hover:bg-gray-100 p-4"
+                                >
+                                    <motion.span
+                                        initial={{ opacity: 1, x: 0 }}
+                                        animate={{
+                                            opacity: 1,
+                                            x: mobileDropdownOpen ? "-230%" : "0%",
+                                        }}
+                                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                                        className="text-center"
+                                    >
+                                        Kategori
+                                    </motion.span>
+                                    <IoChevronDown
+                                        className={`absolute right-4 text-lg transition-transform duration-300 ${
+                                            mobileDropdownOpen ? "rotate-180" : ""
+                                        }`}
+                                    />
+                                </button>
+                                <AnimatePresence>
+                                    {mobileDropdownOpen && (
+                                        <motion.ul
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: "auto" }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            className="overflow-hidden bg-gray-100 text-black"
+                                        >
+                                            {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map(
+                                                (category, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className="px-6 py-3 text-left hover:bg-gray-200 transition-all border-b last:border-none"
+                                                    >
+                                                        <a href="#" className="block">
+                                                            {category}
+                                                        </a>
+                                                    </li>
+                                                )
+                                            )}
+                                        </motion.ul>
+                                    )}
+                                </AnimatePresence>
+                            </li>
+
+                            {/* Menu Mobile */}
+                            <li className="p-4 border-b hover:bg-gray-200"><a href="#">Katalog Produk</a></li>
+                            <li className="p-4 border-b hover:bg-gray-200"><a href="#">Riwayat</a></li>
+                            <li className="p-4 border-b hover:bg-gray-200"><a href="#">Bantuan</a></li>
+                            <li className="p-4 border-b hover:bg-gray-200"><a href="#">Profil</a></li>
+                        </ul>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 };
 
