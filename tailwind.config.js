@@ -9,7 +9,7 @@ export default {
       colors: {
         primary: "#341C1C",
         secondary: "#FFFFF",
-        keunggulan: "#F4FDAF",
+        keunggulan: "#FFF698",
       },
       container: {
         center: true,
