@@ -5,10 +5,11 @@ import Homepage from './pages/Homepage';
 import Footer from './components/footer/Footer';
 import WhatsApp from './components/whatsapp/WhatsApp';
 import Daftar from './pages/Daftar';
+import Masuk from './pages/Masuk';
 
 const AppContent = () => {
   const location = useLocation();
-  const hideLayout = ['/daftar',].includes(location.pathname);
+  const hideLayout = ['/daftar', '/masuk'].includes(location.pathname);
 
   return (
     <div className="overflow-x-hidden flex flex-col min-h-screen">
@@ -18,6 +19,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/daftar" element={<Daftar />} />
+        <Route path="/masuk" element={<Masuk />} />
       </Routes>
 
       {!hideLayout && <Footer />}
