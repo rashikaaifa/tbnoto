@@ -31,32 +31,30 @@ const top = [
     { id: 6, name: "Kaso", size: "2 meter x 80 cm", price: "Rp. 65.000 / lembar", image: "/img/kaso.jpg" },
 ];
 
-const products = [
-    { id: 1, name: "Triplek", size: "2 meter x 80 cm", price: "Rp. 65.000 / lembar", image: "" },
-    { id: 2, name: "Kaso", size: "4 cm x 6 cm x 4 meter", price: "Rp. 65.000 / ikat", image: "/img/kaso.jpg" },
-    { id: 3, name: "Besi", size: "6 meter", price: "Rp. 65.000 / batang", image: "/img/besi.jpg" },
-    { id: 4, name: "Paralon", size: "3 inch", price: "Rp. 30.000 / meter", image: "/img/paralon.jpg" },
-    { id: 5, name: "Semen", size: "3 roda", price: "Rp. 65.000 / karung", image: "/img/semen.jpg" },
-    { id: 6, name: "Kaso", size: "2 meter x 80 cm", price: "Rp. 65.000 / lembar", image: "/img/kaso.jpg" },
-    { id: 7, name: "Triplek", size: "2 meter x 80 cm", price: "Rp. 65.000 / lembar", image: "/img/triplek.jpg" },
-    { id: 8, name: "Kaso", size: "2 meter x 80 cm", price: "Rp. 65.000 / lembar", image: "/img/kaso.jpg" },
-    { id: 9, name: "Triplek", size: "2 meter x 80 cm", price: "Rp. 65.000 / lembar", image: "" },
-    { id: 10, name: "Kaso", size: "4 cm x 6 cm x 4 meter", price: "Rp. 65.000 / ikat", image: "/img/kaso.jpg" },
-    { id: 11, name: "Besi", size: "6 meter", price: "Rp. 65.000 / batang", image: "/img/besi.jpg" },
-    { id: 12, name: "Paralon", size: "3 inch", price: "Rp. 30.000 / meter", image: "/img/paralon.jpg" },
-];
-
 const posters = [
     { id: 1, image: poster1, alt: "Poster 1" },
     { id: 2, image: poster2, alt: "Poster 2" },
     { id: 3, image: poster3, alt: "Poster 3" },
 ];
   
-
 const Homepage = () => {
     const [currentImage, setCurrentImage] = useState(0); // untuk section images
     const [currentPoster, setCurrentPoster] = useState(0); // untuk section posters
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+    const [products, setProducts] = useState([]);
+
+    fetch("https://6067-160-22-25-43.ngrok-free.app/api/barang", {
+        headers: {
+          "ngrok-skip-browser-warning": "true"
+        }
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setProducts(data);
+        })
+        .catch((err) => console.error("Fetch error:", err));
+      
 
     const mobileImages = [
         "/assets/hero/mobile1.jpg",
@@ -278,19 +276,24 @@ const Homepage = () => {
                             </a>
                         </span>
                     </div>
-
                     {/* list produk */}
-                    <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-8">
                         {products.map((product) => (
-                            <div key={product.id} className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500">
-                                <img src={product.image} alt={product.name} className="w-full h-32 object-cover rounded-lg mb-2"/>
-                                <h3 className="font-semibold text-lg">{product.name}</h3>
-                                <p className="text-sm">{product.size}</p>
-                                <p className="text-md">{product.price}</p>
+                            <div
+                            key={product.id}
+                            className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500"
+                            >
+                            <img
+                                src={`https://6067-160-22-25-43.ngrok-free.app/storage/${product.foto_barang}`}
+                                alt={product.nama_barang}
+                                className="w-full h-32 object-cover rounded-lg mb-2"
+                            />
+                            <h3 className="font-semibold text-lg">{product.nama_barang}</h3>
+                            <p className="text-sm">Kategori: {product.kategori_id}</p>
+                            <p className="text-md">Rp{Number(product.harga).toLocaleString()}</p>
                             </div>
                         ))}
                     </div>
-
                     {/* teks "lihat semua" */}
                     <div className="mt-6 mb-6">
                         <div className="w-full bg-gray-200 text-center text-black py-3 rounded-xl border cursor-pointer hover:bg-gray-300 transition">
@@ -305,7 +308,7 @@ const Homepage = () => {
             {/* poster */}
             <section id="poster">
                 <div className="p-6 md:p-12">
-                    <div className="relative w-full aspect-[400] md:aspect-auto md:h-[400px] overflow-hidden rounded-2xl shadow-xl">
+                    <div className="relative w-full aspect-[16/9] md:h-[400px] overflow-hidden rounded-2xl shadow-xl">
                         <div
                             className="flex transition-transform duration-700 ease-in-out w-full h-full"
                             style={{ transform: `translateX(-${currentPoster * 100}%)` }}
