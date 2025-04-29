@@ -1,0 +1,106 @@
+/* src/styles/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #0d5c3a;
+  --primary-hover: #0a4a2f;
+  --secondary-color: #f9f6e9;
+  --text-dark: #333333;
+  --text-light: #666666;
+  --border-color: #e5e5e5;
+  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  --danger-color: #dc3545;
+  --success-color: #28a745;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}   
+
+body {
+  background-color: var(--secondary-color);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-bottom: 80px; /* Space for mobile summary */
+}
+
+.page-header {
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 16px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-light);
+}
+
+/* Layout */
+.desktop-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+/* Responsive styles */
+@media (min-width: 1024px) {
+  .desktop-layout {
+    grid-template-columns: 2fr 1fr;
+    align-items: start;
+  }
+  
+  .summary-section {
+    position: sticky;
+    top: 24px;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .mobile-summary {
+    display: block;
+  }
+  
+  .desktop-layout .summary-section {
+    display: none;
+  }
+  
+  /* Perbaikan container utama */
+  .container {
+    padding: 16px;
+    padding-bottom: 100px;
+  }
+  
+  /* Perbaikan header */
+  .page-header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+  
+  .page-subtitle {
+    font-size: 14px;
+  }
+}

@@ -22,6 +22,7 @@ const AppContent = () => {
         <Route path="/daftar" element={<Daftar />} />
         <Route path="/masuk" element={<Masuk />} />
         <Route path="/bantuan" element={<Bantuan />} />
+        <Route path="/keranjang" element={<Keranjang />} />
       </Routes>
 
       {!hideLayout && <Footer />}
