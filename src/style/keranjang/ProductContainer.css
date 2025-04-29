@@ -1,0 +1,55 @@
+/* src/styles/components/ProductsContainer.css */
+
+/* Products container */
+.products-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 80px; /* Space for mobile summary */
+  }
+  
+  /* Empty cart */
+  .empty-cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 0;
+    text-align: center;
+  }
+  
+  .empty-cart-icon {
+    font-size: 64px;
+    color: var(--text-light);
+    margin-bottom: 16px;
+  }
+  
+  .empty-cart-text {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-bottom: 24px;
+  }
+  
+  .shop-now-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .shop-now-button:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  @media (max-width: 767px) {
+    /* Memastikan ui tidak terlalu rapat saat scroll */
+    .products-container {
+      margin-bottom: 90px;
+    }
+  }

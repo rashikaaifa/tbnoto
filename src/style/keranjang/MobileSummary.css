@@ -1,0 +1,94 @@
+/* src/styles/components/MobileSummary.css */
+
+/* Mobile summary */
+.mobile-summary {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    padding: 16px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+  
+  .mobile-summary-content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .mobile-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .mobile-summary-toggle {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .mobile-summary-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  
+  .mobile-summary-details.expanded {
+    max-height: 200px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  
+  /* Perbaikan untuk button beli dan info total */
+  .mobile-summary .total-value {
+    color: var(--primary-color);
+    font-weight: 700;
+  }
+  
+  .mobile-summary-toggle {
+    color: var(--primary-color);
+    font-weight: 500;
+  }
+  
+  /* Animasi smooth untuk expand/collapse mobile summary */
+  .mobile-summary-details.expanded {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  
+  @media (max-width: 767px) {
+    .mobile-summary {
+      display: block;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      padding: 16px 16px 20px;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .mobile-summary-header {
+      margin-bottom: 10px;
+    }
+    
+    .total-value {
+      font-size: 18px;
+    }
+    
+    .mobile-summary-toggle {
+      font-size: 14px;
+    }
+    
+    .mobile-summary-details {
+      transition: max-height 0.25s ease;
+    }
+  }
