@@ -8,6 +8,7 @@ import Daftar from './pages/Daftar';
 import Masuk from './pages/Masuk';
 import Bantuan from './pages/Bantuan';
 import Riwayat from './pages/Riwayat';
+import Profil from './pages/Profil';
 
 const AppContent = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ const AppContent = () => {
         <Route path="/masuk" element={<Masuk />} />
         <Route path="/bantuan" element={<Bantuan />} />
         <Route path="/riwayat" element={<Riwayat />} />
+        <Route path="/profil" element={<Profil />} />
       </Routes>
 
       {!hideLayout && <Footer />}
