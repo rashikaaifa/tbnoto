@@ -1,0 +1,153 @@
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.transaction-container {
+  font-family: sans-serif;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin-top: 80px    ;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin: 0 auto;
+  margin-right: 80px;
+  margin-left: 80px;
+}
+
+.transaction-header {
+  text-align: center;
+}
+
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: hidden;
+  table-layout: auto;
+}
+
+.transaction-table th,
+.transaction-table td {
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.transaction-table th {
+  background-color: #f3f4f6;
+  text-align: center; /* Header center */
+}
+
+.transaction-table td:nth-child(1),
+.transaction-table td:nth-child(4),
+.transaction-table td:nth-child(5),
+.transaction-table td:nth-child(6) {
+  text-align: center; /* No., Jumlah, Bukti, Aksi center */
+}
+
+.proof-image {
+  width: 100px;
+  height: auto;
+  border-radius: 4px;
+}
+
+.transaction-card {
+  background-color: #fff;
+  margin: 0 20px 16px 20px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.detail-button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.detail-button.full-width {
+  width: 100%;
+}
+
+.detail-button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Modal Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal-content {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  margin-right: 32px;
+  margin-left: 32px;
+
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+
+.detail-group {
+  margin-bottom: 12px;
+}
+
+.detail-group p {
+  margin: 4px 0;
+}
+
+.close-modal-button {
+  background-color: #ef4444;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+.close-modal-button:hover {
+  background-color: #dc2626;
+}

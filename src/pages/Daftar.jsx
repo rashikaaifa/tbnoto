@@ -1,8 +1,9 @@
-import React, { useState } from "react";  // Mengimpor useState dari React
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoApple } from "react-icons/io5";
 import { FaFacebook } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import bgImage from '../assets/img/background.png';
 import { useNavigate } from "react-router-dom";
 
 const Daftar = () => {
@@ -46,7 +47,7 @@ const Daftar = () => {
     return (
         <div
             className="min-h-screen bg-cover bg-center px-8"
-            // style={{ backgroundImage: `url(${bgImage})` }}
+            style={{ backgroundImage: `url(${bgImage})` }}
         >
             <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-end min-h-screen max-w-7xl mx-auto">
                 <motion.div
