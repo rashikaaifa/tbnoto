@@ -133,7 +133,7 @@ const Navbar = () => {
                                 onClick={() => setIsLoggedIn(true)} 
                                 className="font-medium bg-white text-primary px-4 py-2 rounded-full border-2 border-transparent hover:border-white hover:bg-transparent hover:text-white transition"
                             >
-                                Daftar / Masuk
+                                Daftar
                             </button>
                         ) : (
                             <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-8">
