@@ -210,7 +210,7 @@ const Homepage = () => {
                     {["KAYU", "BESI", "PARALON", "PAKU", "SEMEN", "KANOPI"].map((kategori, index) => (
                         <Link
                             key={index}
-                            to={`/kategori/katalog/${kategori.toLowerCase()}`}
+                            to={`/katalog/${kategori.toLowerCase()}`}
                             className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-lg cursor-pointer hover:scale-105 transition-all duration-500 block"
                         >
                             <img
@@ -219,7 +219,7 @@ const Homepage = () => {
                                 className="w-full h-full object-cover"
                             />
                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                <span className="text-white font-medium text-lg">{kategori}</span>
+                                <span className="text-white font-semibold text-lg">{kategori}</span>
                             </div>
                         </Link>
                     ))}
