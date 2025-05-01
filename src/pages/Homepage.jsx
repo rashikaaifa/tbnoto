@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { FaCheckCircle } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa6";
+import { FaChevronLeft } from "react-icons/fa6";
 import img1 from "../assets/img/img1.jpg";
 import img2 from "../assets/img/img2.jpg";
 import img3 from "../assets/img/img3.jpg";
@@ -9,9 +12,6 @@ import poster2 from "../assets/img/poster2.jpg"
 import poster3 from "../assets/img/poster3.jpg"
 import perjalananImg from "../assets/img/cth4.jpg";
 import faq from "../assets/img/faq.png";
-import { FaCheckCircle } from "react-icons/fa";
-import { FaChevronRight } from "react-icons/fa6";
-import { FaChevronLeft } from "react-icons/fa6";
 
 const images = [img1, img2, img3];
 
@@ -38,23 +38,20 @@ const posters = [
 ];
   
 const Homepage = () => {
-    const [currentImage, setCurrentImage] = useState(0); // untuk section images
     const [currentPoster, setCurrentPoster] = useState(0); // untuk section posters
-    const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [products, setProducts] = useState([]);
 
     fetch("https://6067-160-22-25-43.ngrok-free.app/api/barang", {
         headers: {
           "ngrok-skip-browser-warning": "true"
         }
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setProducts(data);
-        })
-        .catch((err) => console.error("Fetch error:", err));
-      
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data);
+        setProducts(data);
+    })
+    .catch((err) => console.error("Fetch error:", err));
 
     const mobileImages = [
         "/assets/hero/mobile1.jpg",
@@ -72,7 +69,6 @@ const Homepage = () => {
         const posterInterval = setInterval(() => {
           setCurrentPoster((prev) => (prev + 1) % posters.length);
         }, 4000);
-    
         return () => clearInterval(posterInterval);
     }, [posters.length]);
 
@@ -90,26 +86,14 @@ const Homepage = () => {
         email: "",
         question: "",
     });
-      
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-      
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(formData); // FAQ kirim ke API/database
-      
-        // reset form
-        setFormData({ name: "", email: "", question: "" });
-    };
 
     return (
         <div className="relative w-full">
-            {/* Hero Section */}
+            {/* hero section */}
             <section id="hero">
                 <div className="relative w-full h-screen">
                     <div className="absolute inset-0 w-full h-full overflow-hidden">
-                        {/* Mobile Images */}
+                        {/* gambar mobile */}
                         {mobileImages.map((img, index) => (
                             <motion.img
                                 key={`mobile-${index}`}
@@ -120,7 +104,7 @@ const Homepage = () => {
                                 } md:hidden`}
                             />
                         ))}
-                        {/* Desktop Images */}
+                        {/* gambar desktop */}
                         {desktopImages.map((img, index) => (
                             <motion.img
                                 key={`desktop-${index}`}
@@ -133,8 +117,7 @@ const Homepage = () => {
                         ))}
                         <div className="absolute inset-0 bg-black/50"></div>
                     </div>
-
-                    {/* Text */}
+                    {/* teks */}
                     <div className="relative flex flex-col items-center justify-center h-full text-center px-4">
                         <motion.h1
                             initial={{ opacity: 0, y: -20 }}
@@ -176,7 +159,6 @@ const Homepage = () => {
                                 />
                             </div>
                         </motion.div>
-
                         {/* teks */}
                         <motion.div
                             initial={{ opacity: 0, x: 50 }}
@@ -225,21 +207,22 @@ const Homepage = () => {
                 <div className="p-6 md:p-12">
                     <h2 className="text-3xl font-bold text-center mb-8">Kategori</h2>
                     <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-                        {["KAYU", "BESI", "PARALON", "PAKU", "SEMEN", "KANOPI"].map((kategori, index) => (
-                        <div
+                    {["KAYU", "BESI", "PARALON", "PAKU", "SEMEN", "KANOPI"].map((kategori, index) => (
+                        <Link
                             key={index}
-                            className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-lg cursor-pointer hover:scale-105 transition-all duration-500"
+                            to={`/kategori/katalog/${kategori.toLowerCase()}`}
+                            className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-lg cursor-pointer hover:scale-105 transition-all duration-500 block"
                         >
                             <img
-                            src={`/assets/kategori/${kategori.toLowerCase()}.jpg`}
-                            alt={kategori}
-                            className="w-full h-full object-cover"
+                                src={`/assets/kategori/${kategori.toLowerCase()}.jpg`}
+                                alt={kategori}
+                                className="w-full h-full object-cover"
                             />
                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                            <span className="text-white font-medium text-lg">{kategori}</span>
+                                <span className="text-white font-medium text-lg">{kategori}</span>
                             </div>
-                        </div>
-                        ))}
+                        </Link>
+                    ))}
                     </div>
                 </div>
             </section>
@@ -250,7 +233,6 @@ const Homepage = () => {
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-2xl md:text-3xl font-bold">Produk Unggulan</h2>
                     </div>
-
                     <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                         {top.map((item) => (
                             <div key={item.id} className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500">
@@ -267,11 +249,11 @@ const Homepage = () => {
             {/* semua produk */}
             <section id="produk">
                 <div className="p-6 md:p-12">
-                    {/* teks "lihat semua" */}
+                    {/* teks "lihat semua" atas */}
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-2xl md:text-3xl font-bold">Semua Produk</h2>
                         <span className="text-sm cursor-pointer underline">
-                            <a href="">
+                            <a href="/katalog">
                                 Lihat Semua ...
                             </a>
                         </span>
@@ -297,7 +279,7 @@ const Homepage = () => {
                     {/* teks "lihat semua" */}
                     <div className="mt-6 mb-6">
                         <div className="w-full bg-gray-200 text-center text-black py-3 rounded-xl border cursor-pointer hover:bg-gray-300 transition">
-                            <a href="">
+                            <a href="/katalog">
                                 Lihat Semua ...
                             </a>
                         </div>
@@ -367,7 +349,6 @@ const Homepage = () => {
                             </div>
                         </div>
                         </motion.div>
-
                         {/* teks */}
                         <motion.div
                         initial={{ opacity: 0, x: 50 }}
@@ -422,7 +403,6 @@ const Homepage = () => {
                     </div>
                 </div>
             </section>
-
 
             {/* lokasi */}
             <section id="lokasi">
