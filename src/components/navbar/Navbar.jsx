@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from "framer-motion";
 import { HiBuildingStorefront } from "react-icons/hi2";
 import { IoMenu, IoChevronDown } from "react-icons/io5";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
-import { useLocation } from 'react-router-dom';
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
@@ -100,11 +100,11 @@ const Navbar = () => {
                                                 className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-36 bg-white text-black rounded-lg shadow-lg overflow-hidden"
                                             >
                                                 <ul className="flex flex-col py-2 font-light">
-                                                    {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map((category, index) => (
-                                                        <li key={index} className="hover:bg-gray-200 px-4 py-2 text-center">
-                                                            <a href="#">{category}</a>
-                                                        </li>
-                                                    ))}
+                                                {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map((category, index) => (
+                                                    <li key={index} className="hover:bg-gray-200 px-4 py-2 text-center">
+                                                        <a href={`/katalog/${category.toLowerCase()}`}>{category}</a>
+                                                    </li>
+                                                ))}
                                                 </ul>
                                             </motion.div>
                                         )}
@@ -127,13 +127,12 @@ const Navbar = () => {
                                 <FaShoppingCart />
                             </button>
                         </a>
-
                         {!isLoggedIn ? (
                             <button 
                                 onClick={() => setIsLoggedIn(true)} 
                                 className="font-medium bg-white text-primary px-4 py-2 rounded-full border-2 border-transparent hover:border-white hover:bg-transparent hover:text-white transition"
                             >
-                                Daftar
+                                Registrasi
                             </button>
                         ) : (
                             <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-8">
@@ -197,16 +196,14 @@ const Navbar = () => {
                                             exit={{ opacity: 0, height: 0 }}
                                             className="overflow-hidden bg-gray-100 text-black"
                                         >
-                                            {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map(
-                                                (category, index) => (
-                                                    <li
-                                                        key={index}
-                                                        className="px-6 py-3 text-left hover:bg-gray-200 border-b last:border-none"
-                                                    >
-                                                        <a href="#">{category}</a>
-                                                    </li>
-                                                )
-                                            )}
+                                            {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map((category, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="px-6 py-3 text-left hover:bg-gray-200 border-b last:border-none"
+                                                >
+                                                    <a href={`/katalog/${category.toLowerCase()}`}>{category}</a>
+                                                </li>
+                                            ))}
                                         </motion.ul>
                                     )}
                                 </AnimatePresence>
