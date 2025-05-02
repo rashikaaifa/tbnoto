@@ -7,6 +7,7 @@ import WhatsApp from './components/whatsapp/WhatsApp';
 import Daftar from './pages/Daftar';
 import Masuk from './pages/Masuk';
 import Bantuan from './pages/Bantuan';
+import Keranjang from './pages/Keranjang';
 
 const AppContent = () => {
   const location = useLocation();
