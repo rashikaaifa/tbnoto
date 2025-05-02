@@ -217,7 +217,7 @@ const Navbar = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </div>  
     );
 };
 
