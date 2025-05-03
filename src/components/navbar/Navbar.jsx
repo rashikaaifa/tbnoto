@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from "framer-motion";
 import { HiBuildingStorefront } from "react-icons/hi2";
 import { IoMenu, IoChevronDown } from "react-icons/io5";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
-import { useLocation } from 'react-router-dom'; // Import useLocation
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
@@ -14,7 +14,7 @@ const Navbar = () => {
     const mobileDropdownRef = useRef(null);
     const [isScrolled, setIsScrolled] = useState(false); 
     const [isMobile, setIsMobile] = useState(false);
-    const location = useLocation(); // untuk mengetahui path
+    const location = useLocation();
 
     const NavbarMenu = [
         { id: 1, title: "Kategori", link: "#" },
@@ -66,18 +66,18 @@ const Navbar = () => {
 
     return (
         <div className="relative">
-            {/* NAVBAR */}
+            {/* navbar */}
             <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
                 (isMobile || isScrolled || !isHomepage) ? "bg-primary" : "bg-transparent"
             }`}>
                 <div className="container flex justify-between items-center py-4 px-4 md:px-8">
-                    {/* Logo */}
+                    {/* logo */}
                     <div className="text-2xl flex items-center gap-4 font-bold uppercase text-white">
                         <HiBuildingStorefront />
                         <a href="/">TB. NOTO 19</a>
                     </div>
 
-                    {/* Menu Desktop */}
+                    {/* versi desktop */}
                     <div className="hidden md:flex text-white items-center gap-6 font-regular">
                         {NavbarMenu.map((item) => (
                             item.title === "Kategori" ? (
@@ -90,7 +90,7 @@ const Navbar = () => {
                                         <IoChevronDown className={`text-lg transition-transform duration-300 ${dropdownOpen ? "rotate-180" : ""}`} />
                                     </button>
 
-                                    {/* Dropdown Desktop */}
+                                    {/* dropdown */}
                                     <AnimatePresence>
                                         {dropdownOpen && (
                                             <motion.div 
@@ -100,11 +100,11 @@ const Navbar = () => {
                                                 className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-36 bg-white text-black rounded-lg shadow-lg overflow-hidden"
                                             >
                                                 <ul className="flex flex-col py-2 font-light">
-                                                    {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map((category, index) => (
-                                                        <li key={index} className="hover:bg-gray-200 px-4 py-2 text-center">
-                                                            <a href="#">{category}</a>
-                                                        </li>
-                                                    ))}
+                                                {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map((category, index) => (
+                                                    <li key={index} className="hover:bg-gray-200 px-4 py-2 text-center">
+                                                        <a href={`/katalog/${category.toLowerCase()}`}>{category}</a>
+                                                    </li>
+                                                ))}
                                                 </ul>
                                             </motion.div>
                                         )}
@@ -121,21 +121,18 @@ const Navbar = () => {
                             )
                         ))}
                     </div>
-
-                    {/* Right Buttons */}
                     <div className="hidden md:flex items-center gap-4 text-white">
                         <a href="/keranjang">
                             <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-4">
                                 <FaShoppingCart />
                             </button>
                         </a>
-
                         {!isLoggedIn ? (
                             <button 
                                 onClick={() => setIsLoggedIn(true)} 
                                 className="font-medium bg-white text-primary px-4 py-2 rounded-full border-2 border-transparent hover:border-white hover:bg-transparent hover:text-white transition"
                             >
-                                Daftar / Masuk
+                                Registrasi
                             </button>
                         ) : (
                             <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-8">
@@ -144,7 +141,7 @@ const Navbar = () => {
                         )}
                     </div>
 
-                    {/* Hamburger Mobile */}
+                    {/* hamburger */}
                     <div className="md:hidden flex items-center gap-4 text-white">
                         <button onClick={() => setOpen(!open)}>
                             <motion.div 
@@ -159,7 +156,7 @@ const Navbar = () => {
                 </div>
             </nav>
 
-            {/* MOBILE MENU */}
+            {/* versi mobile */}
             <AnimatePresence>
                 {open && (
                     <motion.div
@@ -169,7 +166,7 @@ const Navbar = () => {
                         className="md:hidden fixed top-16 left-0 w-full bg-white text-black shadow-lg rounded-b-lg overflow-hidden z-40"
                     >
                         <ul className="flex flex-col text-center">
-                            {/* Dropdown Mobile */}
+                            {/* dropdown */}
                             <li ref={mobileDropdownRef} className="relative">
                                 <button
                                     onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
@@ -199,22 +196,19 @@ const Navbar = () => {
                                             exit={{ opacity: 0, height: 0 }}
                                             className="overflow-hidden bg-gray-100 text-black"
                                         >
-                                            {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map(
-                                                (category, index) => (
-                                                    <li
-                                                        key={index}
-                                                        className="px-6 py-3 text-left hover:bg-gray-200 border-b last:border-none"
-                                                    >
-                                                        <a href="#">{category}</a>
-                                                    </li>
-                                                )
-                                            )}
+                                            {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map((category, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="px-6 py-3 text-left hover:bg-gray-200 border-b last:border-none"
+                                                >
+                                                    <a href={`/katalog/${category.toLowerCase()}`}>{category}</a>
+                                                </li>
+                                            ))}
                                         </motion.ul>
                                     )}
                                 </AnimatePresence>
                             </li>
 
-                            {/* Other Menu */}
                             <li className="p-4 border-b hover:bg-gray-200"><a href="/katalog">Katalog Produk</a></li>
                             <li className="p-4 border-b hover:bg-gray-200"><a href="/riwayat">Riwayat</a></li>
                             <li className="p-4 border-b hover:bg-gray-200"><a href="/bantuan">Bantuan</a></li>
