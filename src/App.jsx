@@ -9,6 +9,7 @@ import Masuk from './pages/Masuk';
 import Bantuan from './pages/Bantuan';
 import Riwayat from './pages/Riwayat';
 import Profil from './pages/Profil';
+import Keranjang from './pages/Keranjang';
 
 const AppContent = () => {
   const location = useLocation();
@@ -26,6 +27,7 @@ const AppContent = () => {
         <Route path="/bantuan" element={<Bantuan />} />
         <Route path="/riwayat" element={<Riwayat />} />
         <Route path="/profil" element={<Profil />} />
+        <Route path="/keranjang" element={<Keranjang />} />
       </Routes>
 
       {!hideLayout && <Footer />}
