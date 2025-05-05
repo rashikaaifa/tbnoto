@@ -25,7 +25,7 @@ const faqs = [
   },
   {
     question: "Bagaimana cara konsultasi ke penjual?",
-    answer: "Anda bisa menghubungi penjual melalui WhatsApp atau fitur chat yang tersedia di website.",
+    answer: "Anda bisa menghubungi penjual melalui WhatsApp atau fitur Whatsapp yang tersedia di website.",
   },
 ];
 
