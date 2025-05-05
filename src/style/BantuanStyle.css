@@ -1,209 +1,179 @@
-/* Reset default margin dan padding */
+/* BantuanStyle.css */
+
+/* Reset default margin and padding */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  html, body {
-    width: 100%;
-    height: 100%;
-    font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
-  }
-  
-  /* Container utama */
-  .faq-container {
-    width: 100vw;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #F8F5E9;
-    padding-bottom: 20px;
-  }
-  
-  /* FAQ Content */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Main container - full width */
+.faq-container {
+  width: 100vw; /* Full viewport width */
+  min-height: calc(100vh - 60px); /* Adjust based on your navbar height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #F8F5E9;
+  padding: 0 0 20px 0; /* Remove padding on sides */
+  /* Remove max-width constraint */
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+  position: relative; /* For proper positioning */
+  left: 0; /* Ensure alignment from the left edge */
+  right: 0; /* Ensure alignment to the right edge */
+}
+
+/* FAQ Title */
+.faq-title {
+  font-size: 40px;
+  font-weight: bold;
+  text-align: left;
+  width: 80%;
+  margin-bottom: 20px;
+  margin-top: 80px;
+}
+
+/* FAQ Content container */
+.faq-content {
+  display: flex;
+  width: 80%;
+  align-items: flex-start; /* Align to top */
+  justify-content: space-between;
+  margin: 30px auto;
+  max-width: 1400px; /* Maximum width for very large screens */
+}
+
+/* Image container */
+.faq-image {
+  flex: 0 0 40%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top */
+}
+
+.faq-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* FAQ List */
+.faq-list {
+  flex: 0 0 55%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* FAQ Item */
+.faq-item {
+  background: #F8F5E9;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ccc;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.faq-item:hover {
+  background: #f1e9d6;
+}
+
+/* Question styling */
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Toggle button */
+.toggle-button {
+  background: none;
+  border: none;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #7a0000;
+  margin-left: 15px;
+}
+
+/* Answer styling */
+.faq-answer {
+  font-size: 16px;
+  margin-top: 10px;
+  padding-left: 10px;
+  line-height: 1.5;
+}
+
+/* ======================== */
+/* RESPONSIVE DESIGN */
+/* ======================== */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
   .faq-content {
-    display: flex;
-    width: 80%;
-    max-width: 1400px;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 30px;
-  }
-  
-  /* Judul FAQ */
-  .faq-title {
-    font-size: 60px; /* Lebih besar */
-    font-weight: bold;
-    text-align: left;
+    flex-direction: column;
     width: 90%;
-    max-width: 1600px;
-    margin-bottom: 20px;
-    margin-top: 80px;
   }
-  
-  /* Gambar FAQ */
-  .faq-image img {
-    max-width: 550px;
-    height: auto;
+
+  .faq-image {
+    flex: 0 0 100%;
+    margin-bottom: 30px;
+    max-width: 400px;
+    align-self: center;
   }
-  
-  /* Daftar FAQ */
+
   .faq-list {
-    flex: 1;
-    margin-left: 30px;
-  }
-  
-  .faq-item {
-    background: #F8F5E9;
-    padding: 20px;
-    margin: 10px 0;
-    border-bottom: 2px solid #ccc;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .faq-item:hover {
-    background: #f1e9d6;
-  }
-  
-  .faq-question {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 22px;
-    font-weight: bold;
-  }
-  
-  /* Tombol + dan - */
-  .toggle-button {
-    background: none;
-    border: none;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #7a0000;
-    margin-left: 15px;
-  }
-  
-  /* Jawaban FAQ */
-  .faq-answer {
-    font-size: 18px;
-    margin-top: 10px;
-    padding-left: 10px;
-  }
-  
-  /* Footer */
-  footer {
     width: 100%;
-    background-color: #7a0000;
-    color: white;
+    flex: 0 0 100%;
+  }
+
+  .faq-title {
+    font-size: 36px;
+    width: 90%;
     text-align: center;
-    padding: 15px 0;
-    margin-top: 40px;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  .faq-container {
+    padding: 0 0 20px 0;
   }
   
-  footer p {
-    margin: 5px 0;
+  .faq-title {
+    font-size: 32px;
+    margin-top: 20px;
   }
-  
-  /* ======================== */
-  /* RESPONSIVE DESIGN */
-  /* ======================== */
-  
-  /* Tablet (max-width: 1024px) */
-  @media (max-width: 1024px) {
-    .faq-content {
-      flex-direction: column; /* Susun vertikal */
-      text-align: center;
-    }
-  
-    .faq-image img {
-      max-width: 400px; /* Perkecil gambar */
-      margin-bottom: 20px;
-    }
-  
-    .faq-list {
-      width: 100%;
-      margin-left: 0;
-    }
-  
-    .faq-title {
-      font-size: 48px;
-    }
-  
-    .faq-question {
-      font-size: 20px;
-    }
-  
-    .faq-answer {
-      font-size: 16px;
-    }
+
+  .faq-image {
+    max-width: 300px;
   }
-  
-  /* Mobile (max-width: 768px) */
-  @media (max-width: 768px) {
-    .faq-title {
-      font-size: 40px; 
-      margin-top: 80px; /* Dulu 40px, sekarang 80px */
-      /* Lebih kecil untuk mobile */
-    }
-  
-    .faq-content {
-      flex-direction: column;
-      width: 90%;
-    }
-  
-    .faq-image img {
-      max-width: 300px;
-    }
-  
-    .faq-list {
-      width: 100%;
-    }
-  
-    .faq-item {
-      padding: 15px;
-    }
-  
-    .faq-question {
-      font-size: 18px;
-    }
-  
-    .toggle-button {
-      font-size: 24px;
-    }
-  
-    .faq-answer {
-      font-size: 15px;
-    }
+
+  .faq-question {
+    font-size: 16px;
   }
-  
-  /* Small Mobile (max-width: 480px) */
-  @media (max-width: 480px) {
-    .faq-title {
-      font-size: 32px;
-    }
-  
-    .faq-image img {
-      max-width: 250px;
-    }
-  
-    .faq-question {
-      font-size: 16px;
-    }
-  
-    .faq-answer {
-      font-size: 14px;
-    }
-  
-    .toggle-button {
-      font-size: 20px;
-    }
-  
-    footer {
-      font-size: 14px;
-    }
-  }  
+
+  .faq-answer {
+    font-size: 14px;
+  }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+  .faq-title {
+    font-size: 28px;
+  }
+
+  .faq-image {
+    max-width: 220px;
+  }
+
+  .faq-question {
+    font-size: 15px;
+  }
+
+  .toggle-button {
+    font-size: 18px;
+  }
+}
