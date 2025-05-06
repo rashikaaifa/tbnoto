@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../style/ProfileStyle.css';
+import '../style/ProfilStyle.css';
 import profileImage from '../assets/img/lucu.jpg';
 
 const ProfilePage = () => {
