@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import '../style/ProfilStyle.css';
+import '../style/ProfileStyle.css';
+import profileImage from '../assets/img/lucu.jpg';
 
-const Profil = () => {
+const ProfilePage = () => {
+  const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState({
     name: 'Daniel Budianto',
     email: 'budispeed@gmail.com',
@@ -10,97 +12,82 @@ const Profil = () => {
     password: '********'
   });
 
-  const [isEditing, setIsEditing] = useState(false);
-
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
-  const handleEditToggle = () => {
-    setIsEditing(true);
-  };
-
   const handleSave = () => {
     setIsEditing(false);
-    // Simpan data ke backend di sini kalau sudah connect API
     console.log('Saved profile:', profile);
   };
 
   return (
-    <div className="account-container">
-      <div className="account-card">
-        <h2>Account Setting</h2>
-
-        <div className="tabs">
-          <button className="active-tab">PROFILE</button>
-          <button>VACANCIES</button>
+    <div className="profile-page">
+      <div className="profile-card-modern">
+        <div className="profile-header-modern">
+        <img src={profileImage} alt="Profile" className="profile-avatar" />
+        <div>
+            <h2>{profile.name}</h2>
+            <p>{profile.email}</p>
+          </div>
+          <button
+            className={isEditing ? 'btn-save-modern' : 'btn-edit-modern'}
+            onClick={isEditing ? handleSave : () => setIsEditing(true)}
+          >
+            {isEditing ? 'Save' : 'Edit'}
+          </button>
         </div>
 
-        <div className="profile-content">
-          <div className="profile-image-section">
-            <img src="/src/assets/lucu.jpg" alt="Profile" />
-            <button className="change-btn">CHANGE</button>
+        <div className="profile-form-modern">
+          <div className="form-group-modern">
+            <label>Full Name</label>
+            <input
+              type="text"
+              name="name"
+              value={profile.name}
+              onChange={handleChange}
+              disabled={!isEditing}
+            />
           </div>
-
-          <div className="profile-fields">
-            <label>
-              NAME
-              <input
-                type="text"
-                name="name"
-                value={profile.name}
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
-            </label>
-            <label>
-              EMAIL
-              <input
-                type="email"
-                name="email"
-                value={profile.email}
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
-            </label>
-            <label>
-              PHONE
-              <input
-                type="text"
-                name="phone"
-                value={profile.phone}
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
-            </label>
-            <label>
-              WEBSITE
-              <input
-                type="text"
-                name="website"
-                value={profile.website}
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
-            </label>
-            <label>
-              PASSWORD
-              <input
-                type="password"
-                name="password"
-                value={profile.password}
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
-            </label>
-
-            <div className="button-group">
-              {!isEditing ? (
-                <button className="edit-btn" onClick={handleEditToggle}>EDIT</button>
-              ) : (
-                <button className="save-btn" onClick={handleSave}>SAVE</button>
-              )}
-            </div>
+          <div className="form-group-modern">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              value={profile.email}
+              onChange={handleChange}
+              disabled={!isEditing}
+            />
+          </div>
+          <div className="form-group-modern">
+            <label>Phone</label>
+            <input
+              type="text"
+              name="phone"
+              value={profile.phone}
+              onChange={handleChange}
+              disabled={!isEditing}
+            />
+          </div>
+          <div className="form-group-modern">
+            <label>Website</label>
+            <input
+              type="text"
+              name="website"
+              value={profile.website}
+              onChange={handleChange}
+              disabled={!isEditing}
+            />
+          </div>
+          <div className="form-group-modern">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              value={profile.password}
+              onChange={handleChange}
+              disabled={!isEditing}
+            />
           </div>
         </div>
       </div>
@@ -108,4 +95,4 @@ const Profil = () => {
   );
 };
 
-export default Profil;
+export default ProfilePage;
