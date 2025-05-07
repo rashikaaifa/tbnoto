@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import "../style/RiwayatStyle.css";
 
 import bukti1 from "../assets/img/bukti.png";
 import bukti2 from "../assets/img/genjiii.jpg";
@@ -41,32 +40,34 @@ export default function TransactionTableUnified() {
   };
 
   return (
-    <div className="transaction-container container mx-auto p-4">
-      <h1 className="transaction-header text-2xl mb-4">Riwayat Transaksi</h1>
+    <div className="mt-20 px-4 max-w-full overflow-x-hidden">
+      <h1 className="text-2xl text-center mb-4 font-semibold">Riwayat Transaksi</h1>
 
       {!isMobile ? (
-        <div className="table-wrapper">
-          <table className="transaction-table w-full">
+        <div className="overflow-x-auto mx-20">
+          <table className="w-full border-collapse">
             <thead>
-              <tr className="table-header">
-                <th>No.</th>
-                <th>Tanggal Transaksi</th>
-                <th>Nama Produk</th>
-                <th>Jumlah</th>
-                <th>Bukti Transaksi</th>
-                <th>Aksi</th>
+              <tr className="bg-gray-100 text-center">
+                <th className="p-3 border">No.</th>
+                <th className="p-3 border">Tanggal Transaksi</th>
+                <th className="p-3 border">Nama Produk</th>
+                <th className="p-3 border">Jumlah</th>
+                <th className="p-3 border">Bukti Transaksi</th>
+                <th className="p-3 border">Aksi</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map((transaction) => (
-                <tr key={transaction.id} className="table-row">
-                  <td>{transaction.id}</td>
-                  <td>{transaction.date}</td>
-                  <td>{transaction.product}</td>
-                  <td>{transaction.quantity}</td>
-                  <td><img src={transaction.proof} alt="Bukti" className="proof-image" /></td>
-                  <td>
-                    <button className="detail-button" onClick={() => openDetail(transaction)}>Detail</button>
+                <tr key={transaction.id} className="text-center border-t">
+                  <td className="p-2">{transaction.id}</td>
+                  <td className="p-2">{transaction.date}</td>
+                  <td className="p-2">{transaction.product}</td>
+                  <td className="p-2">{transaction.quantity}</td>
+                  <td className="p-2">
+                    <img src={transaction.proof} alt="Bukti" className="w-24 rounded" />
+                  </td>
+                  <td className="p-2">
+                    <button onClick={() => openDetail(transaction)} className="bg-blue-600 text-white py-2 px-4 rounded-xs hover:bg-blue-700">Detail</button>
                   </td>
                 </tr>
               ))}
@@ -74,41 +75,40 @@ export default function TransactionTableUnified() {
           </table>
         </div>
       ) : (
-        <div className="mobile-cards">
+        <div className="space-y-4 px-4">
           {transactions.map((tx) => (
-            <div key={tx.id} className="transaction-card">
-              <div className="transaction-info"><span>ID Transaksi:</span><span>{tx.id}</span></div>
-              <div className="transaction-info"><span>Tanggal:</span><span>{tx.date}</span></div>
-              <div className="transaction-info"><span>Produk:</span><span>{tx.product}</span></div>
-              <div className="transaction-info"><span>Jumlah:</span><span>{tx.quantity}</span></div>
-              <div className="transaction-info">
-                {/* <span>Bukti:</span>
-                <img src={tx.proof} alt="Bukti" className="proof-image" /> */}
-              </div>
-              <button className="detail-button full-width" onClick={() => openDetail(tx)}>Detail</button>
+            <div key={tx.id} className="bg-white p-4 rounded-xl shadow-md">
+              <div className="flex justify-between text-sm mb-1"><span>ID Transaksi:</span><span>{tx.id}</span></div>
+              <div className="flex justify-between text-sm mb-1"><span>Tanggal:</span><span>{tx.date}</span></div>
+              <div className="flex justify-between text-sm mb-1"><span>Produk:</span><span>{tx.product}</span></div>
+              <div className="flex justify-between text-sm mb-3"><span>Jumlah:</span><span>{tx.quantity}</span></div>
+              <button onClick={() => openDetail(tx)} className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Detail</button>
             </div>
           ))}
         </div>
       )}
 
-{showDetail && selectedTransaction && (
-  <div className="modal-backdrop">
-  <div className="modal-content">
-      <div className="modal-header">
-        <h2 className="modal-title">Detail Transaksi</h2>
-        <button onClick={closeDetail} className="close-button">&times;</button>
-      </div>
-      <div className="modal-body">
-        <div className="detail-group"><p>No. Transaksi</p><p>{selectedTransaction.id}</p></div>
-        <div className="detail-group"><p>Tanggal</p><p>{selectedTransaction.date}</p></div>
-        <div className="detail-group"><p>Produk</p><p>{selectedTransaction.product}</p></div>
-        <div className="detail-group"><p>Jumlah</p><p>{selectedTransaction.quantity}</p></div>
-        <div className="detail-group"><p>Bukti Transaksi</p><img src={selectedTransaction.proof} alt="Bukti" className="proof-image" /></div>
-        <div className="detail-group"><p>Detail</p><p>{selectedTransaction.details}</p></div>
-      </div>
-    </div>
-  </div>
-)}
+      {showDetail && selectedTransaction && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
+          <div className="bg-white p-6 rounded-xl w-full max-w-md relative">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Detail Transaksi</h2>
+              <button onClick={closeDetail} className="text-3xl leading-none">&times;</button>
+            </div>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between"><p>No. Transaksi</p><p>{selectedTransaction.id}</p></div>
+              <div className="flex justify-between"><p>Tanggal</p><p>{selectedTransaction.date}</p></div>
+              <div className="flex justify-between"><p>Produk</p><p>{selectedTransaction.product}</p></div>
+              <div className="flex justify-between"><p>Jumlah</p><p>{selectedTransaction.quantity}</p></div>
+              <div>
+                <p className="mb-1">Bukti Transaksi</p>
+                <img src={selectedTransaction.proof} alt="Bukti" className="w-full rounded" />
+              </div>
+              <div><p className="mb-1">Detail</p><p>{selectedTransaction.details}</p></div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
