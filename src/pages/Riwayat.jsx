@@ -29,6 +29,15 @@ export default function TransactionTableUnified() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Prevent background scroll when modal is open
+  useEffect(() => {
+    if (showDetail) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  }, [showDetail]);
+
   const openDetail = (transaction) => {
     setSelectedTransaction(transaction);
     setShowDetail(true);
@@ -102,7 +111,7 @@ export default function TransactionTableUnified() {
               <div className="flex justify-between"><p>Jumlah</p><p>{selectedTransaction.quantity}</p></div>
               <div>
                 <p className="mb-1">Bukti Transaksi</p>
-                <img src={selectedTransaction.proof} alt="Bukti" className="w-full rounded" />
+                <img src={selectedTransaction.proof} alt="Bukti" className="w-full max-w-[200px] mx-auto rounded" />
               </div>
               <div><p className="mb-1">Detail</p><p>{selectedTransaction.details}</p></div>
             </div>
@@ -112,3 +121,4 @@ export default function TransactionTableUnified() {
     </div>
   );
 }
+
