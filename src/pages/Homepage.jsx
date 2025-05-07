@@ -16,10 +16,10 @@ import faq from "../assets/img/faq.png";
 const images = [img1, img2, img3];
 
 const keunggulan = [
-    { title: "Kualitas Terbaik", desc: "Kami menyediakan produk dengan kualitas unggulan." },
-    { title: "Pelayanan Ramah", desc: "Kami melayani pelanggan dengan sepenuh hati." },
-    { title: "Harga Terjangkau", desc: "Harga yang kompetitif dan sesuai dengan kualitas." },
-    { title: "Pengiriman Cepat", desc: "Kami memastikan barang sampai tepat waktu." },
+    { title: "Harga Terbaik", desc: "Material berkualitas tinggi dengan harga terjangkau." },
+    { title: "Fleksibel & Praktis", desc: "Pemesanan mudah, bisa langsung di toko atau secara online." },
+    { title: "Stok Lengkap", desc: "Beragam material tersedia untuk proyek kecil hingga skala besar." },
+    { title: "Pengiriman Kilat", desc: "Cepat dan tepat waktu, langsung ke lokasi proyek Anda." },    
 ];
 
 const top = [
@@ -39,6 +39,7 @@ const posters = [
   
 const Homepage = () => {
     const [currentPoster, setCurrentPoster] = useState(0); // untuk section posters
+
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
@@ -50,6 +51,23 @@ const Homepage = () => {
         })
         .catch((err) => console.error("Fetch error:", err));
     }, []);
+
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetch("https://tbnoto19.rplrus.com/api/kategori")
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("Data kategori:", data);
+                setCategories(data);
+            })
+            .catch((err) => console.error("Fetch kategori error:", err));
+    }, []);
+
+    const getKategoriName = (id) => {
+        const kategori = categories.find((item) => item.id === id);
+        return kategori ? kategori.nama_kategori : 'Tidak diketahui';
+    };    
 
     const mobileImages = [
         "/assets/hero/mobile1.jpg",
@@ -205,22 +223,22 @@ const Homepage = () => {
                 <div className="p-6 md:p-12">
                     <h2 className="text-3xl font-bold text-center mb-8">Kategori</h2>
                     <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-                    {["KAYU", "BESI", "PARALON", "PAKU", "SEMEN", "KANOPI"].map((kategori, index) => (
-                        <Link
-                            key={index}
-                            to={`/katalog/${kategori.toLowerCase()}`}
-                            className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-lg cursor-pointer hover:scale-105 transition-all duration-500 block"
-                        >
-                            <img
-                                src={`/assets/kategori/${kategori.toLowerCase()}.jpg`}
-                                alt={kategori}
-                                className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                <span className="text-white font-semibold text-lg">{kategori}</span>
-                            </div>
-                        </Link>
-                    ))}
+                        {categories.map((kategori) => (
+                            <Link
+                                key={kategori.id}
+                                to={`/katalog/${kategori.nama_kategori.toLowerCase().replace(/\s+/g, '-')}`}
+                                className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-lg cursor-pointer hover:scale-105 transition-all duration-500 block"
+                            >
+                                <img
+                                    src={`/assets/kategori/${kategori.nama_kategori.toLowerCase().replace(/\s+/g, '-')}.jpg`}
+                                    alt={kategori.nama_kategori}
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                    <span className="text-white font-semibold text-lg">{kategori.nama_kategori}</span>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -231,15 +249,25 @@ const Homepage = () => {
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-2xl md:text-3xl font-bold">Produk Unggulan</h2>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-                        {top.map((item) => (
-                            <div key={item.id} className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500">
-                                <img src={item.image} alt={item.name} className="w-full h-32 object-cover rounded-lg mb-2" />
-                                <h3 className="font-semibold text-lg">{item.name}</h3>
-                                <p className="text-sm">{item.size}</p>
-                                <p className="text-md">{item.price}</p>
-                            </div>
-                        ))}
+                    <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-8">
+                        {products.map((product) => {
+                            const kategoriNama = getKategoriName(product.kategori_id);
+                            return (
+                                <div
+                                    key={product.id}
+                                    className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500"
+                                >
+                                    <img
+                                        src={'imageUrl'}
+                                        alt={product.nama_barang}
+                                        className="w-full h-32 object-cover rounded-lg mb-2"
+                                    />
+                                    <h3 className="font-semibold text-lg">{product.nama_barang}</h3>
+                                    <p className="text-sm">Kategori: {kategoriNama}</p>
+                                    <p className="text-md">Rp{Number(product.harga).toLocaleString()}</p>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -259,19 +287,19 @@ const Homepage = () => {
                     {/* list produk */}
                     <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-8">
                         {products.map((product) => {
+                            const kategoriNama = getKategoriName(product.kategori_id);
                             return (
                                 <div
                                     key={product.id}
                                     className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500"
                                 >
                                     <img
-                                    src={'imageUrl'} // Gunakan imageUrl yang sudah didefinisikan
-                                    alt={product.nama_barang}
-                                    className="w-full h-32 object-cover rounded-lg mb-2"
+                                        src={'imageUrl'}
+                                        alt={product.nama_barang}
+                                        className="w-full h-32 object-cover rounded-lg mb-2"
                                     />
-
                                     <h3 className="font-semibold text-lg">{product.nama_barang}</h3>
-                                    <p className="text-sm">Kategori: {product.kategori_id}</p>
+                                    <p className="text-sm">Kategori: {kategoriNama}</p>
                                     <p className="text-md">Rp{Number(product.harga).toLocaleString()}</p>
                                 </div>
                             );
@@ -279,11 +307,11 @@ const Homepage = () => {
                     </div>
                     {/* teks "lihat semua" */}
                     <div className="mt-6 mb-6">
+                        <a href="/katalog">
                         <div className="w-full bg-gray-200 text-center text-black py-3 rounded-xl border cursor-pointer hover:bg-gray-300 transition">
-                            <a href="/katalog">
                                 Lihat Semua ...
-                            </a>
                         </div>
+                        </a>
                     </div>
                 </div>
             </section>
