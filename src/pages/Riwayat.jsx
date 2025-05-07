@@ -50,7 +50,9 @@ export default function TransactionTableUnified() {
 
   return (
     <div className="mt-20 px-4 max-w-full overflow-x-hidden">
-      <h1 className="text-2xl text-center mb-4 font-semibold">Riwayat Transaksi</h1>
+    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mt-16 mb-6 px-4 sm:px-8 lg:px-20 text-left">
+  Riwayat Transaksi
+</h1>
 
       {!isMobile ? (
         <div className="overflow-x-auto mx-20">
