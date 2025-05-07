@@ -1,0 +1,58 @@
+/* productgrid.css */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+  }
+  
+  @media (max-width: 768px) {
+    .product-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+    }
+  }
+  
+  .empty-products {
+    text-align: center;
+    padding: 60px 0;
+    color: #718096;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* productgrid.css */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+  }
+  
+  /* Modifikasi media query untuk mobile */
+  @media (max-width: 768px) {
+    .product-grid {
+      grid-template-columns: repeat(2, 1fr); /* Menampilkan hanya 2 card per baris */
+      gap: 12px; /* Spasi lebih kecil untuk mobile */
+    }
+  }
+  
+  /* Media query untuk layar sangat kecil seperti smartphone kecil */
+  @media (max-width: 480px) {
+    .product-grid {
+      grid-template-columns: repeat(2, 1fr); /* Tetap 2 card pada layar sangat kecil */
+      gap: 8px; /* Spasi lebih kecil lagi */
+    }
+  }
+  
+  .empty-products {
+    text-align: center;
+    padding: 60px 0;
+    color: #718096;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }

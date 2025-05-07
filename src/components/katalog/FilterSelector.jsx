@@ -1,6 +1,4 @@
-// FilterSelector.jsx
 import React from 'react';
-import '../styles/FilterSelector.css';
 
 const FilterSelector = ({ categories, selectedCategory, onCategorySelect }) => {
   const handleChange = (e) => {
@@ -8,11 +6,11 @@ const FilterSelector = ({ categories, selectedCategory, onCategorySelect }) => {
   };
 
   return (
-    <div className="filter-selector">
+    <div className="relative w-44 sm:w-full flex-shrink-0">
       <select 
         value={selectedCategory} 
         onChange={handleChange}
-        className="filter-select"
+        className="w-full pl-4 pr-10 py-3 rounded-lg text-sm border border-gray-300 shadow-sm appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500 cursor-pointer transition-all duration-200"
       >
         <option value="">Semua Kategori</option>
         {categories.map((category) => (
@@ -21,7 +19,7 @@ const FilterSelector = ({ categories, selectedCategory, onCategorySelect }) => {
           </option>
         ))}
       </select>
-      <div className="select-icon">
+      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
         <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
         </svg>

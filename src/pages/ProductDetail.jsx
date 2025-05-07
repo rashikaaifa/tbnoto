@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getProductById } from '../services/productService';
-import '../styles/ProductDetail.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -13,7 +12,9 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         const productId = parseInt(id);
+        console.log("Fetching product with id:", productId);
         const data = await getProductById(productId);
+        console.log("Product data:", data);
         setProduct(data);
       } catch (error) {
         console.error('Error fetching product details:', error);
@@ -42,83 +43,99 @@ const ProductDetail = () => {
   };
 
   if (isLoading) {
-    return <div className="simple-loading">Memuat detail produk...</div>;
+    return (
+      <div className="flex justify-center items-center h-[300px] text-gray-600 text-lg">
+        Memuat detail produk...
+      </div>
+    );
   }
 
   if (!product) {
-    return <div className="simple-error">Produk tidak ditemukan</div>;
+    return (
+      <div className="max-w-7xl mx-auto px-5 py-10 text-center">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Produk tidak ditemukan</h2>
+        <Link to="/" className="text-blue-600 hover:text-blue-800 font-medium">
+          Kembali ke halaman produk
+        </Link>
+      </div>
+    );
   }
 
   return (
-    <div className="simple-detail-container">
-      <div className="simple-back-button">
-        <Link to="/" className="back-link">
-          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none">
+    <div className="max-w-7xl mx-auto px-5 py-5 sm:px-3 sm:py-3">
+      <div className="mb-6">
+        <Link to="/" className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" className="mr-2">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
-          <span>Detail Produk</span>
+          Detail Produk
         </Link>
       </div>
 
-      <div className="simple-product-wrapper">
-        <div className="simple-product-image">
-          <img src={product.gambar} alt={product.nama} />
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col md:flex-row">
+        {/* Gambar Produk */}
+        <div className="w-full md:w-1/2 p-6">
+          <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg">
+            <img 
+              src={product.gambar} 
+              alt={product.nama} 
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
-
-        <div className="simple-product-content">
-          <h1 className="simple-product-title">{product.nama}</h1>
-          <p className="simple-product-dimension">{product.ukuran}</p>
+        
+        {/* Informasi Produk */}
+        <div className="w-full md:w-1/2 p-6 flex flex-col">
+          <h1 className="text-2xl font-bold text-gray-900">{product.nama}</h1>
+          <p className="text-lg text-gray-600 mb-4">{product.ukuran}</p>
           
-          <p className="simple-product-description">
+          <p className="text-gray-700 mb-8">
             {product.nama} {product.ukuran} – Kayu lapis berkualitas, kuat, dan serbaguna.
             Cocok untuk furniture, konstruksi, dan dekorasi.
           </p>
-
-          <div className="simple-order-box">
-            <h2 className="simple-order-title">BUAT PESANAN</h2>
+          
+          <div className="bg-gray-50 rounded-lg p-6 mt-auto">
+            <h2 className="text-lg font-semibold text-gray-900 mb-6 text-center">BUAT PESANAN</h2>
             
-            <div className="simple-quantity-control">
+            <div className="flex items-center mb-6">
               <button 
-                className="simple-qty-btn"
+                className="w-10 h-10 flex items-center justify-center rounded bg-gray-200 text-gray-700 font-medium text-xl disabled:opacity-50"
                 onClick={handleDecreaseQuantity}
                 disabled={quantity <= 1}
               >
                 −
               </button>
-              <input 
-                type="text" 
-                value={quantity} 
-                readOnly 
-                className="simple-qty-input"
-              />
+              <span className="mx-6 font-medium text-lg">{quantity}</span>
               <button 
-                className="simple-qty-btn"
+                className="w-10 h-10 flex items-center justify-center rounded bg-gray-200 text-gray-700 font-medium text-xl disabled:opacity-50"
                 onClick={handleIncreaseQuantity}
                 disabled={quantity >= product.stok}
               >
                 +
               </button>
-              <span className="simple-stock">Stok: {product.stok}</span>
+              <span className="ml-auto text-gray-500">Stok: {product.stok}</span>
             </div>
-
-            <div className="simple-price-section">
-              <p className="simple-total-label">Total harga:</p>
-              <p className="simple-total-price">Rp{calculateTotalPrice().toLocaleString()}</p>
+            
+            <div className="flex justify-between items-center mb-6">
+              <span className="text-gray-700 font-medium">Total harga:</span>
+              <span className="text-xl font-bold text-gray-900">Rp{calculateTotalPrice().toLocaleString()}</span>
             </div>
-
-            <div className="simple-action-buttons">
-              <button className="simple-cart-btn">
-                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none">
+            
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <button className="flex justify-center items-center bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-50 transition">
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" className="mr-2">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 Masukkan Keranjang
               </button>
-              <button className="simple-buy-btn">Beli</button>
+              <button className="bg-green-700 text-white px-4 py-3 rounded-lg font-medium hover:bg-green-800 transition">
+                Beli
+              </button>
             </div>
-
-            <button className="simple-contact-btn">
-              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+            
+            <button className="w-full flex justify-center items-center border border-gray-300 bg-gray-50 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-100 transition">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" className="mr-2">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
               Hubungi penjual
             </button>
