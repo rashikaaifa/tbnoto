@@ -14,7 +14,7 @@ export default function TransactionTableUnified() {
 
   const transactions = [
     { id: 1, date: '5 Januari 2025', product: 'Kaso', quantity: 3, proof: bukti1, details: 'Pembelian kaso ukuran 4x6 cm panjang 4 meter' },
-    { id: 2, date: '30 maret 2025', product: 'Besi', quantity: 16, proof: bukti2, details: 'Pembelian besi beton 10mm' },
+    { id: 2, date: '30 April 2025', product: 'Besi', quantity: 16, proof: bukti2, details: 'Pembelian besi beton 10mm' },
     { id: 3, date: '18 September 2025', product: 'Paku', quantity: 1000, proof: bukti3, details: 'Pembelian paku ukuran 2 inci' },
     { id: 4, date: '6 Desember 2025', product: 'Triplek', quantity: 20, proof: bukti4, details: 'Pembelian triplek 12mm' },
     { id: 5, date: '12 Februari 2025', product: 'Semen', quantity: 7, proof: bukti5, details: 'Pembelian semen 50kg per sak' },
