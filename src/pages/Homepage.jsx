@@ -41,17 +41,15 @@ const Homepage = () => {
     const [currentPoster, setCurrentPoster] = useState(0); // untuk section posters
     const [products, setProducts] = useState([]);
 
-    fetch("https://6067-160-22-25-43.ngrok-free.app/api/barang", {
-        headers: {
-          "ngrok-skip-browser-warning": "true"
-        }
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        console.log(data);
-        setProducts(data);
-    })
-    .catch((err) => console.error("Fetch error:", err));
+    useEffect(() => {
+        fetch("https://tbnoto19.rplrus.com/api/barang")
+        .then((res) => res.json())
+        .then((data) => {
+            console.log("Data produk:", data);
+            setProducts(data);
+        })
+        .catch((err) => console.error("Fetch error:", err));
+    }, []);
 
     const mobileImages = [
         "/assets/hero/mobile1.jpg",
@@ -260,21 +258,24 @@ const Homepage = () => {
                     </div>
                     {/* list produk */}
                     <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-8">
-                        {products.map((product) => (
-                            <div
-                            key={product.id}
-                            className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500"
-                            >
-                            <img
-                                src={`https://6067-160-22-25-43.ngrok-free.app/storage/${product.foto_barang}`}
-                                alt={product.nama_barang}
-                                className="w-full h-32 object-cover rounded-lg mb-2"
-                            />
-                            <h3 className="font-semibold text-lg">{product.nama_barang}</h3>
-                            <p className="text-sm">Kategori: {product.kategori_id}</p>
-                            <p className="text-md">Rp{Number(product.harga).toLocaleString()}</p>
-                            </div>
-                        ))}
+                        {products.map((product) => {
+                            return (
+                                <div
+                                    key={product.id}
+                                    className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500"
+                                >
+                                    <img
+                                    src={'imageUrl'} // Gunakan imageUrl yang sudah didefinisikan
+                                    alt={product.nama_barang}
+                                    className="w-full h-32 object-cover rounded-lg mb-2"
+                                    />
+
+                                    <h3 className="font-semibold text-lg">{product.nama_barang}</h3>
+                                    <p className="text-sm">Kategori: {product.kategori_id}</p>
+                                    <p className="text-md">Rp{Number(product.harga).toLocaleString()}</p>
+                                </div>
+                            );
+                        })}
                     </div>
                     {/* teks "lihat semua" */}
                     <div className="mt-6 mb-6">
