@@ -29,7 +29,6 @@ export default function TransactionTableUnified() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Prevent background scroll when modal is open
   useEffect(() => {
     if (showDetail) {
       document.body.classList.add("overflow-hidden");
@@ -50,25 +49,14 @@ export default function TransactionTableUnified() {
 
   return (
     <div className="mt-20 px-4 max-w-full overflow-x-hidden">
-      <h1 className="text-2xl text-center mb-4 font-semibold">Riwayat Transaksi</h1>
-    <div className="mt-20 px-4 max-w-full overflow-x-hidden">
-    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mt-16 mb-6 px-4 sm:px-8 lg:px-20 text-left">
-  Riwayat Transaksi
-</h1>
+      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mt-16 mb-6 px-4 sm:px-8 lg:px-20 text-left">
+        Riwayat Transaksi
+      </h1>
 
       {!isMobile ? (
         <div className="overflow-x-auto mx-20">
           <table className="w-full border-collapse">
-        <div className="overflow-x-auto mx-20">
-          <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-gray-100 text-center">
-                <th className="p-3 border">No.</th>
-                <th className="p-3 border">Tanggal Transaksi</th>
-                <th className="p-3 border">Nama Produk</th>
-                <th className="p-3 border">Jumlah</th>
-                <th className="p-3 border">Bukti Transaksi</th>
-                <th className="p-3 border">Aksi</th>
               <tr className="bg-gray-100 text-center">
                 <th className="p-3 border">No.</th>
                 <th className="p-3 border">Tanggal Transaksi</th>
@@ -89,17 +77,12 @@ export default function TransactionTableUnified() {
                     <img src={transaction.proof} alt="Bukti" className="w-24 rounded" />
                   </td>
                   <td className="p-2">
-                    <button onClick={() => openDetail(transaction)} className="bg-blue-600 text-white py-2 px-4 rounded-xs hover:bg-blue-700">Detail</button>
-                <tr key={transaction.id} className="text-center border-t">
-                  <td className="p-2">{transaction.id}</td>
-                  <td className="p-2">{transaction.date}</td>
-                  <td className="p-2">{transaction.product}</td>
-                  <td className="p-2">{transaction.quantity}</td>
-                  <td className="p-2">
-                    <img src={transaction.proof} alt="Bukti" className="w-24 rounded" />
-                  </td>
-                  <td className="p-2">
-                    <button onClick={() => openDetail(transaction)} className="bg-blue-600 text-white py-2 px-4 rounded-xs hover:bg-blue-700">Detail</button>
+                    <button
+                      onClick={() => openDetail(transaction)}
+                      className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                    >
+                      Detail
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -108,46 +91,23 @@ export default function TransactionTableUnified() {
         </div>
       ) : (
         <div className="space-y-4 px-4">
-        <div className="space-y-4 px-4">
           {transactions.map((tx) => (
             <div key={tx.id} className="bg-white p-4 rounded-xl shadow-md">
               <div className="flex justify-between text-sm mb-1"><span>ID Transaksi:</span><span>{tx.id}</span></div>
               <div className="flex justify-between text-sm mb-1"><span>Tanggal:</span><span>{tx.date}</span></div>
               <div className="flex justify-between text-sm mb-1"><span>Produk:</span><span>{tx.product}</span></div>
               <div className="flex justify-between text-sm mb-3"><span>Jumlah:</span><span>{tx.quantity}</span></div>
-              <button onClick={() => openDetail(tx)} className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Detail</button>
-            <div key={tx.id} className="bg-white p-4 rounded-xl shadow-md">
-              <div className="flex justify-between text-sm mb-1"><span>ID Transaksi:</span><span>{tx.id}</span></div>
-              <div className="flex justify-between text-sm mb-1"><span>Tanggal:</span><span>{tx.date}</span></div>
-              <div className="flex justify-between text-sm mb-1"><span>Produk:</span><span>{tx.product}</span></div>
-              <div className="flex justify-between text-sm mb-3"><span>Jumlah:</span><span>{tx.quantity}</span></div>
-              <button onClick={() => openDetail(tx)} className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Detail</button>
+              <button
+                onClick={() => openDetail(tx)}
+                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+              >
+                Detail
+              </button>
             </div>
           ))}
         </div>
       )}
 
-      {showDetail && selectedTransaction && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
-          <div className="bg-white p-6 rounded-xl w-full max-w-md relative">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Detail Transaksi</h2>
-              <button onClick={closeDetail} className="text-3xl leading-none">&times;</button>
-            </div>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between"><p>No. Transaksi</p><p>{selectedTransaction.id}</p></div>
-              <div className="flex justify-between"><p>Tanggal</p><p>{selectedTransaction.date}</p></div>
-              <div className="flex justify-between"><p>Produk</p><p>{selectedTransaction.product}</p></div>
-              <div className="flex justify-between"><p>Jumlah</p><p>{selectedTransaction.quantity}</p></div>
-              <div>
-                <p className="mb-1">Bukti Transaksi</p>
-                <img src={selectedTransaction.proof} alt="Bukti" className="w-full rounded" />
-              </div>
-              <div><p className="mb-1">Detail</p><p>{selectedTransaction.details}</p></div>
-            </div>
-          </div>
-        </div>
-      )}
       {showDetail && selectedTransaction && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
           <div className="bg-white p-6 rounded-xl w-full max-w-md relative">
@@ -172,5 +132,3 @@ export default function TransactionTableUnified() {
     </div>
   );
 }
-
-
