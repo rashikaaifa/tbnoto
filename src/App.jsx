@@ -10,6 +10,8 @@ import Bantuan from './pages/Bantuan';
 import Riwayat from './pages/Riwayat';
 import Profil from './pages/Profil';
 import Keranjang from './pages/Keranjang';
+import ProductPage from './pages/ProductPage';
+import ProductDetail from './pages/ProductDetail';
 
 const AppContent = () => {
   const location = useLocation();
@@ -28,6 +30,8 @@ const AppContent = () => {
         <Route path="/riwayat" element={<Riwayat />} />
         <Route path="/profil" element={<Profil />} />
         <Route path="/keranjang" element={<Keranjang />} />
+        <Route path="/katalog" element={<ProductPage />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
       </Routes>
 
       {!hideLayout && <Footer />}
