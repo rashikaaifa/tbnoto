@@ -48,13 +48,13 @@ export default function TransactionTableUnified() {
   };
 
   return (
-    <div className="mt-20 px-4 max-w-full overflow-x-hidden">
-      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mt-16 mb-6 px-4 sm:px-8 lg:px-20 text-left">
+    <div className="mt-12 px-4 max-w-full overflow-x-hidden">
+      <h1 className="text-2xl md:text-3xl font-bold lg:text-4xl mt-16 mb-6 px-4 sm:px-8 lg:px-20 text-left">
         Riwayat Transaksi
       </h1>
 
       {!isMobile ? (
-        <div className="overflow-x-auto mx-20">
+        <div className="overflow-x-auto mx-20 mb-20">
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-100 text-center">
@@ -74,12 +74,14 @@ export default function TransactionTableUnified() {
                   <td className="p-2">{transaction.product}</td>
                   <td className="p-2">{transaction.quantity}</td>
                   <td className="p-2">
-                    <img src={transaction.proof} alt="Bukti" className="w-24 rounded" />
+                    <div className="flex justify-center">
+                      <img src={transaction.proof} alt="Bukti" className="w-24 rounded" />
+                    </div>
                   </td>
                   <td className="p-2">
                     <button
                       onClick={() => openDetail(transaction)}
-                      className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                      className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
                     >
                       Detail
                     </button>
@@ -122,7 +124,11 @@ export default function TransactionTableUnified() {
               <div className="flex justify-between"><p>Jumlah</p><p>{selectedTransaction.quantity}</p></div>
               <div>
                 <p className="mb-1">Bukti Transaksi</p>
-                <img src={selectedTransaction.proof} alt="Bukti" className="w-full max-w-[200px] mx-auto rounded" />
+                <img
+                  src={selectedTransaction.proof}
+                  alt="Bukti"
+                  className="w-full max-w-[200px] max-h-[250px] object-contain mx-auto rounded"
+                />
               </div>
               <div><p className="mb-1">Detail</p><p>{selectedTransaction.details}</p></div>
             </div>
