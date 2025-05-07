@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import '../style/BantuanStyle.css'
-import faqImage from '../assets/img/image_bantuan.png';
+import faqImage from '../assets/img/bntuan.jpg';
 
 const faqs = [
   {
@@ -37,24 +36,31 @@ const Bantuan = () => {
   };
 
   return (
-    <div className="faq-container">
-      <h1 className="faq-title">FAQ</h1>
-      <div className="faq-content">
-        <div className="faq-image">
-          <img src={faqImage} alt="FAQ Illustration" />
+    <div className="w-full min-h-[calc(100vh-60px)] flex flex-col items-center px-4 py-8 sm:py-12">
+    <h1 className="text-3xl sm:text-5xl font-bold mt-16 mb-6 mr-0 lg:mr-24 w-full sm:w-4/5 text-left">
+      FAQ
+    </h1>
+
+      <div className="flex flex-col lg:flex-row justify-between items-start gap-8 w-full sm:w-4/5 max-w-[1400px]">
+        <div className="flex justify-center items-start lg:w-2/5 w-full">
+          <img src={faqImage} alt="FAQ Illustration" className="w-full max-w-sm" />
         </div>
 
-        <div className="faq-list">
+        <div className="flex flex-col lg:w-3/5 w-full">
           {faqs.map((faq, index) => (
-            <div key={index} className="faq-item">
-              <div className="faq-question" onClick={() => toggleFAQ(index)}>
+            <div
+              key={index}
+              className="border-b-2 border-gray-300 p-4 mb-2 cursor-pointer hover:bg-[#f1e9d6] transition-all"
+              onClick={() => toggleFAQ(index)}
+            >
+              <div className="flex justify-between items-center font-semibold text-base sm:text-lg">
                 {faq.question}
-                <button className="toggle-button">
+                <button className="text-[#7a0000] text-xl font-bold ml-4">
                   {openIndex === index ? "−" : "+"}
                 </button>
               </div>
               {openIndex === index && (
-                <div className="faq-answer">{faq.answer}</div>
+                <p className="mt-2 text-sm sm:text-base pl-2 leading-relaxed">{faq.answer}</p>
               )}
             </div>
           ))}
