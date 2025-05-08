@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaChevronRight } from "react-icons/fa6";
@@ -253,14 +253,16 @@ const Homepage = () => {
                     </div>
                     {/* list produk */}
                     <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-8">
-                    {products
-                        .filter((product) => allowedIds.includes(product.id)) // filter pilih berdasar id
+                        {products
+                        .filter((product) => allowedIds.includes(product.id))
                         .map((product) => {
-                        const kategoriNama = getKategoriName(product.kategori_id);
+                            if (!product.id) return null;
+                            const kategoriNama = getKategoriName(product.kategori_id);
                             return (
-                                <div
+                                <Link
+                                    to={`/product/${product.id}`}
                                     key={product.id}
-                                    className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500"
+                                    className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500 block"
                                 >
                                     <img
                                         src={`https://tbnoto19.rplrus.com/storage/${product.foto_barang}`}
@@ -270,7 +272,7 @@ const Homepage = () => {
                                     <h3 className="font-semibold text-lg">{product.nama_barang}</h3>
                                     <p className="text-sm">Kategori: {kategoriNama}</p>
                                     <p className="text-md">Rp{Number(product.harga).toLocaleString()}</p>
-                                </div>
+                                </Link>
                             );
                         })}
                     </div>
@@ -291,12 +293,16 @@ const Homepage = () => {
                     </div>
                     {/* list produk */}
                     <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-8">
-                        {products.map((product) => {
+                        {products
+                        .slice(0, 12)
+                        .map((product) => {
+                            if (!product.id) return null;
                             const kategoriNama = getKategoriName(product.kategori_id);
                             return (
-                                <div
+                                <Link
+                                    to={`/product/${product.id}`}
                                     key={product.id}
-                                    className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500"
+                                    className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500 block"
                                 >
                                     <img
                                         src={`https://tbnoto19.rplrus.com/storage/${product.foto_barang}`}
@@ -306,7 +312,7 @@ const Homepage = () => {
                                     <h3 className="font-semibold text-lg">{product.nama_barang}</h3>
                                     <p className="text-sm">Kategori: {kategoriNama}</p>
                                     <p className="text-md">Rp{Number(product.harga).toLocaleString()}</p>
-                                </div>
+                                </Link>
                             );
                         })}
                     </div>
