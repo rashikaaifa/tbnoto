@@ -42,6 +42,8 @@ const Homepage = () => {
 
     const [products, setProducts] = useState([]);
 
+    const allowedIds = [1, 2, 3];
+
     useEffect(() => {
         fetch("https://tbnoto19.rplrus.com/api/barang")
         .then((res) => res.json())
@@ -249,9 +251,12 @@ const Homepage = () => {
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-2xl md:text-3xl font-bold">Produk Unggulan</h2>
                     </div>
+                    {/* list produk */}
                     <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-8">
-                        {products.map((product) => {
-                            const kategoriNama = getKategoriName(product.kategori_id);
+                    {products
+                        .filter((product) => allowedIds.includes(product.id)) // filter pilih berdasar id
+                        .map((product) => {
+                        const kategoriNama = getKategoriName(product.kategori_id);
                             return (
                                 <div
                                     key={product.id}
