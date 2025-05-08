@@ -1,30 +1,38 @@
+// ProductPage.jsx - Improved UI
 import React, { useState, useEffect } from 'react';
 import ProductGrid from '../components/katalog/ProductGrid';
 import SearchBar from '../components/katalog/SearchBar';
 import FilterSelector from '../components/katalog/FilterSelector';
-import { getProducts } from '../services/productService';
+import { getProducts, getProductCategories } from '../services/productService';
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getProducts();
-        setProducts(data);
-        setFilteredProducts(data);
+        setIsLoading(true);
+        // Ambil data produk
+        const productsData = await getProducts();
+        setProducts(productsData);
+        setFilteredProducts(productsData);
+        
+        // Ambil data kategori
+        const categoriesData = await getProductCategories();
+        setCategories(categoriesData);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error saat mengambil data:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchProducts();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -59,27 +67,27 @@ const ProductPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-[300px] text-gray-600 text-lg sm:h-[200px] sm:text-base">
+      <div className="flex justify-center items-center h-60 text-gray-600 text-lg">
         Memuat produk...
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-5 py-5 sm:px-3 sm:py-3 mt-24">
-      <header className="mb-6 sm:mb-4">
-        <h1 className="text-[28px] font-bold text-gray-900 mb-2 sm:text-[22px] sm:mb-1">
+    <div className="max-w-7xl mx-auto px-4 py-6 mt-20">
+      <header className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Semua Produk
         </h1>
-        <p className="text-[16px] text-gray-600 sm:text-sm">
+        <p className="text-lg text-gray-600">
           Katalog lengkap produk bahan bangunan
         </p>
       </header>
 
-      <div className="flex gap-4 mb-6 flex-wrap sm:flex-col sm:gap-3 sm:mb-4">
+      <div className="flex justify-between items-center mb-6 gap-4">
         <SearchBar onSearch={handleSearch} />
         <FilterSelector
-          categories={['triplek', 'kayu', 'besi', 'paralon']}
+          categories={categories}
           selectedCategory={selectedCategory}
           onCategorySelect={handleCategorySelect}
         />
