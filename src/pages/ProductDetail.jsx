@@ -1,3 +1,4 @@
+// ProductDetail.jsx - Improved UI
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getProductById } from '../services/productService';
@@ -42,7 +43,7 @@ const ProductDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-[300px] text-gray-600 text-lg">
+      <div className="flex justify-center items-center h-60 text-gray-600 text-lg">
         Memuat detail produk...
       </div>
     );
@@ -50,7 +51,7 @@ const ProductDetail = () => {
 
   if (!product) {
     return (
-      <div className="max-w-7xl mx-auto px-5 py-10 text-center">
+      <div className="max-w-7xl mx-auto px-4 py-10 text-center">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Produk tidak ditemukan</h2>
         <Link to="/" className="text-blue-600 hover:text-blue-800 font-medium">
           Kembali ke halaman produk
@@ -60,19 +61,19 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-5 py-5 sm:px-3 sm:py-3">
+    <div className="max-w-7xl mx-auto px-4 py-6 mt-20">
       <div className="mb-6">
-        <Link to="/" className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium">
+        <Link to="/katalog" className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium">
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
-          Detail Produk
+          Kembali ke Katalog
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col md:flex-row">
+      <div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col lg:flex-row">
         {/* Gambar Produk */}
-        <div className="w-full md:w-1/2 p-6">
+        <div className="w-full lg:w-1/2 p-6">
           <div className="aspect-square overflow-hidden rounded-lg">
             <img
               src={product.gambar}
@@ -83,13 +84,12 @@ const ProductDetail = () => {
         </div>
 
         {/* Informasi Produk */}
-        <div className="w-full md:w-1/2 p-6 flex flex-col">
+        <div className="w-full lg:w-1/2 p-6 flex flex-col">
           <h1 className="text-2xl font-bold text-gray-900">{product.nama}</h1>
           <p className="text-lg text-gray-600 mb-4">{product.ukuran}</p>
 
           <p className="text-gray-700 mb-8">
-            {product.nama} {product.ukuran} – Kayu lapis berkualitas, kuat, dan serbaguna.
-            Cocok untuk furniture, konstruksi, dan dekorasi.
+            {product.deskripsi}
           </p>
 
           <div className="bg-gray-50 rounded-lg p-6 mt-auto">
@@ -145,4 +145,3 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
-  
