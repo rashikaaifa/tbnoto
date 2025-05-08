@@ -11,7 +11,7 @@ import poster1 from "../assets/img/poster1.jpg"
 import poster2 from "../assets/img/poster2.jpg"
 import poster3 from "../assets/img/poster3.jpg"
 import perjalananImg from "../assets/img/cth4.jpg";
-import faq from "../assets/img/faq.png";
+import faq from "../assets/img/faqhome.png";
 
 const images = [img1, img2, img3];
 
@@ -72,15 +72,15 @@ const Homepage = () => {
     };    
 
     const mobileImages = [
-        "/assets/hero/mobile1.jpg",
-        "/assets/hero/mobile2.jpg",
-        "/assets/hero/mobile3.jpg",
+        "/assets/hero/mobile1.png",
+        "/assets/hero/mobile2.png",
+        "/assets/hero/mobile3.png",
     ];
       
     const desktopImages = [
-        "/assets/hero/desktop1.jpg",
-        "/assets/hero/desktop2.jpg",
-        "/assets/hero/desktop3.jpg",
+        "/assets/hero/desktop1.png",
+        "/assets/hero/desktop2.png",
+        "/assets/hero/desktop3.png",
     ];
 
     useEffect(() => {
