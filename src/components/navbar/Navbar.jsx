@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HiBuildingStorefront } from "react-icons/hi2";
 import { IoMenu, IoChevronDown } from "react-icons/io5";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { a } from 'framer-motion/client';
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
@@ -135,9 +136,11 @@ const Navbar = () => {
                                 Registrasi
                             </button>
                         ) : (
-                            <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-8">
+                            <a href="/profil">
+                                <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-8">
                                 <FaUser />
                             </button>
+                            </a>
                         )}
                     </div>
 
