@@ -263,7 +263,7 @@ const Homepage = () => {
                                     className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500"
                                 >
                                     <img
-                                        src={'imageUrl'}
+                                        src={`https://tbnoto19.rplrus.com/storage/${product.foto_barang}`}
                                         alt={product.nama_barang}
                                         className="w-full h-32 object-cover rounded-lg mb-2"
                                     />
@@ -299,7 +299,7 @@ const Homepage = () => {
                                     className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500"
                                 >
                                     <img
-                                        src={'imageUrl'}
+                                        src={`https://tbnoto19.rplrus.com/storage/${product.foto_barang}`}
                                         alt={product.nama_barang}
                                         className="w-full h-32 object-cover rounded-lg mb-2"
                                     />
