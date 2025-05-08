@@ -10,9 +10,8 @@ import img3 from "../assets/img/img3.jpg";
 import poster1 from "../assets/img/poster1.jpg"
 import poster2 from "../assets/img/poster2.jpg"
 import poster3 from "../assets/img/poster3.jpg"
-import perjalananImg from "../assets/img/cth4.jpg";
+import perjalananImg from "../assets/img/cth4.png";
 import faq from "../assets/img/faqhome.png";
-
 const images = [img1, img2, img3];
 
 const keunggulan = [
