@@ -5,7 +5,6 @@ import MobileSummary from '../components/keranjang/MobileSummary';
 import DeleteConfirmation from '../services/DeleteConfirmation';
 import { useCartState } from '../services/useCartState';
 import productData from '../data/products';
-import '../style/Keranjang.css';
 
 const Keranjang = () => {
   const { 
@@ -63,11 +62,11 @@ const Keranjang = () => {
   const summary = calculateSummary();
 
   return (
-    <div className="keranjang-page" style={{ paddingTop: "80px" }}> {/* MODIFIKASI: Tambahkan padding-top untuk memberikan ruang dibawah navbar */}
-      <div className="container">
-        <div className="page-header"> {/* Menggunakan class asli tanpa perubahan lain */}
-          <h1 className="page-title">Keranjang</h1>
-          <p className="page-subtitle">Produk berada di keranjang maksimal selama 2 hari</p>
+    <div className="font-['Poppins'] bg-[#f9f6e9] text-gray-800 leading-relaxed pt-20">
+      <div className="w-full max-w-6xl mx-auto px-5 pb-20 sm:px-4 sm:pb-24">
+        <div className="mb-6 pb-4 border-b-2 border-gray-200 sm:mb-4 sm:pb-3">
+          <h1 className="text-2xl font-bold text-gray-800 mb-2 sm:text-xl sm:mb-1">Keranjang</h1>
+          <p className="text-base text-gray-600 sm:text-sm">Produk berada di keranjang maksimal selama 2 hari</p>
         </div>
         
         {/* Delete Confirmation Modal */}
@@ -79,13 +78,15 @@ const Keranjang = () => {
           />
         )}
         
-        <div className="desktop-layout">
-          <div className="products-container">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="flex flex-col gap-4 lg:col-span-2 mb-20 sm:mb-20">
             {products.length === 0 ? (
-              <div className="empty-cart">
-                <div className="empty-cart-icon">🛒</div>
-                <p className="empty-cart-text">Keranjang Anda kosong</p>
-                <button className="shop-now-button">Belanja Sekarang</button>
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="text-6xl text-gray-500 mb-4">🛒</div>
+                <p className="text-lg font-medium text-gray-500 mb-6">Keranjang Anda kosong</p>
+                <button className="bg-green-800 hover:bg-green-900 text-white py-3 px-6 rounded-lg text-base font-semibold cursor-pointer transition-colors">
+                  Belanja Sekarang
+                </button>
               </div>
             ) : (
               products.map(product => (
@@ -101,10 +102,12 @@ const Keranjang = () => {
               ))
             )}
           </div>
-          <CartSummary
-            summary={summary}
-            disabled={summary.totalItems === 0}
-          />
+          <div className="hidden lg:block">
+            <CartSummary
+              summary={summary}
+              disabled={summary.totalItems === 0}
+            />
+          </div>
         </div>
         {/* Mobile summary that shows at the bottom on small screens */}
         <MobileSummary
