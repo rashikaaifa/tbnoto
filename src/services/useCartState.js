@@ -1,4 +1,4 @@
-// src/hooks/useCartState.js
+// src/services/useCartState.js
 import { useState, useEffect } from 'react';
 
 export const useCartState = (initialProducts) => {
