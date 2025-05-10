@@ -110,6 +110,7 @@ const Homepage = () => {
         const response = await fetch("https://tbnoto19.rplrus.com/api/faq", {
         method: "POST",
         headers: {
+            'Accept': 'application/json',
             "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
@@ -118,7 +119,7 @@ const Homepage = () => {
         const result = await response.json();
 
         console.log("Status Code:", response.status);
-        console.log("Response JSON:", result); // 👈 ini penting untuk lihat isi respon
+        console.log("Response JSON:", result);
 
         if (!response.ok) {
         // tampilkan error dari API jika ada
