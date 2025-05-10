@@ -4,15 +4,11 @@ import { motion } from "framer-motion";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaChevronRight } from "react-icons/fa6";
 import { FaChevronLeft } from "react-icons/fa6";
-import img1 from "../assets/img/img1.jpg";
-import img2 from "../assets/img/img2.jpg";
-import img3 from "../assets/img/img3.jpg";
 import poster1 from "../assets/img/poster1.jpg"
 import poster2 from "../assets/img/poster2.jpg"
 import poster3 from "../assets/img/poster3.jpg"
 import perjalananImg from "../assets/img/cth4.png";
 import faq from "../assets/img/faqhome.png";
-const images = [img1, img2, img3];
 
 const keunggulan = [
     { title: "Harga Terbaik", desc: "Material berkualitas tinggi dengan harga terjangkau." },
@@ -41,7 +37,7 @@ const Homepage = () => {
 
     const [products, setProducts] = useState([]);
 
-    const allowedIds = [1, 2, 3];
+    const allowedIds = [1, 9, 6, 2, 5, 7];
 
     useEffect(() => {
         fetch("https://tbnoto19.rplrus.com/api/barang")
@@ -98,11 +94,42 @@ const Homepage = () => {
         setCurrentPoster((prev) => (prev === 0 ? posters.length - 1 : prev - 1));
     };
 
+    // faq
     const [formData, setFormData] = useState({
-        name: "",
+        nama_pelanggan: "",
         email: "",
-        question: "",
+        tanya: "",
     });
+
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Form data:", formData);
+
+    try {
+        const response = await fetch("https://tbnoto19.rplrus.com/api/faq", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+        });
+
+        const result = await response.json();
+
+        console.log("Status Code:", response.status);
+        console.log("Response JSON:", result);
+
+        if (!response.ok) {
+        throw new Error(result.message || "Gagal mengirim data");
+        }
+
+        alert("Form berhasil dikirim!");
+        setFormData({ nama_pelanggan: "", email: "", tanya: "" });
+    } catch (error) {
+        console.error("Error detail:", error.message);
+        alert("Terjadi kesalahan saat mengirim formulir.");
+    }
+    };
 
     return (
         <div className="relative w-full">
@@ -396,18 +423,21 @@ const Homepage = () => {
                         viewport={{ once: true }}
                         className="w-full"
                         >
-                        <form className="space-y-6">
+                        <form className="space-y-6" onSubmit={handleSubmit}>
                             <div>
                             <label className="block mb-1 font-medium">Nama</label>
                             <input
                                 type="text"
-                                name="name"
+                                name="nama_pelanggan"
                                 placeholder="Masukkan nama Anda"
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 required
+                                value={formData.nama_pelanggan}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, nama_pelanggan: e.target.value })
+                                }
                             />
                             </div>
-
                             <div>
                             <label className="block mb-1 font-medium">Email</label>
                             <input
@@ -416,9 +446,12 @@ const Homepage = () => {
                                 placeholder="Alamat email aktif"
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 required
+                                value={formData.email}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, email: e.target.value })
+                                }
                             />
                             </div>
-
                             <div>
                             <label className="block mb-1 font-medium">Saran / Pertanyaan</label>
                             <textarea
@@ -427,6 +460,10 @@ const Homepage = () => {
                                 placeholder="Tulis saran/pertanyaan Anda..."
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
                                 required
+                                value={formData.tanya}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, tanya: e.target.value })
+                                }
                             />
                             </div>
                             <div>
