@@ -103,6 +103,7 @@ const Homepage = () => {
 
     const handleSubmit = async (e) => {
     e.preventDefault();
+
     console.log("Form data:", formData);
 
     try {
@@ -117,16 +118,17 @@ const Homepage = () => {
         const result = await response.json();
 
         console.log("Status Code:", response.status);
-        console.log("Response JSON:", result);
+        console.log("Response JSON:", result); // 👈 ini penting untuk lihat isi respon
 
         if (!response.ok) {
-        throw new Error(result.message || "Gagal mengirim data");
+        // tampilkan error dari API jika ada
+        throw new Error(result.message || "Gagal mengirim data.");
         }
 
         alert("Form berhasil dikirim!");
         setFormData({ nama_pelanggan: "", email: "", tanya: "" });
     } catch (error) {
-        console.error("Error detail:", error.message);
+        console.error("Submit Error:", error.message);
         alert("Terjadi kesalahan saat mengirim formulir.");
     }
     };
