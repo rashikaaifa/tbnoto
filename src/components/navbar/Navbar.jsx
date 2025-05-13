@@ -4,13 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HiBuildingStorefront } from "react-icons/hi2";
 import { IoMenu, IoChevronDown } from "react-icons/io5";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
-import { a } from 'framer-motion/client';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Navbar = () => {
+    const { isLoggedIn, logout } = useAuth();
+
     const [open, setOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const dropdownRef = useRef(null);
     const mobileDropdownRef = useRef(null);
     const [isScrolled, setIsScrolled] = useState(false); 
@@ -129,18 +130,22 @@ const Navbar = () => {
                             </button>
                         </a>
                         {!isLoggedIn ? (
-                            <button 
-                                onClick={() => setIsLoggedIn(true)} 
-                                className="font-medium bg-white text-primary px-4 py-2 rounded-full border-2 border-transparent hover:border-white hover:bg-transparent hover:text-white transition"
-                            >
+                            <a href="/daftar">
+                            <button className="font-medium bg-white text-primary px-4 py-2 rounded-full border-2 border-transparent hover:border-white hover:bg-transparent hover:text-white transition">
                                 Registrasi
                             </button>
-                        ) : (
-                            <a href="/profil">
-                                <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-8">
-                                <FaUser />
-                            </button>
                             </a>
+                        ) : (
+                            <div className="flex items-center gap-4">
+                            <a href="/profil">
+                                <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2">
+                                <FaUser />
+                                </button>
+                            </a>
+                            <button onClick={logout} className="text-sm bg-red-500 text-white px-3 py-1 rounded-full hover:bg-red-600">
+                                Logout
+                            </button>
+                            </div>
                         )}
                     </div>
 
