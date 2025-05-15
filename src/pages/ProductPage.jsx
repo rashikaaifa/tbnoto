@@ -1,5 +1,7 @@
+// ProductPage.jsx - Updated with proper API integration
 import React, { useState, useEffect } from 'react';
-import { getProducts } from '../services/productService';
+import ProductGrid from '../components/katalog/ProductGrid';
+import { getProducts, getProductCategories } from '../services/productService';
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -18,6 +20,11 @@ const ProductPage = () => {
     '5': 'Semen',
     '8': 'Lainnya',
     // Tambahkan kategori lain sesuai kebutuhan
+  };
+
+  // Fungsi untuk mendapatkan nama kategori
+  const getKategoriName = (kategoriId) => {
+    return categoryNames[kategoriId] || `Kategori ${kategoriId}`;
   };
 
   // Fungsi untuk menangani perubahan ukuran layar
@@ -144,40 +151,7 @@ const ProductPage = () => {
       </div>
 
       {/* Product Grid Component */}
-      {filteredProducts.length === 0 ? (
-        <div className="text-center py-12">
-          <h3 className={`${isMobile ? 'text-lg' : 'text-xl'} font-medium text-gray-700`}>
-            Tidak ada produk yang ditemukan.
-          </h3>
-          <p className={`${isMobile ? 'text-sm' : 'text-base'} text-gray-500 mt-2`}>
-            Coba gunakan filter atau kata kunci pencarian yang berbeda.
-          </p>
-        </div>
-      ) : (
-        <div className={`grid ${isMobile ? 'grid-cols-2 gap-2' : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4'}`}>
-          {filteredProducts.map((product) => (
-            <div 
-              key={product.id}
-              className="bg-white rounded-lg border shadow-sm overflow-hidden hover:shadow-md transition-all duration-300"
-            >
-              <img
-                src={product.gambar}
-                alt={product.nama}
-                className={`w-full ${isMobile ? 'h-24' : 'h-32'} object-cover`}
-              />
-              <div className={`p-2 ${isMobile ? 'text-sm' : 'text-base'}`}>
-                <h3 className={`font-medium ${isMobile ? 'text-sm' : 'text-lg'} leading-tight`}>{product.nama}</h3>
-                <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-gray-600 mt-0.5`}>
-                  Kategori: {categoryNames[product.kategori] || product.kategori}
-                </p>
-                <p className={`${isMobile ? 'text-sm' : 'text-md'} font-medium mt-0.5`}>
-                  Rp{Number(product.harga).toLocaleString()}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <ProductGrid products={filteredProducts} />
     </div>
   );
 };
