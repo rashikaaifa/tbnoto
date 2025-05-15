@@ -3,11 +3,16 @@ import { motion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
-const PopUp = ({ isOpen, onClose }) => {
+const Berhasil = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
 
     const handleDaftar = () => {
         navigate("/daftar");
+    };
+
+    const checkmarkPath = {
+    hidden: { pathLength: 0, opacity: 0 },
+    visible: { pathLength: 1, opacity: 1, transition: { duration: 0.8, ease: "easeInOut" } },
     };
 
     if (!isOpen) return null;
@@ -24,33 +29,41 @@ const PopUp = ({ isOpen, onClose }) => {
                     <IoClose className="text-2xl" />
                 </button>
                 
-                {/* logo */}
+                {/* icon centang */}
                 <div className="flex justify-center mb-4">
-                    <img src="" alt="Logo" className="w-20" />
+                <svg
+                    className="w-20 h-20 stroke-primary text-primary"
+                    fill="none"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    viewBox="0 0 24 24"
+                >
+                    <motion.path
+                    d="M5 13l4 4L19 7"
+                    variants={checkmarkPath}
+                    initial="hidden"
+                    animate="visible"
+                    />
+                </svg>
                 </div>
                 
                 {/* judul */}
-                <h2 className="text-xl font-bold text-gray-800">Jangan lewatkan pengalaman  berbelanja terbaik!</h2>
-                <p className="text-gray-600 mt-2">Masuk untuk melanjutkan akses.</p>
-                
+                <h2 className="text-xl font-bold text-gray-800">Pesan Anda Telah Terkirim!</h2>
+                <p className="text-gray-600 mt-2">Pertanyaan/saran dari Anda akan segera kami respon melalui email.</p>
+
                 {/* button */}
                 <div className="mt-6 space-y-3">
                 <a
-                    href="/daftar"
+                    href="/"
                     className="block w-full text-center bg-primary text-white py-2 rounded-2xl border-2 border-transparent hover:border-primary hover:bg-transparent hover:text-primary transition"
                 >
-                    Daftar
+                    Kembali ke Homepage
                 </a>
-                    <p className="text-center text-gray-700">
-                        Sudah memiliki akun?{" "}
-                        <a href="/masuk" className="text-primary underline">
-                            Masuk
-                        </a>
-                    </p>
                 </div>
             </motion.div>
         </div>
   );
 };
 
-export default PopUp;
+export default Berhasil;
