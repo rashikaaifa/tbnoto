@@ -9,6 +9,7 @@ import poster2 from "../assets/img/poster2.jpg"
 import poster3 from "../assets/img/poster3.jpg"
 import perjalananImg from "../assets/img/cth4.png";
 import faq from "../assets/img/faqhome.png";
+import Berhasil from "../components/popup/Berhasil";
 
 const keunggulan = [
     { title: "Harga Terbaik", desc: "Material berkualitas tinggi dengan harga terjangkau." },
@@ -33,6 +34,8 @@ const posters = [
 ];
   
 const Homepage = () => {
+    const [isBerhasilOpen, setIsBerhasilOpen] = useState(false);
+
     const [currentPoster, setCurrentPoster] = useState(0); // untuk section posters
 
     const [products, setProducts] = useState([]);
@@ -126,7 +129,7 @@ const Homepage = () => {
         throw new Error(result.message || "Gagal mengirim data.");
         }
 
-        alert("Form berhasil dikirim!");
+setIsBerhasilOpen(true);
         setFormData({ nama_pelanggan: "", email: "", tanya: "" });
     } catch (error) {
         console.error("Submit Error:", error.message);
@@ -478,6 +481,7 @@ const Homepage = () => {
                                 </button>
                             </div>
                         </form>
+                        <Berhasil isOpen={isBerhasilOpen} onClose={() => setIsBerhasilOpen(false)} />
                         </motion.div>
                     </div>
                 </div>
