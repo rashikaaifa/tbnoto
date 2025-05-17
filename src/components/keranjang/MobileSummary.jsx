@@ -1,49 +1,53 @@
-// src/components/cart/MobileSummary.jsx
+// src/components/keranjang/MobileSummary.jsx
 import React from 'react';
 
 const MobileSummary = ({ summary, isExpanded, onToggle, disabled }) => {
   return (
-    <div className="fixed bottom-0 left-0 w-full bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.1)] z-50 p-4 rounded-t-2xl md:hidden">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-3">
-          <div className="text-lg font-bold text-green-800">
-            {`Rp. ${summary.total.toLocaleString()}`}
-          </div>
-          <button
-            className="text-green-800 text-sm font-medium flex items-center gap-1"
-            onClick={onToggle}
-          >
-            Detail
-            <span>{isExpanded ? '▲' : '▼'}</span>
-          </button>
+    <div className="fixed bottom-0 left-0 w-full bg-white shadow-md z-50 rounded-t-lg">
+      {/* Bar rangkuman harga */}
+      <div className="px-3 py-2 flex justify-between items-center border-b border-gray-100">
+        <div className="flex items-center gap-2">
+          <span className="font-medium text-sm text-gray-600">Total:</span>
+          <span className="font-bold text-base text-green-800">Rp{summary.total.toLocaleString()}</span>
         </div>
-        <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-48 py-1.5' : 'max-h-0'}`}>
-          <div className="flex justify-between mb-1.5">
-            <span className="text-sm text-gray-600">Total Item</span>
-            <span className="text-sm font-medium">{summary.totalItems}</span>
-          </div>
-          <div className="flex justify-between mb-1.5">
-            <span className="text-sm text-gray-600">Subtotal</span>
-            <span className="text-sm font-medium">{`Rp. ${summary.subtotal.toLocaleString()}`}</span>
-          </div>
-          <div className="flex justify-between mb-1.5">
-            <span className="text-sm text-gray-600">Ongkos Kirim (3%)</span>
-            <span className="text-sm font-medium">
-              {summary.shipping === 0 
-                ? 'Gratis' 
-                : `Rp. ${summary.shipping.toLocaleString()}`}
-            </span>
-          </div>  
+        <button
+          className="text-green-800 text-xs font-medium flex items-center gap-1 p-1"
+          onClick={onToggle}
+        >
+          {isExpanded ? 'Tutup' : 'Detail'}
+          <span className="text-xs">{isExpanded ? '▲' : '▼'}</span>
+        </button>
+      </div>
+
+      {/* Detail ringkasan yang bisa diexpand */}
+      <div className={`overflow-hidden transition-all duration-300 px-3 ${isExpanded ? 'max-h-28 py-2' : 'max-h-0'}`}>
+        <div className="flex justify-between mb-1">
+          <span className="text-xs text-gray-600">Total Item</span>
+          <span className="text-xs font-medium">{summary.totalItems}</span>
         </div>
-        <div className="mt-3.5">
-          <button
-            className="bg-green-800 hover:bg-green-900 text-white w-full rounded-lg py-3 px-5 text-base font-bold flex items-center justify-center gap-2 shadow-md shadow-green-800/20 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-            disabled={disabled}
-          >
-            <i className="text-lg">🛒</i>
-            Beli Sekarang
-          </button>
+        <div className="flex justify-between mb-1">
+          <span className="text-xs text-gray-600">Subtotal</span>
+          <span className="text-xs font-medium">Rp{summary.subtotal.toLocaleString()}</span>
         </div>
+        <div className="flex justify-between mb-1">
+          <span className="text-xs text-gray-600">Ongkos Kirim (3%)</span>
+          <span className="text-xs font-medium">
+            {summary.shipping === 0 
+              ? 'Gratis' 
+              : `Rp${summary.shipping.toLocaleString()}`}
+          </span>
+        </div>  
+      </div>
+
+      {/* Tombol beli */}
+      <div className="p-3 pt-2">
+        <button
+          className="bg-green-800 hover:bg-green-900 text-white w-full rounded-md py-2 px-4 text-sm font-semibold flex items-center justify-center gap-1 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          disabled={disabled}
+        >
+          <i className="text-sm">🛒</i>
+          Beli Sekarang
+        </button>
       </div>
     </div>
   );

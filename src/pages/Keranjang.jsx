@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// Keranjang.jsx yang diperbaiki untuk Mobile View
+import React, { useState } from 'react';
 import ProductCard from '../components/keranjang/ProductCard';
 import CartSummary from '../components/keranjang/CartSummary';
 import MobileSummary from '../components/keranjang/MobileSummary';
@@ -62,12 +63,12 @@ const Keranjang = () => {
   const summary = calculateSummary();
 
   return (
-    <div className="font-['Poppins'] bg-[#f9f6e9] text-gray-800 leading-relaxed pt-20">
-      <div className="w-full max-w-6xl mx-auto px-5 pb-20 sm:px-4 sm:pb-24">
-        <div className="mb-6 pb-4 border-b-2 border-gray-200 sm:mb-4 sm:pb-3">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2 sm:text-xl sm:mb-1">Keranjang</h1>
-          <p className="text-base text-gray-600 sm:text-sm">Produk berada di keranjang maksimal selama 2 hari</p>
-        </div>
+    <div className="font-['Poppins'] bg-gray-50 text-gray-800 leading-relaxed pt-16">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-5">
+        <header className="mb-3 sm:mb-4">
+          <h1 className="text-xl font-bold text-gray-800 mb-0 md:text-2xl lg:text-3xl">Keranjang</h1>
+          <p className="text-xs text-gray-600 mt-0.5 sm:text-sm">Produk berada di keranjang maksimal selama 2 hari</p>
+        </header>
         
         {/* Delete Confirmation Modal */}
         {deleteConfirmation.isOpen && (
@@ -78,13 +79,13 @@ const Keranjang = () => {
           />
         )}
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="flex flex-col gap-4 lg:col-span-2 mb-20 sm:mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-6">
+          <div className="flex flex-col gap-2 sm:gap-3 lg:col-span-2 mb-20 sm:mb-20">
             {products.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="text-6xl text-gray-500 mb-4">🛒</div>
-                <p className="text-lg font-medium text-gray-500 mb-6">Keranjang Anda kosong</p>
-                <button className="bg-green-800 hover:bg-green-900 text-white py-3 px-6 rounded-lg text-base font-semibold cursor-pointer transition-colors">
+              <div className="flex flex-col items-center justify-center py-8 text-center bg-white rounded-lg shadow-sm my-4">
+                <div className="text-4xl text-gray-400 mb-3">🛒</div>
+                <p className="text-sm font-medium text-gray-500 mb-4">Keranjang Anda kosong</p>
+                <button className="bg-green-800 hover:bg-green-900 text-white py-2 px-4 rounded-md text-sm font-medium cursor-pointer transition-colors">
                   Belanja Sekarang
                 </button>
               </div>
@@ -109,13 +110,16 @@ const Keranjang = () => {
             />
           </div>
         </div>
-        {/* Mobile summary that shows at the bottom on small screens */}
-        <MobileSummary
-          summary={summary}
-          isExpanded={isMobileSummaryExpanded}
-          onToggle={toggleMobileSummary}
-          disabled={summary.totalItems === 0}
-        />
+        
+        {/* Mobile summary yang ditampilkan di bagian bawah pada layar kecil */}
+        <div className="block lg:hidden">
+          <MobileSummary
+            summary={summary}
+            isExpanded={isMobileSummaryExpanded}
+            onToggle={toggleMobileSummary}
+            disabled={summary.totalItems === 0}
+          />
+        </div>
       </div>
     </div>
   );
