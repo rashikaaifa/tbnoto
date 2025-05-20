@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaChevronRight } from "react-icons/fa6";
 import { FaChevronLeft } from "react-icons/fa6";
-import poster1 from "../assets/img/poster1.jpg"
-import poster2 from "../assets/img/poster2.jpg"
-import poster3 from "../assets/img/poster3.jpg"
+import poster1 from "../assets/img/poster1.png"
+import poster2 from "../assets/img/poster2.png"
+import poster3 from "../assets/img/poster3.png"
 import perjalananImg from "../assets/img/cth4.png";
 import faq from "../assets/img/faqhome.png";
 import Berhasil from "../components/popup/Berhasil";
@@ -16,15 +16,6 @@ const keunggulan = [
     { title: "Fleksibel & Praktis", desc: "Pemesanan mudah, bisa langsung di toko atau secara online." },
     { title: "Stok Lengkap", desc: "Beragam material tersedia untuk proyek kecil hingga skala besar." },
     { title: "Pengiriman Kilat", desc: "Cepat dan tepat waktu, langsung ke lokasi proyek Anda." },    
-];
-
-const top = [
-    { id: 1, name: "Papan", size: "2 meter x 80 cm", price: "Rp. 65.000 / lembar", image: "" },
-    { id: 2, name: "Kaso", size: "4 cm x 6 cm x 4 meter", price: "Rp. 65.000 / ikat", image: "/img/kaso.jpg" },
-    { id: 3, name: "Besi", size: "6 meter", price: "Rp. 65.000 / batang", image: "/img/besi.jpg" },
-    { id: 4, name: "Paralon", size: "3 inch", price: "Rp. 30.000 / meter", image: "/img/paralon.jpg" },
-    { id: 5, name: "Semen", size: "3 roda", price: "Rp. 65.000 / karung", image: "/img/semen.jpg" },
-    { id: 6, name: "Kaso", size: "2 meter x 80 cm", price: "Rp. 65.000 / lembar", image: "/img/kaso.jpg" },
 ];
 
 const posters = [
@@ -264,7 +255,7 @@ setIsBerhasilOpen(true);
                                 className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-lg cursor-pointer hover:scale-105 transition-all duration-500 block"
                             >
                                 <img
-                                    src={`/assets/kategori/${kategori.nama_kategori.toLowerCase().replace(/\s+/g, '-')}.jpg`}
+                                    src={`https://tbnoto19.rplrus.com/storage/${kategori.foto_kategori}`}
                                     alt={kategori.nama_kategori}
                                     className="w-full h-full object-cover"
                                 />
@@ -302,7 +293,7 @@ setIsBerhasilOpen(true);
                                         className="w-full h-32 object-cover rounded-lg mb-2"
                                     />
                                     <h3 className="font-semibold text-lg">{product.nama_barang}</h3>
-                                    <p className="text-sm">Kategori: {kategoriNama}</p>
+                                    <p className="text-sm">{product.ukuran}</p>
                                     <p className="text-md">Rp{Number(product.harga).toLocaleString()}</p>
                                 </Link>
                             );
@@ -342,7 +333,7 @@ setIsBerhasilOpen(true);
                                         className="w-full h-32 object-cover rounded-lg mb-2"
                                     />
                                     <h3 className="font-semibold text-lg">{product.nama_barang}</h3>
-                                    <p className="text-sm">Kategori: {kategoriNama}</p>
+                                    <p className="text-sm">{product.ukuran}</p>
                                     <p className="text-md">Rp{Number(product.harga).toLocaleString()}</p>
                                 </Link>
                             );
