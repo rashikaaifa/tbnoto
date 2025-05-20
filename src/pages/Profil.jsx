@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import profileImage from '../assets/img/lucu.jpg';
 
 // Logo image imports
-import logo1 from '../assets/img/poster1.jpg';
-import logo2 from '../assets/img/poster2.jpg';
-import logo3 from '../assets/img/poster3.jpg';
+import logo1 from '../assets/img/poster1.png';
+import logo2 from '../assets/img/poster2.png';
+import logo3 from '../assets/img/poster3.png';
 
 
 const ProfilePage = () => {
