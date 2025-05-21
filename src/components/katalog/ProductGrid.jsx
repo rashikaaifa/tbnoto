@@ -1,8 +1,8 @@
-// ProductGrid.jsx - Fixed width layout regardless of product count
+// ProductGrid.jsx - Perbarui dengan kategori dari API
 import React from 'react';
 import ProductCard from './ProductCard';
 
-const ProductGrid = ({ products }) => {
+const ProductGrid = ({ products, categories }) => {
   return (
     <div className="w-full">
       {products.length === 0 ? (
@@ -17,7 +17,7 @@ const ProductGrid = ({ products }) => {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 w-full">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} categories={categories} />
           ))}
         </div>
       )}

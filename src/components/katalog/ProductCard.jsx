@@ -1,21 +1,12 @@
-// ProductCard.jsx - Updated to match the second design with proper API data integration
+// ProductCard.jsx - Perbarui untuk menggunakan kategori dari API
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const ProductCard = ({ product }) => {
-  // Function to get category name based on category ID
+const ProductCard = ({ product, categories }) => {
+  // Fungsi untuk mendapatkan nama kategori dari API
   const getKategoriName = (kategoriId) => {
-    const categoryNames = {
-      '1': 'Kayu',
-      '2': 'Besi',
-      '3': 'Paralon',
-      '4': 'Triplek',
-      '5': 'Semen',
-      '8': 'Lainnya',
-      // Add more categories as needed
-    };
-    
-    return categoryNames[kategoriId] || `Kategori ${kategoriId}`;
+    const category = categories.find(cat => cat.id.toString() === kategoriId);
+    return category ? category.nama_kategori : 'Kategori Tidak Diketahui';
   };
 
   return (

@@ -1,4 +1,4 @@
-// ProductPage.jsx - Updated with proper API integration
+// ProductPage.jsx - Diperbarui untuk menggunakan API kategori
 import React, { useState, useEffect } from 'react';
 import ProductGrid from '../components/katalog/ProductGrid';
 import { getProducts, getProductCategories } from '../services/productService';
@@ -10,22 +10,7 @@ const ProductPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-  // Pemetaan kategori_id ke nama kategori yang lebih deskriptif
-  const categoryNames = {
-    '1': 'Kayu',
-    '2': 'Besi',
-    '3': 'Paralon',
-    '4': 'Triplek',
-    '5': 'Semen',
-    '8': 'Lainnya',
-    // Tambahkan kategori lain sesuai kebutuhan
-  };
-
-  // Fungsi untuk mendapatkan nama kategori
-  const getKategoriName = (kategoriId) => {
-    return categoryNames[kategoriId] || `Kategori ${kategoriId}`;
-  };
+  const [categories, setCategories] = useState([]);
 
   // Fungsi untuk menangani perubahan ukuran layar
   useEffect(() => {
@@ -40,19 +25,26 @@ const ProductPage = () => {
   }, []);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getProducts();
-        setProducts(data);
-        setFilteredProducts(data);
+        setIsLoading(true);
+        // Mengambil data produk dan kategori secara paralel
+        const [productsData, categoriesData] = await Promise.all([
+          getProducts(),
+          getProductCategories()
+        ]);
+        
+        setProducts(productsData);
+        setFilteredProducts(productsData);
+        setCategories(categoriesData);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchProducts();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -133,7 +125,7 @@ const ProductPage = () => {
           </div>
         </div>
 
-        {/* Category Filter Component */}
+        {/* Category Filter Component dengan data dari API */}
         <div className={`${isMobile ? 'w-2/5' : 'w-64'}`}>
           <select
             value={selectedCategory}
@@ -141,9 +133,9 @@ const ProductPage = () => {
             className={`w-full ${isMobile ? 'py-2 text-sm' : 'py-3'} px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white appearance-none cursor-pointer`}
           >
             <option value="">Semua Kategori</option>
-            {Object.entries(categoryNames).map(([id, name]) => (
-              <option key={id} value={id}>
-                {name}
+            {categories.map((category) => (
+              <option key={category.id} value={category.id.toString()}>
+                {category.nama_kategori}
               </option>
             ))}
           </select>
@@ -151,7 +143,7 @@ const ProductPage = () => {
       </div>
 
       {/* Product Grid Component */}
-      <ProductGrid products={filteredProducts} />
+      <ProductGrid products={filteredProducts} categories={categories} />
     </div>
   );
 };

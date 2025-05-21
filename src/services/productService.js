@@ -1,5 +1,7 @@
-// src/services/productService.js
+
+// productService.js - Perbarui dengan service untuk kategori
 const API_URL = 'https://tbnoto19.rplrus.com/api/barang';
+const CATEGORY_API_URL = 'https://tbnoto19-admin.rplrus.com/api/kategori';
 
 // Fungsi untuk mengubah format data dari API ke format yang digunakan di UI
 const formatProductData = (product) => {
@@ -51,12 +53,16 @@ export const getProductById = async (id) => {
   }
 };
 
-// Mendapatkan kategori produk
+// Mendapatkan kategori produk dari API
 export const getProductCategories = async () => {
   try {
-    const products = await getProducts();
-    // Mendapatkan kategori unik dari produk
-    const categories = [...new Set(products.map(product => product.kategori))];
+    const response = await fetch(CATEGORY_API_URL);
+    
+    if (!response.ok) {
+      throw new Error('Gagal mengambil data kategori');
+    }
+    
+    const categories = await response.json();
     return categories;
   } catch (error) {
     console.error('Error:', error);
