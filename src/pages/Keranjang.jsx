@@ -64,7 +64,7 @@ const Keranjang = () => {
 
   return (
     <div className="font-['Poppins'] bg-gray-50 text-gray-800 leading-relaxed pt-16">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-5">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-12">
         <header className="mb-3 sm:mb-4">
           <h1 className="text-xl font-bold text-gray-800 mb-0 md:text-2xl lg:text-3xl">Keranjang</h1>
           <p className="text-xs text-gray-600 mt-0.5 sm:text-sm">Produk berada di keranjang maksimal selama 2 hari</p>
