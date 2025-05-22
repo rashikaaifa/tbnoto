@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaChevronRight } from "react-icons/fa6";
 import { FaChevronLeft } from "react-icons/fa6";
-import poster1 from "../assets/img/poster1.png"
+import poster1 from "../assets/img/poster1.jpg"
 import poster2 from "../assets/img/poster2.png"
 import poster3 from "../assets/img/poster3.png"
 import perjalananImg from "../assets/img/cth4.png";
@@ -495,16 +495,6 @@ setIsBerhasilOpen(true);
                     </div>
                 </div>
             </section>
-
-            {/* trigger daftar */}
-            <div className="mt-4 ml-12">
-                <Link 
-                to="/daftar"
-                className="inline-block bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
-                >
-                    Daftar Sekarang
-                </Link>
-            </div>
             <br />
         </div>
     );

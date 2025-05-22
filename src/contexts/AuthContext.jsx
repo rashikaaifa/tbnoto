@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      fetch('https://tbnoto19.rplrus.com/api/auth/me', {
+      fetch('https://tbnoto19-admin.rplrus.com/api/auth/me', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    fetch('https://tbnoto19.rplrus.com/api/auth/logout', {
+    fetch('https://tbnoto19-admin.rplrus.com/api/auth/logout', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,

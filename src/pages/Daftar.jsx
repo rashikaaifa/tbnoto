@@ -55,23 +55,27 @@ const Daftar = () => {
 
     // Kirim data ke API
     try {
-      const response = await fetch('https://tbnoto19.rplrus.com/api/auth/register', {
+      const response = await fetch('https://tbnoto19-admin.rplrus.com/api/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+      },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           phone: formData.phone_number,
           address: formData.address,
           password: formData.password,
+          password_confirmation: formData.confirmPassword,
         }),
-      });
+    });
 
       const data = await response.json();
 
       if (response.ok) {
-        login(data.token); // Simpan token dan login otomatis
-        navigate('/'); // Redirect ke homepage setelah registrasi berhasil
+        login(data.token);
+        navigate('/'); 
       } else {
         setError(data.message || 'Registrasi gagal');
       }
