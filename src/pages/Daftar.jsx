@@ -56,20 +56,21 @@ const Daftar = () => {
     // Kirim data ke API
     try {
       const response = await fetch('https://tbnoto19-admin.rplrus.com/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-      },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone_number,
-          address: formData.address,
-          password: formData.password,
-          password_confirmation: formData.confirmPassword,
-        }),
-    });
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
+  credentials: 'include', // <=== WAJIB agar cookie Laravel terkirim
+  body: JSON.stringify({
+    name: formData.name,
+    email: formData.email,
+    phone: formData.phone_number,
+    address: formData.address,
+    password: formData.password,
+    password_confirmation: formData.confirmPassword,
+  }),
+});
 
       const data = await response.json();
 
