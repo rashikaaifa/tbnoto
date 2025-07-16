@@ -20,7 +20,7 @@ const WhatsApp = () => {
 
             {/* pop up */}
             {showPopup && (
-                <div className="absolute bottom-14 right-0 bg-white p-3 shadow-lg rounded-lg w-64">
+                <div className="absolute bottom-16 right-0 bg-white p-3 shadow-lg rounded-lg w-64">
                     <p className="text-sm text-gray-700">Konsultasi ke WhatsApp</p>
                     <a
                         href="https://wa.me/62882003826565"
