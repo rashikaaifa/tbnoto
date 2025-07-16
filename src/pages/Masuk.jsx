@@ -32,7 +32,7 @@ const Masuk = () => {
 
     // Kirim data login ke API
     try {
-      const response = await fetch('https://tbnoto19.rplrus.com/api/auth/login', {
+      const response = await fetch('https://tbnoto19-admin.rplrus.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

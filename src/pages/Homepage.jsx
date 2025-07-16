@@ -34,7 +34,7 @@ const Homepage = () => {
     const allowedIds = [1, 9, 6, 2, 5, 7];
 
     useEffect(() => {
-        fetch("https://tbnoto19.rplrus.com/api/barang")
+        fetch("https://tbnoto19-admin.rplrus.com/api/barang")
         .then((res) => res.json())
         .then((data) => {
             console.log("Data produk:", data);
@@ -46,7 +46,7 @@ const Homepage = () => {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        fetch("https://tbnoto19.rplrus.com/api/kategori")
+        fetch("https://tbnoto19-admin.rplrus.com/api/kategori")
             .then((res) => res.json())
             .then((data) => {
                 console.log("Data kategori:", data);
@@ -101,7 +101,7 @@ const Homepage = () => {
     console.log("Form data:", formData);
 
     try {
-        const response = await fetch("https://tbnoto19.rplrus.com/api/faq", {
+        const response = await fetch("https://tbnoto19-admin.rplrus.com/api/faq", {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -255,7 +255,7 @@ setIsBerhasilOpen(true);
                                 className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-lg cursor-pointer hover:scale-105 transition-all duration-500 block"
                             >
                                 <img
-                                    src={`https://tbnoto19.rplrus.com/storage/${kategori.foto_kategori}`}
+                                    src={`https://tbnoto19-admin.rplrus.com/storage/${kategori.foto_kategori}`}
                                     alt={kategori.nama_kategori}
                                     className="w-full h-full object-cover"
                                 />
@@ -288,7 +288,7 @@ setIsBerhasilOpen(true);
                                     className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500 block"
                                 >
                                     <img
-                                        src={`https://tbnoto19.rplrus.com/storage/${product.foto_barang}`}
+                                        src={`https://tbnoto19-admin.rplrus.com/storage/${product.foto_barang}`}
                                         alt={product.nama_barang}
                                         className="w-full h-32 object-cover rounded-lg mb-2"
                                     />
@@ -328,7 +328,7 @@ setIsBerhasilOpen(true);
                                     className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500 block"
                                 >
                                     <img
-                                        src={`https://tbnoto19.rplrus.com/storage/${product.foto_barang}`}
+                                        src={`https://tbnoto19-admin.rplrus.com/storage/${product.foto_barang}`}
                                         alt={product.nama_barang}
                                         className="w-full h-32 object-cover rounded-lg mb-2"
                                     />

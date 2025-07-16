@@ -11,8 +11,8 @@ export default function Riwayat() {
     async function fetchData() {
       try {
         const [penjualanRes, barangRes] = await Promise.all([
-          fetch("https://tbnoto19.rplrus.com/api/penjualan"),
-          fetch("https://tbnoto19.rplrus.com/api/barang"),
+          fetch("https://tbnoto19-admin.rplrus.com/api/penjualan"),
+          fetch("https://tbnoto19-admin.rplrus.com/api/barang"),
         ]);
 
         const penjualanData = await penjualanRes.json();
@@ -32,7 +32,7 @@ export default function Riwayat() {
           }),
           product: barangMap[tx.barang_id] || `ID Barang: ${tx.barang_id}`,
           quantity: tx.jumlah_terjual,
-          proof: `https://tbnoto19.rplrus.com/storage/${tx.bukti_transaksi}`,
+          proof: `https://tbnoto19-admin.rplrus.com/storage/${tx.bukti_transaksi}`,
           details: `Total: Rp ${Number(tx.total_pemasukan).toLocaleString("id-ID")}`,
         }));
 
