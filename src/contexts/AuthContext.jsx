@@ -5,40 +5,23 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token') || null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const res = await fetch('https://tbnoto19-admin.rplrus.com/api/auth/me', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
+    if (token) {
+      fetch('https://tbnoto19-admin.rplrus.com/api/auth/me', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => setUser(data))
+        .catch(() => {
+          setUser(null);
+          setToken(null);
+          localStorage.removeItem('token');
         });
-
-        const data = await res.json();
-
-        if (res.ok && data?.id) {
-          setUser(data);
-        } else {
-          throw new Error('Token tidak valid');
-        }
-      } catch (err) {
-        console.error('Auth error:', err.message);
-        logout(); // reset semua jika error
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
+    }
   }, [token]);
 
   const login = (newToken) => {
@@ -46,28 +29,23 @@ export const AuthProvider = ({ children }) => {
     setToken(newToken);
   };
 
-  const logout = async () => {
-    try {
-      await fetch('https://tbnoto19-admin.rplrus.com/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-    } catch (err) {
-      console.warn('Logout error:', err.message);
-    } finally {
-      localStorage.removeItem('token');
-      setUser(null);
-      setToken(null);
-    }
+  const logout = () => {
+    fetch('https://tbnoto19-admin.rplrus.com/api/auth/logout', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    localStorage.removeItem('token');
+    setUser(null);
+    setToken(null);
   };
 
-  const isLoggedIn = !!token && !!user;
+  const isLoggedIn = !!token;
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoggedIn, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, isLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );
