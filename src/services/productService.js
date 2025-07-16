@@ -12,7 +12,7 @@ const formatProductData = (product) => {
     harga: parseFloat(product.harga),
     stok: product.stok,
     deskripsi: product.deskripsi,
-    gambar: `https://tbnoto19-admin.rplrus.com/storage/${product.foto_barang}`,
+gambar: `https://tbnoto19-admin.rplrus.com/storage/${product.foto_barang.replace(/^storage\//, '')}`,
     ukuran: '', // Jika ukuran tidak ada di API, bisa diisi dari deskripsi atau dibiarkan kosong
     created_at: product.created_at,
     updated_at: product.updated_at
