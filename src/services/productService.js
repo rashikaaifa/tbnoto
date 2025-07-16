@@ -1,7 +1,6 @@
 
 // productService.js - Perbarui dengan service untuk kategori
 const API_URL = 'https://tbnoto19-admin.rplrus.com/api/barang';
-const API_URL = 'https://tbnoto19.rplrus.com/api/barang';
 const CATEGORY_API_URL = 'https://tbnoto19-admin.rplrus.com/api/kategori';
 
 // Fungsi untuk membersihkan URL gambar
