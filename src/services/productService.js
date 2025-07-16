@@ -1,7 +1,29 @@
 
 // productService.js - Perbarui dengan service untuk kategori
 const API_URL = 'https://tbnoto19-admin.rplrus.com/api/barang';
+const API_URL = 'https://tbnoto19.rplrus.com/api/barang';
 const CATEGORY_API_URL = 'https://tbnoto19-admin.rplrus.com/api/kategori';
+
+// Fungsi untuk membersihkan URL gambar
+const cleanImageUrl = (imagePath) => {
+  if (!imagePath) return '';
+  
+  // Hapus duplikasi /storage/ jika ada
+  const cleanedPath = imagePath.replace(/\/storage\/+/g, '/storage/');
+  
+  // Jika path sudah dimulai dengan https://, kembalikan apa adanya
+  if (cleanedPath.startsWith('https://')) {
+    return cleanedPath;
+  }
+  
+  // Jika path dimulai dengan /storage/, tambahkan base URL
+  if (cleanedPath.startsWith('/storage/')) {
+    return `https://tbnoto19-admin.rplrus.com${cleanedPath}`;
+  }
+  
+  // Jika path tidak dimulai dengan /storage/, tambahkan /storage/
+  return `https://tbnoto19-admin.rplrus.com/storage/${cleanedPath}`;
+};
 
 // Fungsi untuk mengubah format data dari API ke format yang digunakan di UI
 const formatProductData = (product) => {
@@ -12,7 +34,7 @@ const formatProductData = (product) => {
     harga: parseFloat(product.harga),
     stok: product.stok,
     deskripsi: product.deskripsi,
-gambar: `https://tbnoto19-admin.rplrus.com/storage/${product.foto_barang.replace(/^storage\//, '')}`,
+    gambar: cleanImageUrl(product.foto_barang), // Gunakan fungsi pembersih URL
     ukuran: '', // Jika ukuran tidak ada di API, bisa diisi dari deskripsi atau dibiarkan kosong
     created_at: product.created_at,
     updated_at: product.updated_at
@@ -68,4 +90,4 @@ export const getProductCategories = async () => {
     console.error('Error:', error);
     throw error;
   }
-};
+};  
