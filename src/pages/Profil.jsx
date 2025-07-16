@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
 import profileImage from '../assets/img/lucu.jpg';
-
-// Logo image imports
-import logo1 from '../assets/img/poster1.jpg';
-import logo2 from '../assets/img/poster2.png';
-import logo3 from '../assets/img/poster3.png';
-
+import { GoPencil } from "react-icons/go";
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showLogos, setShowLogos] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false); // 👈 Tambahan di sini
 
   const [profile, setProfile] = useState({
-    name: 'Daniel Budianto',
-    email: 'budispeed@gmail.com',
+    name: 'Batman',
+    email: 'whoisjoker@gmail.com',
     phone: '085780845220',
     password: '',
-    address: 'Jl. Contoh No.123, Bandung, Indonesia',
+    address: 'Jl. Besito',
     image: profileImage,
   });
 
@@ -45,114 +40,94 @@ const ProfilePage = () => {
     }
   };
 
-  const logoOptions = [logo1, logo2, logo3];
 
   return (
-    <div className="min-h-screen bg-[#f4f6f8] flex justify-center items-center py-10 px-6">
-      <div className="w-full max-w-6xl bg-white rounded-2xl shadow-lg p-8 flex flex-col lg:flex-row gap-10">
+    <div className="min-h-screen flex justify-center items-center py-32 px-0">
+      <div className="w-full max-w-6xl bg-white rounded-2xl p-8 flex flex-col lg:flex-row gap-10">
         {/* Left: Avatar & Logo Picker */}
         <div className="flex flex-col items-center gap-8 w-full lg:w-1/3">
-          <div className="relative">
-            <img
-              src={profile.image}
-              alt="Profile"
-              className="w-48 h-48 rounded-xl object-cover border-4 border-gray-200"
-            />
-            <div className="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow">
-              <label htmlFor="image-upload" className="cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-4.553a1.5 1.5 0 112.121 2.121L17.121 12.12m-4.243 4.243L3 21l4.636-9.879m4.243-4.243l4.95 4.95M5 13l4 4" />
-                </svg>
-              </label>
-            </div>
-            <input
-              id="image-upload"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageChange}
-            />
-          </div>
+          <h2 className="text-2xl font-semibold black-800 mb-8">PROFILE</h2>
 
-          {/* Logo Button & Picker */}
-          <div className="w-full">
-            <button
-              onClick={() => setShowLogos(!showLogos)}
-              className="w-full border-2 border-dashed border-indigo-300 rounded-xl py-6 text-sm font-medium text-indigo-500 hover:bg-indigo-50 transition"
-            >
-              Pilih Logo
-            </button>
-            {showLogos && (
-              <div className="mt-4 grid grid-cols-3 gap-4">
-                {logoOptions.map((logo, idx) => (
-                  <img
-                    key={idx}
-                    src={logo}
-                    alt={`Logo ${idx + 1}`}
-                    onClick={() => {
-                      setProfile({ ...profile, image: logo });
-                      setShowLogos(false);
-                    }}
-                    className="w-16 h-16 object-cover rounded-lg border cursor-pointer hover:ring-2 hover:ring-indigo-500"
-                  />
-                ))}
-              </div>
-            )}
+         <div className="relative">
+  <img
+    src={profile.image}
+    alt="Profile"
+    className="w-48 h-48 rounded-full object-cover border border-gray-300"
+  />
+
+            {isEditing && (
+  <>
+    <div className="absolute bottom-1 right-2">
+        <label
+          htmlFor="image-upload"
+          className="w-10 h-10 flex items-center justify-center bg-gray-300 rounded-full shadow-md cursor-pointer hover:bg-gray-100 transition"
+          title="Edit Foto"
+        >
+          <GoPencil className="w-5 h-5" />
+        </label>
+      </div>
+    <input
+      id="image-upload"
+      type="file"
+      accept="image/*"
+      className="hidden"
+      onChange={handleImageChange}
+    />
+  </>
+)}
           </div>
         </div>
 
         {/* Right: Profile Form */}
         <div className="flex-1 space-y-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-8">PROFILEKU</h2>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-600 mb-2">Nama</label>
+              <label className="block text-lg font-semibold black-600 mb-2">Nama</label>
               {isEditing ? (
                 <input
                   type="text"
                   name="name"
                   value={profile.name}
                   onChange={handleChange}
-                  className="mt-1 w-full border rounded-lg px-4 py-3 text-lg"
+                  className="mt-1 w-full border rounded-lg px-4 py-3 text-base"
                 />
               ) : (
-                <p className="mt-1 text-lg text-gray-800">{profile.name}</p>
+                <p className="mt-1 text-lg black-800">{profile.name}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">Email</label>
+              <label className="block text-lg font-semibold black-600 mb-2">Email</label>
               {isEditing ? (
                 <input
                   type="email"
                   name="email"
                   value={profile.email}
                   onChange={handleChange}
-                  className="mt-1 w-full border rounded-lg px-4 py-3 text-lg"
+                  className="mt-1 w-full border rounded-lg px-4 py-3 text-base"
                 />
               ) : (
-                <p className="mt-1 text-lg text-gray-800">{profile.email}</p>
+                <p className="mt-1 text-lg black-800">{profile.email}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">No.hp</label>
+              <label className="block text-lg font-semibold black-600 mb-2">Nomor Telepon</label>
               {isEditing ? (
                 <input
                   type="text"
                   name="phone"
                   value={profile.phone}
                   onChange={handleChange}
-                  className="mt-1 w-full border rounded-lg px-4 py-3 text-lg"
+                  className="mt-1 w-full border rounded-lg px-4 py-3 text-base"
                 />
               ) : (
-                <p className="mt-1 text-lg text-gray-800">{profile.phone}</p>
+                <p className="mt-1 text-lg black-800">{profile.phone}</p>
               )}
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-600 mb-2">Kata Sandi</label>
+              <label className="block text-lg font-semibold black-600 mb-2">Kata Sandi</label>
               {isEditing ? (
                 <div className="relative">
                   <input
@@ -165,7 +140,7 @@ const ProfilePage = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-500"
+                    className="absolute top-1/2 right-4 transform -translate-y-1/2 black-500"
                   >
                     {showPassword ? (
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -180,13 +155,13 @@ const ProfilePage = () => {
                   </button>
                 </div>
               ) : (
-                <p className="mt-1 text-lg text-gray-800">********</p>
+                <p className="mt-1 text-lg black-800">********</p>
               )}
             </div>
 
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-600 mb-2">Alamat</label>
+              <label className="block text-lg font-semibold black-600 mb-2">Alamat</label>
               {isEditing ? (
                 <input
                   type="text"
@@ -196,7 +171,7 @@ const ProfilePage = () => {
                   className="mt-1 w-full border rounded-lg px-4 py-3 text-lg"
                 />
               ) : (
-                <p className="mt-1 text-lg text-gray-800">{profile.address}</p>
+                <p className="mt-1 text-lg black-800">{profile.address}</p>
               )}
             </div>
           </div>
@@ -205,13 +180,13 @@ const ProfilePage = () => {
             <div className="flex gap-6 pt-6">
               <button
                 onClick={handleSave}
-                className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition text-base"
+                className="bg-primary text-white px-8 py-3 rounded-lg font-medium transition text-base"
               >
                 Save
               </button>
               <button
                 onClick={handleCancel}
-                className="border border-indigo-600 text-indigo-600 px-8 py-3 rounded-lg font-medium hover:bg-indigo-50 transition text-base"
+                className="border border-primary text-primary px-8 py-3 rounded-lg font-medium transition text-base"
               >
                 Cancel
               </button>
@@ -219,7 +194,7 @@ const ProfilePage = () => {
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="mt-6 border border-indigo-600 text-indigo-600 px-8 py-3 rounded-lg font-medium hover:bg-indigo-50 transition text-base"
+              className="mt-6 border border-primary text-primary px-8 py-3 rounded-lg font-medium hover:bg-primary hover:text-white transition text-base"
             >
               Edit Profile
             </button>
