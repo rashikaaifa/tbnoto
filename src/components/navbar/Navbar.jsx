@@ -7,8 +7,7 @@ import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { useAuth } from '../../contexts/AuthContext';
 
 const Navbar = () => {
-    const { isLoggedIn, logout } = useAuth();
-
+const { isLoggedIn } = useAuth();
     const [open, setOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
@@ -142,9 +141,6 @@ const Navbar = () => {
                                 <FaUser />
                                 </button>
                             </a>
-                            <button onClick={logout} className="text-sm bg-red-500 text-white px-3 py-1 rounded-full hover:bg-red-600">
-                                Logout
-                            </button>
                             </div>
                         )}
                     </div>
