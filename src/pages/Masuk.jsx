@@ -19,35 +19,42 @@ const Masuk = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
+  e.preventDefault();
+  setError('');
 
-    try {
-      const response = await fetch('https://tbnoto19-admin.rplrus.com/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        })
-      });
+  if (!formData.email || !formData.password) {
+    setError('Email dan kata sandi wajib diisi.');
+    return;
+  }
 
-      const data = await response.json();
+  try {
+    const response = await fetch('https://tbnoto19-admin.rplrus.com/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password
+      })
+    });
 
-      if (response.ok && data.token) {
-        login(data.token);
-        navigate('/');
-      } else {
-        setError(data.message || 'Email atau kata sandi salah.');
-      }
-    } catch (err) {
-      console.error(err);
-      setError('Terjadi kesalahan jaringan.');
+    const data = await response.json();
+    console.log("Login Response:", data); // <-- tambahkan untuk debug
+
+    if (response.ok && data.token) {
+      login(data.token);
+      navigate('/');
+    } else {
+      setError(data.message || 'Email atau kata sandi salah.');
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setError('Terjadi kesalahan jaringan.');
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50">
