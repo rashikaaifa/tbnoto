@@ -8,7 +8,8 @@ const Masuk = () => {
 
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    phone_number: '',
   });
 
   const [error, setError] = useState('');
@@ -36,7 +37,8 @@ const Masuk = () => {
       },
       body: JSON.stringify({
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        phone: formData.phone_number
       })
     });
 
