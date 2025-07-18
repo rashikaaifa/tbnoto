@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import profileImage from '../assets/img/lucu.jpg';
 import { GoPencil } from "react-icons/go";
+import { useAuth } from '../contexts/AuthContext';
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [showLogos, setShowLogos] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // 👈 Tambahan di sini
+  const [showPassword, setShowPassword] = useState(false);
+  const { isLoggedIn, logout } = useAuth();
 
   const [profile, setProfile] = useState({
     name: 'Batman',
@@ -40,41 +41,40 @@ const ProfilePage = () => {
     }
   };
 
-
   return (
-    <div className="min-h-screen flex justify-center items-center py-32 px-0">
+    <div className="min-h-screen flex flex-col items-center py-32 px-4">
       <div className="w-full max-w-6xl bg-white rounded-2xl p-8 flex flex-col lg:flex-row gap-10">
         {/* Left: Avatar & Logo Picker */}
         <div className="flex flex-col items-center gap-8 w-full lg:w-1/3">
           <h2 className="text-2xl font-semibold black-800 mb-8">PROFILE</h2>
 
-         <div className="relative">
-  <img
-    src={profile.image}
-    alt="Profile"
-    className="w-48 h-48 rounded-full object-cover border border-gray-300"
-  />
+          <div className="relative">
+            <img
+              src={profile.image}
+              alt="Profile"
+              className="w-48 h-48 rounded-full object-cover border border-gray-300"
+            />
 
             {isEditing && (
-  <>
-    <div className="absolute bottom-1 right-2">
-        <label
-          htmlFor="image-upload"
-          className="w-10 h-10 flex items-center justify-center bg-gray-300 rounded-full shadow-md cursor-pointer hover:bg-gray-100 transition"
-          title="Edit Foto"
-        >
-          <GoPencil className="w-5 h-5" />
-        </label>
-      </div>
-    <input
-      id="image-upload"
-      type="file"
-      accept="image/*"
-      className="hidden"
-      onChange={handleImageChange}
-    />
-  </>
-)}
+              <>
+                <div className="absolute bottom-1 right-2">
+                  <label
+                    htmlFor="image-upload"
+                    className="w-10 h-10 flex items-center justify-center bg-gray-300 rounded-full shadow-md cursor-pointer hover:bg-gray-100 transition"
+                    title="Edit Foto"
+                  >
+                    <GoPencil className="w-5 h-5" />
+                  </label>
+                </div>
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </>
+            )}
           </div>
         </div>
 
@@ -144,7 +144,7 @@ const ProfilePage = () => {
                   >
                     {showPassword ? (
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-1.12.184-2.194.525-3.2m3.847 7.803a3 3 0 004.242-4.242m0 0a3 3 0 014.242 4.242m0 0a3 3 0 01-4.242-4.242m0 0L21 21" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-1.12.184-2.194.525-3.2m3.847 7.803a3 3 0 004.242-4.242" />
                       </svg>
                     ) : (
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -158,7 +158,6 @@ const ProfilePage = () => {
                 <p className="mt-1 text-lg black-800">********</p>
               )}
             </div>
-
 
             <div className="md:col-span-2">
               <label className="block text-lg font-semibold black-600 mb-2">Alamat</label>
@@ -176,6 +175,7 @@ const ProfilePage = () => {
             </div>
           </div>
 
+          {/* Tombol Simpan / Edit */}
           {isEditing ? (
             <div className="flex gap-6 pt-6">
               <button
@@ -192,12 +192,24 @@ const ProfilePage = () => {
               </button>
             </div>
           ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="mt-6 border border-primary text-primary px-8 py-3 rounded-lg font-medium hover:bg-primary hover:text-white transition text-base"
-            >
-              Edit Profile
-            </button>
+            <div className="flex gap-6 pt-6">
+    <button
+      onClick={() => setIsEditing(true)}
+      className="border border-primary text-primary px-8 py-3 rounded-lg font-medium hover:bg-primary hover:text-white transition text-base"
+    >
+      Edit Profile
+    </button>
+
+          {isLoggedIn && (
+    <button
+      onClick={logout}
+      className="bg-red-700 text-white px-8 py-3 rounded-lg transition text-base"
+    >
+      Keluar
+    </button>
+          )}
+
+  </div>
           )}
         </div>
       </div>
