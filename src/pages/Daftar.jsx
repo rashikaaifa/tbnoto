@@ -67,7 +67,7 @@ const Daftar = () => {
           phone: formData.phone_number,
           address: formData.address,
           password: formData.password,
-          confirmpassword: formData.confirmpassword,        
+          password_confirmation: formData.confirmPassword,
         }),
     });
 
