@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { IoLogoApple } from "react-icons/io5";
-import { FaFacebook } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import bgImage from '../assets/img/background.png';
 import { useNavigate } from "react-router-dom";
@@ -187,12 +185,12 @@ const Daftar = () => {
               <div className="absolute left-0 top-1/2 w-full h-[1px] bg-gray-400 -z-0"></div>
             </div>
             <div className="flex justify-center items-center space-x-4 mt-4">
-              {[<FcGoogle />, <IoLogoApple />, <FaFacebook />].map((icon, index) => (
+              {[<FcGoogle />,].map((icon, index) => (
                 <a key={index} href="#" className="text-xl">{icon}</a>
               ))}
             </div>
             <p className="text-sm text-center mt-4">
-              Sudah punya akun? <a href="/masuk" className="text-primary font-medium hover:underline">Masuk</a>
+              Sudah memiliki akun? <a href="/masuk" className="text-primary font-medium hover:underline">Masuk</a>
             </p>
           </div>
         </motion.div>
