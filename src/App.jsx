@@ -12,6 +12,7 @@ import Profil from './pages/Profil';
 import Keranjang from './pages/Keranjang';
 import ProductPage from './pages/ProductPage';
 import ProductDetail from './pages/ProductDetail';
+import OrderPage from './pages/OrderPage';
 
 const AppContent = () => {
   const location = useLocation();
@@ -32,6 +33,8 @@ const AppContent = () => {
         <Route path="/keranjang" element={<Keranjang />} />
         <Route path="/katalog" element={<ProductPage />} />
         <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/orderPage" element={<OrderPage />} />
+
       </Routes>
 
       {!hideLayout && <Footer />}

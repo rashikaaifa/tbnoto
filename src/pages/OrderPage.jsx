@@ -142,7 +142,7 @@ const OrderPage = () => {
     <div className="mt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <header className={`${isMobile ? 'mb-3' : 'mb-6'}`}>
         <h1 className={`font-bold ${isMobile ? 'text-xl' : 'text-2xl'} md:text-3xl lg:text-4xl`}>
-          Pembayaran
+          Konfirmasi Pesanan
         </h1>
         <p className={`${isMobile ? 'text-xs' : 'text-base'} text-gray-600 mt-1`}>
           Konfirmasi pesanan dan pembayaran Anda
