@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
-const PopUp = ({ isOpen, onClose }) => {
+const HarapMasuk = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isOpen) {
+        document.body.classList.add("overflow-hidden");
+        } else {
+        document.body.classList.remove("overflow-hidden");
+        }
+
+        return () => {
+        document.body.classList.remove("overflow-hidden");
+        };
+    }, [isOpen]);
 
     const handleDaftar = () => {
         navigate("/daftar");
@@ -23,12 +35,9 @@ const PopUp = ({ isOpen, onClose }) => {
                 <button className="absolute top-3 right-3 hover:text-gray-800" onClick={onClose}>
                     <IoClose className="text-2xl" />
                 </button>
-                
-                {/* logo */}
-                <div className="flex justify-center mb-4">
-                    <img src="" alt="Logo" className="w-20" />
-                </div>
-                
+
+                <br />
+
                 {/* judul */}
                 <h2 className="text-xl font-bold text-gray-800">Jangan lewatkan pengalaman  berbelanja terbaik!</h2>
                 <p className="text-gray-600 mt-2">Masuk untuk melanjutkan akses.</p>
@@ -53,4 +62,4 @@ const PopUp = ({ isOpen, onClose }) => {
   );
 };
 
-export default PopUp;
+export default HarapMasuk;

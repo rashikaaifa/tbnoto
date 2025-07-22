@@ -1,19 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
-const Berhasil = ({ isOpen, onClose }) => {
+const CheckoutSukses = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
 
-    const handleDaftar = () => {
-        navigate("/daftar");
-    };
+    const [countdown, setCountdown] = useState(5);
 
-    const checkmarkPath = {
-    hidden: { pathLength: 0, opacity: 0 },
-    visible: { pathLength: 1, opacity: 1, transition: { duration: 0.8, ease: "easeInOut" } },
-    };
+    // no scrolling
+    useEffect(() => {
+        if (isOpen) {
+            document.body.classList.add("overflow-hidden");
+        } else {
+            document.body.classList.remove("overflow-hidden");
+        }
+        return () => {
+            document.body.classList.remove("overflow-hidden");
+        };
+    }, [isOpen]);
+
+    // countdown
+    useEffect(() => {
+    if (!isOpen) return;
+
+    const timer = setInterval(() => {
+        setCountdown((prev) => {
+            if (prev <= 1) {
+                clearInterval(timer);
+                return 0;
+            }
+            return prev - 1;
+        });
+    }, 1000);
+
+    return () => clearInterval(timer);
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (countdown === 0) {
+            navigate("/riwayat");
+        }
+    }, [countdown, navigate]);
+
+        const checkmarkPath = {
+        hidden: { pathLength: 0, opacity: 0 },
+        visible: { pathLength: 1, opacity: 1, transition: { duration: 1, ease: "easeInOut" } },
+        };
 
     if (!isOpen) return null;
     return (
@@ -24,6 +57,7 @@ const Berhasil = ({ isOpen, onClose }) => {
                 transition={{ duration: 0.3 }}
                 className="bg-white rounded-xl shadow-xl p-6 w-96 text-center relative"
             >
+
                 {/* close */}
                 <button className="absolute top-3 right-3 hover:text-gray-800" onClick={onClose}>
                     <IoClose className="text-2xl" />
@@ -49,8 +83,8 @@ const Berhasil = ({ isOpen, onClose }) => {
                 </div>
                 
                 {/* judul */}
-                <h2 className="text-xl font-bold text-gray-800">Pesan Anda Telah Terkirim!</h2>
-                <p className="text-gray-600 mt-2">Pertanyaan/saran dari Anda akan segera kami respon melalui email.</p>
+                <h2 className="text-xl font-bold text-gray-800">Pesanan Berhasil Dibuat!</h2>
+                <p className="text-gray-600 mt-2">Terima kasih atas kepercayaan Anda terhadap TB. Noto 19.</p>
 
                 {/* button */}
                 <div className="mt-6 space-y-3">
@@ -58,12 +92,13 @@ const Berhasil = ({ isOpen, onClose }) => {
                     href="/"
                     className="block w-full text-center bg-primary text-white py-2 rounded-2xl border-2 border-transparent hover:border-primary hover:bg-transparent hover:text-primary transition"
                 >
-                    Kembali ke Homepage
+                    Lihat Riwayat Transaksi ({countdown})
                 </a>
                 </div>
+                
             </motion.div>
         </div>
   );
 };
 
-export default Berhasil;
+export default CheckoutSukses;

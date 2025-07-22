@@ -9,9 +9,12 @@ import poster2 from "../assets/img/poster2.png"
 import poster3 from "../assets/img/poster3.png"
 import perjalananImg from "../assets/img/cth4.png";
 import faq from "../assets/img/faqhome.png";
-import Berhasil from "../components/popup/Berhasil";
-import PopUp from '../components/popup/PopUp';
-import PopUp from '../components/popup/Berhasil';
+import BerhasilFAQ from "../components/popup/BerhasilFAQ";
+import CheckoutSukses from "../components/popup/CheckoutSukses";
+import EditProfil from "../components/popup/EditProfil";
+import HarapMasuk from "../components/popup/HarapMasuk";
+import MasukGoogle from "../components/popup/MasukGoogle";
+import SuksesMasuk from "../components/popup/SuksesMasuk";
 
 const keunggulan = [
     { title: "Harga Terbaik", desc: "Material berkualitas tinggi dengan harga terjangkau." },
@@ -27,15 +30,19 @@ const posters = [
 ];
   
 const Homepage = () => {
-    const [isBerhasilOpen, setIsBerhasilOpen] = useState(false);
-
     const [currentPoster, setCurrentPoster] = useState(0); // untuk section posters
 
     const [products, setProducts] = useState([]);
 
     const allowedIds = [1, 9, 6, 2, 5, 7];
 
-    const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+    // pop up
+    const [isBerhasilFAQOpen, setIsBerhasilFAQOpen] = useState(false);
+    const [isCheckoutSuksesOpen, setIsCheckoutSuksesOpen] = useState(false);
+    const [isEditProfilOpen, setIsEditProfilOpen] = useState(false);
+    const [isHarapMasukOpen, setIsHarapMasukOpen] = useState(false);
+    const [isMasukGoogleOpen, setIsMasukGoogleOpen] = useState(false);
+    const [isSuksesMasukOpen, setIsSuksesMasukOpen] = useState(false);
 
     useEffect(() => {
         fetch("https://tbnoto19-admin.rplrus.com/api/barang")
@@ -124,7 +131,7 @@ const Homepage = () => {
         throw new Error(result.message || "Gagal mengirim data.");
         }
 
-setIsBerhasilOpen(true);
+    setIsBerhasilOpen(true);
         setFormData({ nama_pelanggan: "", email: "", tanya: "" });
     } catch (error) {
         console.error("Submit Error:", error.message);
@@ -476,7 +483,7 @@ setIsBerhasilOpen(true);
                                 </button>
                             </div>
                         </form>
-                        <Berhasil isOpen={isBerhasilOpen} onClose={() => setIsBerhasilOpen(false)} />
+                        <BerhasilFAQ isOpen={isBerhasilFAQOpen} onClose={() => setIsBerhasilFAQOpen(false)} />
                         </motion.div>
                     </div>
                 </div>
@@ -504,24 +511,75 @@ setIsBerhasilOpen(true);
             <div className="top-20 right-6 z-50 ml-12">
                 <button
                 className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
-                onClick={() => setIsPopUpOpen(true)}
+                onClick={() => setIsBerhasilFAQOpen(true)}
                 >
-                    Pop Up
+                    Berhasil Kirim FAQ
                 </button>
             </div>
+            <BerhasilFAQ isOpen={isBerhasilFAQOpen} onClose={() => setIsBerhasilFAQOpen(false)} />
 
-            <PopUp isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
+            <br />
 
-                <div className="top-20 right-6 z-50 ml-12">
+            <div className="top-20 right-6 z-50 ml-12">
                 <button
                 className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
-                onClick={() => setIsPopUpOpen(true)}
+                onClick={() => setIsCheckoutSuksesOpen(true)}
                 >
-                    Pop Up
+                    Berhasil CO
                 </button>
             </div>
+            <CheckoutSukses isOpen={isCheckoutSuksesOpen} onClose={() => setIsCheckoutSuksesOpen(false)} />
 
-            <PopUp isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
+            <br />
+            
+            <div className="top-20 right-6 z-50 ml-12">
+                <button
+                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
+                onClick={() => setIsEditProfilOpen(true)}
+                >
+                    Berhasil Edit Profil
+                </button>
+            </div>
+            <EditProfil isOpen={isEditProfilOpen} onClose={() => setIsEditProfilOpen(false)} />
+
+            <br />
+            
+            <div className="top-20 right-6 z-50 ml-12">
+                <button
+                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
+                onClick={() => setIsHarapMasukOpen(true)}
+                >
+                    No Access Jika Belum Masuk
+                </button>
+            </div>
+            <HarapMasuk isOpen={isHarapMasukOpen} onClose={() => setIsHarapMasukOpen(false)} />
+
+            <br />
+
+            <div className="top-20 right-6 z-50 ml-12">
+                <button
+                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
+                onClick={() => setIsMasukGoogleOpen(true)}
+                >
+                    Himbauan Edit Profil Ketika Pakai Google
+                </button>
+            </div>
+            <MasukGoogle isOpen={isMasukGoogleOpen} onClose={() => setIsMasukGoogleOpen(false)} />
+
+            <br />
+
+            <div className="top-20 right-6 z-50 ml-12">
+                <button
+                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
+                onClick={() => setIsSuksesMasukOpen(true)}
+                >
+                    Berhasil Masuk
+                </button>
+            </div>
+            <SuksesMasuk isOpen={isSuksesMasukOpen} onClose={() => setIsSuksesMasukOpen(false)} />
+
+            <br />
+
             <br />
         </div>
     );
