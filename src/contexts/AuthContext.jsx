@@ -11,11 +11,19 @@ export const AuthProvider = ({ children }) => {
       fetch('https://tbnoto19-admin.rplrus.com/api/auth/me', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
         },
       })
         .then((res) => res.json())
-        .then((data) => setUser(data))
+        .then((data) => {
+          // Sesuaikan dengan struktur data sebenarnya dari API
+          if (data && data.data) {
+            setUser(data.data);
+          } else {
+            setUser(null);
+          }
+        })
         .catch(() => {
           setUser(null);
           setToken(null);
@@ -35,11 +43,11 @@ export const AuthProvider = ({ children }) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+    }).finally(() => {
+      localStorage.removeItem('token');
+      setUser(null);
+      setToken(null);
     });
-
-    localStorage.removeItem('token');
-    setUser(null);
-    setToken(null);
   };
 
   const isLoggedIn = !!token;

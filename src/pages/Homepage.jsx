@@ -10,6 +10,8 @@ import poster3 from "../assets/img/poster3.png"
 import perjalananImg from "../assets/img/cth4.png";
 import faq from "../assets/img/faqhome.png";
 import Berhasil from "../components/popup/Berhasil";
+import PopUp from '../components/popup/PopUp';
+import PopUp from '../components/popup/Berhasil';
 
 const keunggulan = [
     { title: "Harga Terbaik", desc: "Material berkualitas tinggi dengan harga terjangkau." },
@@ -32,6 +34,8 @@ const Homepage = () => {
     const [products, setProducts] = useState([]);
 
     const allowedIds = [1, 9, 6, 2, 5, 7];
+
+    const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
     useEffect(() => {
         fetch("https://tbnoto19-admin.rplrus.com/api/barang")
@@ -495,6 +499,29 @@ setIsBerhasilOpen(true);
                     </div>
                 </div>
             </section>
+            <br />
+
+            <div className="top-20 right-6 z-50 ml-12">
+                <button
+                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
+                onClick={() => setIsPopUpOpen(true)}
+                >
+                    Pop Up
+                </button>
+            </div>
+
+            <PopUp isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
+
+                <div className="top-20 right-6 z-50 ml-12">
+                <button
+                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
+                onClick={() => setIsPopUpOpen(true)}
+                >
+                    Pop Up
+                </button>
+            </div>
+
+            <PopUp isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
             <br />
         </div>
     );
