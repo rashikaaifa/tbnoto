@@ -12,8 +12,8 @@ const formatProductData = (product) => {
     harga: parseFloat(product.harga),
     stok: product.stok,
     deskripsi: product.deskripsi,
-    gambar: `https://tbnoto19-admin.rplrus.com/storage/${product.foto_barang}`,
-    ukuran: product.ukuran, // tidak tersedia, dibiarkan kosong
+    gambar: `https://tbnoto19-admin.rplrus.com/storage/${product.foto_barang.replace(/^storage\//, '')}`,
+    ukuran: '', // tidak tersedia, dibiarkan kosong
     created_at: product.created_at,
     updated_at: product.updated_at
   };
