@@ -1,11 +1,15 @@
+// src/pages/ProfilePage.jsx
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import profileImage from '../assets/img/lucu.jpg';
 import { GoPencil } from "react-icons/go";
 import { useAuth } from '../contexts/AuthContext';
 
+const BASE_URL = 'https://tbnoto19-admin.rplrus.com/api';
+
 const ProfilePage = () => {
-  const { isLoggedIn, logout, user, updateProfile } = useAuth();
+  const { isLoggedIn, logout, user, updateProfile, token, setUser } = useAuth();
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -36,15 +40,41 @@ const ProfilePage = () => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-        // Tambahkan upload ke server jika ingin upload foto profil
-      };
-      reader.readAsDataURL(file);
+      const formDataUpload = new FormData();
+      formDataUpload.append('profile_photo', file);
+
+      try {
+        const res = await fetch(`${BASE_URL}/profile/photo`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+          },
+          body: formDataUpload,
+        });
+
+        const data = await res.json();
+        console.log('Foto profil diupload:', data);
+
+        if (res.ok && (data.profile_photo_url || data.data?.profile_photo)) {
+          const photoUrl = data.profile_photo_url || data.data?.profile_photo;
+          setImagePreview(photoUrl);
+          setUser(prev => ({
+            ...prev,
+            profile_photo: photoUrl
+          }));
+          alert('Foto profil berhasil diupdate!');
+        } else {
+          alert('Gagal upload foto profil.');
+          console.error('Gagal upload foto profil:', data.message || data);
+        }
+      } catch (error) {
+        alert('Terjadi kesalahan saat upload foto.');
+        console.error('Error saat upload foto profil:', error);
+      }
     }
   };
 
@@ -60,9 +90,10 @@ const ProfilePage = () => {
 
       await updateProfile(profileData);
       setIsEditing(false);
-      console.log('Data berhasil disimpan ke server');
+      alert('Data profil berhasil diperbarui.');
     } catch (error) {
       console.error('Gagal update profil:', error);
+      alert('Gagal update profil.');
     }
   };
 
@@ -83,7 +114,7 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center py-32 px-4">
       <div className="w-full max-w-6xl bg-white rounded-2xl p-8 flex flex-col lg:flex-row gap-10">
-        
+
         {/* Foto profil */}
         <div className="flex flex-col items-center gap-8 w-full lg:w-1/3">
           <h2 className="text-2xl font-semibold black-800 mb-8">PROFILE</h2>
