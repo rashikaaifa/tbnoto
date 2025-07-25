@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
       }
     } catch (error) {
-      console.error('Error saat feact profile:', error);
+      console.error('Error saat feact profil:', error);
       setUser(null);
       setToken(null);
       localStorage.removeItem('token');
