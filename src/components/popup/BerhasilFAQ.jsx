@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-const BerhasilFAQ = ({ isOpen, onClose }) => {
+const BerhasilFAQ = ({ isOpen }) => {
     const navigate = useNavigate();
-
-    const [countdown, setCountdown] = useState(5);
 
     // no scrolling
     useEffect(() => {
@@ -18,29 +16,6 @@ const BerhasilFAQ = ({ isOpen, onClose }) => {
             document.body.classList.remove("overflow-hidden");
         };
     }, [isOpen]);
-
-    // countdown
-    useEffect(() => {
-    if (!isOpen) return;
-
-    const timer = setInterval(() => {
-        setCountdown((prev) => {
-            if (prev <= 1) {
-                clearInterval(timer);
-                return 0;
-            }
-            return prev - 1;
-        });
-    }, 1000);
-
-    return () => clearInterval(timer);
-    }, [isOpen]);
-
-    useEffect(() => {
-        if (countdown === 0) {
-            navigate("/");
-        }
-    }, [countdown, navigate]);
 
         const checkmarkPath = {
         hidden: { pathLength: 0, opacity: 0 },
@@ -86,10 +61,9 @@ const BerhasilFAQ = ({ isOpen, onClose }) => {
                     href="/"
                     className="block w-full text-center bg-primary text-white py-2 rounded-2xl border-2 border-transparent hover:border-primary hover:bg-transparent hover:text-primary transition"
                 >
-                    Tutup ({countdown})
+                    Tutup
                 </a>
                 </div>
-                
             </motion.div>
         </div>
   );
