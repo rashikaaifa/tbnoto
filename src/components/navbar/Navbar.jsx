@@ -7,7 +7,7 @@ import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { useAuth } from '../../contexts/AuthContext';
 
 const Navbar = () => {
-const { isLoggedIn } = useAuth();
+    const { isLoggedIn } = useAuth();
     const [open, setOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
@@ -123,11 +123,14 @@ const { isLoggedIn } = useAuth();
                         ))}
                     </div>
                     <div className="hidden md:flex items-center gap-4 text-white">
-                        <a href="/keranjang">
+                        {isLoggedIn && (
+                            <a href="/keranjang">
                             <button className="text-2xl hover:bg-white hover:text-primary rounded-full p-2 mr-4">
                                 <FaShoppingCart />
                             </button>
-                        </a>
+                            </a>
+                        )}
+                        
                         {!isLoggedIn ? (
                             <a href="/daftar">
                             <button className="font-medium bg-white text-primary px-4 py-2 rounded-full border-2 border-transparent hover:border-white hover:bg-transparent hover:text-white transition">
@@ -216,7 +219,15 @@ const { isLoggedIn } = useAuth();
                             <li className="p-4 border-b hover:bg-gray-200"><a href="/katalog">Katalog Produk</a></li>
                             <li className="p-4 border-b hover:bg-gray-200"><a href="/riwayat">Riwayat</a></li>
                             <li className="p-4 border-b hover:bg-gray-200"><a href="/bantuan">Bantuan</a></li>
-                            <li className="p-4 border-b hover:bg-gray-200"><a href="/profil">Profil</a></li>
+                            {isLoggedIn ? (
+                                <li className="p-4 border-b hover:bg-gray-200">
+                                <a href="/profil">Profil</a>
+                                </li>
+                            ) : (
+                                <li className="p-4 border-b hover:bg-gray-200">
+                                <a href="/masuk">Masuk / Register</a>
+                                </li>
+                            )}
                         </ul>
                     </motion.div>
                 )}

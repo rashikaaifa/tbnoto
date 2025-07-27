@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
-const SuksesMasuk = ({ isOpen, onClose }) => {
+const SuksesMasuk = ({ isOpen }) => {
     const navigate = useNavigate();
 
     const [countdown, setCountdown] = useState(4);
@@ -50,17 +49,14 @@ const SuksesMasuk = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50 p-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-8">
             <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white rounded-xl shadow-xl p-6 w-96 text-center relative"
+                className="bg-white rounded-xl shadow-2xl p-6 w-96 text-center"
             >
-                {/* close */}
-                <button className="absolute top-3 right-3 hover:text-gray-800" onClick={onClose}>
-                    <IoClose className="text-2xl" />
-                </button>
                 
                 {/* icon centang */}
                 <div className="flex justify-center mb-4">

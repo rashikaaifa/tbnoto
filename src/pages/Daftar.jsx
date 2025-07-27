@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import bgImage from '../assets/img/background.png';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../contexts/AuthContext';
+import SuksesMasuk from '../components/popup/SuksesMasuk'
 
 const Daftar = () => {
   const { login } = useAuth(); // menggunakan context Auth
   const navigate = useNavigate(); 
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
   // State untuk menyimpan data form
   const [formData, setFormData] = useState({
@@ -73,7 +75,7 @@ const Daftar = () => {
 
       if (response.ok) {
         login(data.token);
-        navigate('/'); 
+        setIsPopUpOpen(true);
       } else {
         setError(data.message || 'Registrasi gagal');
       }
@@ -195,6 +197,7 @@ const Daftar = () => {
           </div>
         </motion.div>
       </div>
+      <SuksesMasuk isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
     </div>
   );
 };
