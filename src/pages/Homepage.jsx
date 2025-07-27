@@ -10,11 +10,7 @@ import poster3 from "../assets/img/poster3.png"
 import perjalananImg from "../assets/img/cth4.png";
 import faq from "../assets/img/faqhome.png";
 import BerhasilFAQ from "../components/popup/BerhasilFAQ";
-import CheckoutSukses from "../components/popup/CheckoutSukses";
-import EditProfil from "../components/popup/EditProfil";
-import HarapMasuk from "../components/popup/HarapMasuk";
-import MasukGoogle from "../components/popup/MasukGoogle";
-import SuksesMasuk from "../components/popup/SuksesMasuk";
+import GagalFAQ from "../components/popup/GagalFAQ";
 
 const keunggulan = [
     { title: "Harga Terbaik", desc: "Material berkualitas tinggi dengan harga terjangkau." },
@@ -38,11 +34,7 @@ const Homepage = () => {
 
     // pop up
     const [isBerhasilFAQOpen, setIsBerhasilFAQOpen] = useState(false);
-    const [isCheckoutSuksesOpen, setIsCheckoutSuksesOpen] = useState(false);
-    const [isEditProfilOpen, setIsEditProfilOpen] = useState(false);
-    const [isHarapMasukOpen, setIsHarapMasukOpen] = useState(false);
-    const [isMasukGoogleOpen, setIsMasukGoogleOpen] = useState(false);
-    const [isSuksesMasukOpen, setIsSuksesMasukOpen] = useState(false);
+    const [isGagalFAQOpen, setIsGagalFAQOpen] = useState(false);
 
     useEffect(() => {
         fetch("https://tbnoto19-admin.rplrus.com/api/barang")
@@ -101,9 +93,9 @@ const Homepage = () => {
 
     // faq
     const [formData, setFormData] = useState({
-        nama_pelanggan: "",
+        nama: "",
         email: "",
-        tanya: "",
+        pertanyaan: ""
     });
 
     const handleSubmit = async (e) => {
@@ -131,12 +123,12 @@ const Homepage = () => {
         throw new Error(result.message || "Gagal mengirim data.");
         }
 
-    setIsBerhasilOpen(true);
-        setFormData({ nama_pelanggan: "", email: "", tanya: "" });
-    } catch (error) {
-        console.error("Submit Error:", error.message);
-        alert("Terjadi kesalahan saat mengirim formulir.");
-    }
+        setIsBerhasilFAQOpen(true);
+            setFormData({ nama: "", email: "", pertanyaan: "" });
+        } catch (error) {
+            console.error("Submit Error:", error.message);
+            setIsGagalFAQOpen(true);
+        }
     };
 
     return (
@@ -402,7 +394,7 @@ const Homepage = () => {
             <section id="faq">
                 <div className="p-6 md:p-12">
                     <h2 className="text-2xl md:text-3xl font-semibold text-center mb-8">
-                        Formulir Saran & Pertanyaan
+                        Formulir Saran & Perpertanyaanan
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                         {/* gambar */}
@@ -436,13 +428,13 @@ const Homepage = () => {
                             <label className="block mb-1 font-medium">Nama</label>
                             <input
                                 type="text"
-                                name="nama_pelanggan"
+                                name="nama"
                                 placeholder="Masukkan nama Anda"
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 required
-                                value={formData.nama_pelanggan}
+                                value={formData.nama}
                                 onChange={(e) =>
-                                    setFormData({ ...formData, nama_pelanggan: e.target.value })
+                                    setFormData({ ...formData, nama: e.target.value })
                                 }
                             />
                             </div>
@@ -461,16 +453,16 @@ const Homepage = () => {
                             />
                             </div>
                             <div>
-                            <label className="block mb-1 font-medium">Saran / Pertanyaan</label>
+                            <label className="block mb-1 font-medium">Saran / Perpertanyaanan</label>
                             <textarea
                                 name="question"
                                 rows="4"
-                                placeholder="Tulis saran/pertanyaan Anda..."
+                                placeholder="Tulis saran/perpertanyaanan Anda..."
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
                                 required
-                                value={formData.tanya}
+                                value={formData.pertanyaan}
                                 onChange={(e) =>
-                                    setFormData({ ...formData, tanya: e.target.value })
+                                    setFormData({ ...formData, pertanyaan: e.target.value })
                                 }
                             />
                             </div>
@@ -483,7 +475,8 @@ const Homepage = () => {
                                 </button>
                             </div>
                         </form>
-                        <BerhasilFAQ isOpen={isBerhasilFAQOpen} onClose={() => setIsBerhasilFAQOpen(false)} />
+                            <BerhasilFAQ isOpen={isBerhasilFAQOpen} onClose={() => setIsBerhasilFAQOpen(false)} />
+                            <GagalFAQ isOpen={isGagalFAQOpen} onClose={() => setIsGagalFAQOpen(false)} />
                         </motion.div>
                     </div>
                 </div>
@@ -506,80 +499,6 @@ const Homepage = () => {
                     </div>
                 </div>
             </section>
-            <br />
-
-            <div className="top-20 right-6 z-50 ml-12">
-                <button
-                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
-                onClick={() => setIsBerhasilFAQOpen(true)}
-                >
-                    Berhasil Kirim FAQ
-                </button>
-            </div>
-            <BerhasilFAQ isOpen={isBerhasilFAQOpen} onClose={() => setIsBerhasilFAQOpen(false)} />
-
-            <br />
-
-            <div className="top-20 right-6 z-50 ml-12">
-                <button
-                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
-                onClick={() => setIsCheckoutSuksesOpen(true)}
-                >
-                    Berhasil CO
-                </button>
-            </div>
-            <CheckoutSukses isOpen={isCheckoutSuksesOpen} onClose={() => setIsCheckoutSuksesOpen(false)} />
-
-            <br />
-            
-            <div className="top-20 right-6 z-50 ml-12">
-                <button
-                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
-                onClick={() => setIsEditProfilOpen(true)}
-                >
-                    Berhasil Edit Profil
-                </button>
-            </div>
-            <EditProfil isOpen={isEditProfilOpen} onClose={() => setIsEditProfilOpen(false)} />
-
-            <br />
-            
-            <div className="top-20 right-6 z-50 ml-12">
-                <button
-                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
-                onClick={() => setIsHarapMasukOpen(true)}
-                >
-                    No Access Jika Belum Masuk
-                </button>
-            </div>
-            <HarapMasuk isOpen={isHarapMasukOpen} onClose={() => setIsHarapMasukOpen(false)} />
-
-            <br />
-
-            <div className="top-20 right-6 z-50 ml-12">
-                <button
-                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
-                onClick={() => setIsMasukGoogleOpen(true)}
-                >
-                    Himbauan Edit Profil Ketika Pakai Google
-                </button>
-            </div>
-            <MasukGoogle isOpen={isMasukGoogleOpen} onClose={() => setIsMasukGoogleOpen(false)} />
-
-            <br />
-
-            <div className="top-20 right-6 z-50 ml-12">
-                <button
-                className="bg-primary text-white px-6 py-3 rounded-2xl shadow hover:bg-secondary/90 transition"
-                onClick={() => setIsSuksesMasukOpen(true)}
-                >
-                    Berhasil Masuk
-                </button>
-            </div>
-            <SuksesMasuk isOpen={isSuksesMasukOpen} onClose={() => setIsSuksesMasukOpen(false)} />
-
-            <br />
-
             <br />
         </div>
     );

@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import bgImage from '../assets/img/background.png';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../contexts/AuthContext';
+import SuksesMasuk from '../components/popup/SuksesMasuk'
 
 const Masuk = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     phone_number: '',
@@ -40,7 +42,7 @@ const Masuk = () => {
 
       if (response.ok) {
         login(data.token);
-        navigate('/');
+        setIsPopUpOpen(true);
       } else {
         setError(data.message || 'Login gagal. Periksa nomor dan kata sandi.');
       }
@@ -113,6 +115,7 @@ const Masuk = () => {
           </div>
         </motion.div>
       </div>
+      <SuksesMasuk isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
     </div>
   );
 };
