@@ -311,11 +311,6 @@ const Homepage = () => {
                     {/* teks "lihat semua" atas */}
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-2xl md:text-3xl font-bold">Semua Produk</h2>
-                        <span className="text-sm cursor-pointer underline">
-                            <a href="/katalog">
-                                Lihat Semua ...
-                            </a>
-                        </span>
                     </div>
                     {/* list produk */}
                     <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-8">
