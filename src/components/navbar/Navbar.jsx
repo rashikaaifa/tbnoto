@@ -82,35 +82,13 @@ const Navbar = () => {
                     <div className="hidden md:flex text-white items-center gap-6 font-regular">
                         {NavbarMenu.map((item) => (
                             item.title === "Kategori" ? (
-                                <div key={item.id} className="relative" ref={dropdownRef}>
-                                    <button 
-                                        onClick={() => setDropdownOpen(!dropdownOpen)}
-                                        className="flex items-center gap-1 py-1 px-3 border-b-2 border-transparent hover:border-white transition duration-300"
-                                    >
-                                        {item.title}
-                                        <IoChevronDown className={`text-lg transition-transform duration-300 ${dropdownOpen ? "rotate-180" : ""}`} />
-                                    </button>
-
-                                    {/* dropdown */}
-                                    <AnimatePresence>
-                                        {dropdownOpen && (
-                                            <motion.div 
-                                                initial={{ opacity: 0, height: 0 }}
-                                                animate={{ opacity: 1, height: "auto" }}
-                                                exit={{ opacity: 0, height: 0 }}
-                                                className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-36 bg-white text-black rounded-lg shadow-lg overflow-hidden"
-                                            >
-                                                <ul className="flex flex-col py-2 font-light">
-                                                {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map((category, index) => (
-                                                    <li key={index} className="hover:bg-gray-200 px-4 py-2 text-center">
-                                                        <a href={`/katalog/${category.toLowerCase()}`}>{category}</a>
-                                                    </li>
-                                                ))}
-                                                </ul>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
+                                <a 
+                                key={item.id}
+                                href="/#kategori" // scroll ke section kategori di homepage
+                                className="inline-block py-1 px-3 border-b-2 border-transparent hover:border-white transition duration-300"
+                                >
+                                {item.title}
+                                </a>
                             ) : (
                                 <a 
                                     key={item.id} 
