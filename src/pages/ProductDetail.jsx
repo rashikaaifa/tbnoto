@@ -1,13 +1,88 @@
-// ProductDetail.jsx - Improved UI
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getProductById } from '../services/productService';
+import { getProductById, addToCart } from '../services/productService';
+import { useAuth } from '../contexts/AuthContext';
+
+// Simple Notification Component - langsung di dalam file
+const SimpleNotification = ({ show, type, message, onClose }) => {
+  useEffect(() => {
+    if (show) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3500); // Auto close setelah 3.5 detik
+      
+      return () => clearTimeout(timer);
+    }
+  }, [show, onClose]);
+
+  if (!show) return null;
+
+  const getStyles = () => {
+    switch (type) {
+      case 'success':
+        return 'bg-green-500 text-white';
+      case 'error':
+        return 'bg-red-500 text-white';
+      default:
+        return 'bg-blue-500 text-white';
+    }
+  };
+
+  const getIcon = () => {
+    switch (type) {
+      case 'success':
+        return '✓';
+      case 'error':
+        return '✕';
+      default:
+        return 'ℹ';
+    }
+  };
+
+  return (
+    <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top duration-300">
+      <div className={`${getStyles()} px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 max-w-sm`}>
+        <span className="text-xl font-bold">{getIcon()}</span>
+        <span className="text-sm font-medium flex-1">{message}</span>
+        <button
+          onClick={onClose}
+          className="text-white/80 hover:text-white transition-colors ml-2 text-lg font-bold"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const { isLoggedIn, token } = useAuth();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  
+  // State untuk notifikasi
+  const [notification, setNotification] = useState({
+    show: false,
+    type: 'success',
+    message: ''
+  });
+
+  // Function untuk show notification
+  const showNotification = (type, message) => {
+    setNotification({
+      show: true,
+      type,
+      message
+    });
+  };
+
+  // Function untuk hide notification
+  const hideNotification = () => {
+    setNotification(prev => ({ ...prev, show: false }));
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -17,6 +92,7 @@ const ProductDetail = () => {
         setProduct(data);
       } catch (error) {
         console.error('Error fetching product details:', error);
+        showNotification('error', 'Gagal memuat detail produk');
       } finally {
         setIsLoading(false);
       }
@@ -28,6 +104,8 @@ const ProductDetail = () => {
   const handleIncreaseQuantity = () => {
     if (product && quantity < product.stok) {
       setQuantity(quantity + 1);
+    } else if (product && quantity >= product.stok) {
+      showNotification('error', `Maksimal ${product.stok} item tersedia`);
     }
   };
 
@@ -39,6 +117,55 @@ const ProductDetail = () => {
 
   const calculateTotalPrice = () => {
     return product ? product.harga * quantity : 0;
+  };
+
+  const handleAddToCart = async () => {
+    if (!product) return;
+    
+    // Check if user is authenticated
+    if (!isLoggedIn) {
+      showNotification('error', 'Silakan login terlebih dahulu untuk berbelanja');
+      return;
+    }
+    
+    if (product.stok === 0) {
+      showNotification('error', 'Maaf, stok produk habis');
+      return;
+    }
+    
+    // Check if quantity exceeds available stock
+    if (quantity > product.stok) {
+      showNotification('error', `Stok hanya tersisa ${product.stok} item`);
+      setQuantity(product.stok); // Set quantity to max available stock
+      return;
+    }
+    
+    setIsAddingToCart(true);
+    try {
+      console.log('Product ID:', product.id, 'Quantity:', quantity);
+      await addToCart(product.id, quantity, token);
+      
+      // PERBAIKAN: Update stok lokal setelah berhasil menambah ke keranjang
+      setProduct(prevProduct => ({
+        ...prevProduct,
+        stok: prevProduct.stok - quantity
+      }));
+      
+      // Show success notification
+      showNotification('success', `${product.nama} berhasil ditambahkan ke keranjang!`);
+      
+      // Reset quantity to 1 or max available stock
+      const newStock = product.stok - quantity;
+      setQuantity(newStock > 0 ? 1 : 0);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      
+      // Show error notification
+      const errorMessage = error.message || 'Gagal menambahkan ke keranjang. Silakan coba lagi.';
+      showNotification('error', errorMessage);
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
 
   if (isLoading) {
@@ -120,14 +247,24 @@ const ProductDetail = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-4">
-              <button className="flex justify-center items-center bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-50 transition">
+              <button 
+                onClick={handleAddToCart}
+                disabled={isAddingToCart || product.stok === 0 || !isLoggedIn}
+                className="flex justify-center items-center bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                Masukkan Keranjang
+                {!isLoggedIn ? 'Login untuk Berbelanja' : 
+                 isAddingToCart ? 'Menambahkan...' : 
+                 product.stok === 0 ? 'Stok Habis' : 
+                 'Masukkan Keranjang'}
               </button>
-              <button className="bg-green-700 text-white px-4 py-3 rounded-lg font-medium hover:bg-green-800 transition">
-                Beli
+              <button 
+                disabled={!isLoggedIn || product.stok === 0}
+                className="bg-green-700 text-white px-4 py-3 rounded-lg font-medium hover:bg-green-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {!isLoggedIn ? 'Login Dulu' : product.stok === 0 ? 'Habis' : 'Beli'}
               </button>
             </div>
 
@@ -140,6 +277,14 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Simple Notification - langsung di dalam komponen */}
+      <SimpleNotification
+        show={notification.show}
+        type={notification.type}
+        message={notification.message}
+        onClose={hideNotification}
+      />
     </div>
   );
 };
