@@ -1,13 +1,13 @@
 // src/components/keranjang/ProductCard.jsx
 import React from 'react';
 
-const ProductCard = ({ 
-  product, 
-  isSelected, 
-  quantity, 
-  onToggleSelect, 
-  onUpdateQuantity, 
-  onRemove 
+const ProductCard = ({
+  product,
+  isSelected,
+  quantity,
+  onToggleSelect,
+  onUpdateQuantity,
+  onRemove
 }) => {
   // Calculate total price based on quantity
   const totalPrice = product.price * quantity;
@@ -20,7 +20,7 @@ const ProductCard = ({
   return (
     <div className="flex bg-white rounded-lg shadow-sm border border-gray-100 mb-3 overflow-hidden transition-all duration-300 hover:shadow-md relative">
       {/* Tombol hapus */}
-      <div 
+      <div
         className="absolute top-3 right-3 bg-white/90 text-red-600 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-white hover:scale-105 shadow-sm z-10 text-xs"
         onClick={() => onRemove(product.id, product.name)}
       >
@@ -47,13 +47,13 @@ const ProductCard = ({
           />
         </div>
       </div>
-      
+
       {/* Informasi produk */}
       <div className="flex-1 p-3 pr-10 flex flex-col justify-between">
         <div className="mb-1">
           <h3 className="text-sm font-medium text-gray-800 leading-tight line-clamp-1">{product.name}</h3>
         </div>
-        
+
         <div className="flex flex-col gap-1">
           <div className="flex items-center text-xs text-gray-600">
             <span className="mr-1 text-xs">📏</span>
@@ -68,21 +68,28 @@ const ProductCard = ({
             {`Rp${formatPrice(product.price)}`}
           </div>
         </div>
-        
+
         {/* Bagian bawah dengan harga dan kontrol jumlah */}
         <div className="flex items-center justify-between pt-2 mt-2 border-t border-gray-100">
           <div className="text-sm font-bold text-green-800">
             {`Rp${formatPrice(totalPrice)}`}
           </div>
-          
+
           <div className="flex items-center gap-2">
             <button
               className="w-6 h-6 rounded-md bg-gray-100 flex items-center justify-center cursor-pointer transition-colors hover:bg-gray-200 text-xs disabled:opacity-50"
-              onClick={() => onUpdateQuantity(-1)}
-              disabled={quantity <= 1}
+              onClick={() => {
+                if (quantity <= 1) {
+                  onRemove(product.id, product.name); // Hapus produk jika jumlah tinggal 1
+                } else {
+                  onUpdateQuantity(-1); // Kurangi jumlah seperti biasa
+                }
+              }}
+              disabled={quantity <= 0}
             >
               -
             </button>
+
             <span className="text-sm font-medium w-5 text-center">
               {quantity}
             </span>
