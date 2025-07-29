@@ -34,6 +34,7 @@ const AppContent = () => {
         <Route path="/katalog" element={<ProductPage />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/orderPage" element={<OrderPage />} />
+        <Route path="/katalog/kategori/:categorySlug" element={<ProductPage />} />
 
       </Routes>
 
