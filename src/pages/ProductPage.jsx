@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import ProductGrid from '../components/katalog/ProductGrid';
 import PaginationControl from '../components/katalog/PaginationControl';
 import { getProducts, getProductCategories } from '../services/productService';
 
 const ProductPage = () => {
+  const { categorySlug } = useParams(); // Ambil parameter kategori dari URL
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -30,8 +32,21 @@ const ProductPage = () => {
           getProductCategories()
         ]);
         setProducts(productsData);
-        setFilteredProducts(productsData);
         setCategories(categoriesData);
+        
+        // Set kategori berdasarkan URL parameter
+        if (categorySlug && categoriesData.length > 0) {
+          // Cari kategori berdasarkan slug
+          const categoryFromSlug = categoriesData.find(cat => 
+            cat.nama_kategori.toLowerCase().replace(/\s+/g, '-') === categorySlug
+          );
+          
+          if (categoryFromSlug) {
+            setSelectedCategory(categoryFromSlug.id.toString());
+          }
+        }
+        
+        setFilteredProducts(productsData);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -39,7 +54,7 @@ const ProductPage = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [categorySlug]);
 
   useEffect(() => {
     let results = [...products];
@@ -66,6 +81,13 @@ const ProductPage = () => {
     setCurrentPage(1); // reset saat ganti kategori
   };
 
+  // Function untuk mendapatkan nama kategori yang sedang dipilih
+  const getSelectedCategoryName = () => {
+    if (!selectedCategory) return 'Semua Produk';
+    const category = categories.find(cat => cat.id.toString() === selectedCategory);
+    return category ? category.nama_kategori : 'Semua Produk';
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -81,10 +103,13 @@ const ProductPage = () => {
     <div className="mt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <header className={`${isMobile ? 'mb-3' : 'mb-6'}`}>
         <h1 className={`font-bold ${isMobile ? 'text-xl' : 'text-2xl'} md:text-3xl lg:text-4xl`}>
-          Semua Produk
+          {selectedCategory ? `Kategori ${getSelectedCategoryName()}` : 'Semua Produk'}
         </h1>
         <p className={`${isMobile ? 'text-xs' : 'text-base'} text-gray-600 mt-1`}>
-          Katalog lengkap produk bahan bangunan
+          {selectedCategory 
+            ? `Produk dalam kategori ${getSelectedCategoryName()}`
+            : 'Katalog lengkap produk bahan bangunan'
+          }
         </p>
       </header>
 
@@ -118,6 +143,18 @@ const ProductPage = () => {
 
       {/* Product Grid */}
       <ProductGrid products={currentProducts} categories={categories} />
+
+      {/* Show message if no products found */}
+      {filteredProducts.length === 0 && !isLoading && (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">
+            {selectedCategory 
+              ? `Tidak ada produk dalam kategori ${getSelectedCategoryName()}`
+              : 'Tidak ada produk yang ditemukan'
+            }
+          </p>
+        </div>
+      )}
 
       {/* Pagination Control */}
       {totalPages > 1 && (
