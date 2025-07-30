@@ -1,4 +1,4 @@
-// contexts/AuthContext.js
+// src/contexts/AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const AuthContext = createContext();
@@ -7,38 +7,51 @@ const BASE_URL = 'https://tbnoto19-admin.rplrus.com/api';
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const [isAuthLoading, setIsAuthLoading] = useState(false);
 
-const fetchProfile = async (t) => {
+  const clearAuth = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    setToken(null);
+  };
+
+  const fetchProfile = async (t) => {
+    if (!t) return;
+    setIsAuthLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/profile`, {
-        method: 'GET', // ✅ Perbaikan di sini
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${t}`,
           'Accept': 'application/json',
         },
       });
-      const data = await res.json();
-      console.log('RESPON PROFILE:', data);
-      if (res.ok && (data.data || data.user || data.id)) {
+
+      // Coba parse JSON (meski res tidak ok) agar kita bisa baca pesan error
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (_) {
+        data = null;
+      }
+
+      if (res.ok && (data?.data || data?.user || data?.id)) {
         setUser(data.data || data.user || data);
       } else {
-        console.error('Gagal memuat profil:', data.message || data);
-        setUser(null);
-      }     
-
+        console.error('Gagal memuat profil:', data?.message || data);
+        // **PENTING**: kalau profile gagal (mis. 401), anggap token tidak valid → clear
+        clearAuth();
+      }
     } catch (error) {
       console.error('Error saat fetch profil:', error);
-      setUser(null);
-      setToken(null);
-      localStorage.removeItem('token');
+      clearAuth();
+    } finally {
+      setIsAuthLoading(false);
     }
-};
-
+  };
 
   useEffect(() => {
-    if (token) {
-      fetchProfile(token);
-    }
+    if (token) fetchProfile(token);
   }, [token]);
 
   const login = async (newToken) => {
@@ -52,18 +65,17 @@ const fetchProfile = async (t) => {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
       },
     }).finally(() => {
-      localStorage.removeItem('token');
-      setUser(null);
-      setToken(null);
+      clearAuth();
     });
   };
 
   const updateProfile = async (profileData) => {
     try {
       const res = await fetch(`${BASE_URL}/profile`, {
-        method: 'PUT', // ganti jika backendmu PATCH/PUT
+        method: 'PUT', // ganti ke PATCH jika backend kamu PATCH
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json',
@@ -72,21 +84,22 @@ const fetchProfile = async (t) => {
         body: JSON.stringify(profileData),
       });
       const data = await res.json();
-      if (res.ok && data.data) {
+      if (res.ok && data?.data) {
         setUser(data.data);
         console.log('Profil berhasil diperbarui:', data.data);
       } else {
-        console.error('Gagal memperbarui profil:', data.message || data);
+        console.error('Gagal memperbarui profil:', data?.message || data);
       }
     } catch (error) {
       console.error('Error saat update profil:', error);
     }
   };
 
-  const isLoggedIn = !!token;
+  // isLoggedIn sekarang hanya true kalau token **dan** user ada
+  const isLoggedIn = Boolean(token && user);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoggedIn, updateProfile }}>
+    <AuthContext.Provider value={{ user, token, login, logout, isLoggedIn, isAuthLoading, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );
