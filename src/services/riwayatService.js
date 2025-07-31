@@ -3,7 +3,7 @@ const BASE_URL = "https://tbnoto19-admin.rplrus.com/api";
 export async function getRiwayatUser() {
   const token = localStorage.getItem("token"); // pastikan token login user sudah disimpan
   try {
-    const res = await fetch(`${BASE_URL}/penjualan/riwayat`, {
+    const res = await fetch(`${BASE_URL}/penjualan/riwayat-transaksi`, {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
