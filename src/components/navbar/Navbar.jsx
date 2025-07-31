@@ -152,17 +152,48 @@ const Navbar = () => {
                     >
                         <ul className="flex flex-col text-center">
                             {/* dropdown */}
-                            <li className="relative">
+                            <li ref={mobileDropdownRef} className="relative">
                                 <button
-                                    onClick={() => {
-                                    setOpen(false); // Tutup mobile menu
-                                    window.location.href = "/#keunggulan"; // Redirect ke anchor
-                                    }}
+                                    onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
                                     className="w-full flex items-center justify-center p-4 border-b bg-white hover:bg-gray-100"
                                 >
-                                    Kategori
+                                    <motion.span
+                                        initial={{ opacity: 1, x: 0 }}
+                                        animate={{
+                                            opacity: 1,
+                                            x: mobileDropdownOpen ? "-230%" : "0%",
+                                        }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        Kategori
+                                    </motion.span>
+                                    <IoChevronDown
+                                        className={`absolute right-4 text-lg transition-transform duration-300 ${
+                                            mobileDropdownOpen ? "rotate-180" : ""
+                                        }`}
+                                    />
                                 </button>
+                                <AnimatePresence>
+                                    {mobileDropdownOpen && (
+                                        <motion.ul
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: "auto" }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            className="overflow-hidden bg-gray-100 text-black"
+                                        >
+                                            {["Kayu", "Besi", "Paralon", "Paku", "Semen", "Kanopi"].map((category, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="px-6 py-3 text-left hover:bg-gray-200 border-b last:border-none"
+                                                >
+                                                    <a href={`/katalog/${category.toLowerCase()}`}>{category}</a>
+                                                </li>
+                                            ))}
+                                        </motion.ul>
+                                    )}
+                                </AnimatePresence>
                             </li>
+
                             <li className="p-4 border-b hover:bg-gray-200"><a href="/katalog">Katalog Produk</a></li>
                             <li className="p-4 border-b hover:bg-gray-200"><a href="/riwayat">Riwayat</a></li>
                             <li className="p-4 border-b hover:bg-gray-200"><a href="/bantuan">Bantuan</a></li>

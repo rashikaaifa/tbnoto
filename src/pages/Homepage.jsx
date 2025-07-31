@@ -216,7 +216,7 @@ const Homepage = () => {
                             </h2>
                             <p className="text-lg leading-relaxed">
                             Berawal dari masa sulit saat pandemi Covid-19, kami kembali ke kampung halaman dan memulai usaha toko bangunan. Dari pencarian supplier ke berbagai pabrik, kami menemukan peluang besar di produk triplek dan menjadikannya fokus utama toko.
-                            Dengan nama <span className="text-primary font-semibold">TB. Noto 19</span>, kami hadir untuk menyediakan bahan bangunan berkualitas dengan harga yang lebih terjangkau.
+                            Dengan nama <span className="text-primary font-semibold">TB. Noto-19</span>, kami hadir untuk menyediakan bahan bangunan berkualitas dengan harga yang lebih terjangkau.
                             </p>
                         </motion.div>
                     </div>
@@ -389,7 +389,7 @@ const Homepage = () => {
             <section id="faq">
                 <div className="p-6 md:p-12">
                     <h2 className="text-2xl md:text-3xl font-semibold text-center mb-8">
-                        Formulir Saran & Pertanyaan
+                        Formulir Saran & Perpertanyaanan
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                         {/* gambar */}
