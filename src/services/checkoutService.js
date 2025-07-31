@@ -4,7 +4,7 @@ export async function checkoutPenjualan(payload) {
   const token = localStorage.getItem("token");
 
   try {
-    const res = await fetch(`${BASE_URL}/penjualan`, {
+    const res = await fetch(`${BASE_URL}/cart/checkout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
