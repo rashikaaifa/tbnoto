@@ -45,6 +45,7 @@ const Footer = () => {
                         <li><a href="/keranjang" className="">Keranjang</a></li>
                         <li><a href="/riwayat" className="">Riwayat</a></li>
                         <li><a href="/bantuan" className="">Bantuan</a></li>
+                        <li><a href="/profil" className="">Profil</a></li>
                         </ul>
                     </div>
         
@@ -113,7 +114,7 @@ const Footer = () => {
                         </p>
                     </div>
                     <ul className="flex flex-wrap justify-center gap-4 p-2">
-                        {["Katalog", "Keranjang", "Riwayat", "Bantuan"].map((item, index) => (
+                        {["Kategori", "Katalog", "Keranjang", "Riwayat", "Bantuan", "Profil"].map((item, index) => (
                             <li key={index}>
                                 <a href="#" className="">{item}</a>
                             </li>
