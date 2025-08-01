@@ -174,18 +174,18 @@ const Keranjang = () => {
   );
 };
 
-{process.env.NODE_ENV === 'development' && (
-  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3 text-xs text-yellow-800">
-    <div><b>DEBUG</b> Keranjang: {products.length} item</div>
-    <div>Quantities keys: {Object.keys(quantities).length}</div>
-    <button
-      onClick={refreshCart}
-      className="mt-2 inline-flex items-center px-2 py-1 bg-yellow-100 hover:bg-yellow-200 rounded"
-    >
-      Force Refresh
-    </button>
-  </div>
-)}
+// {process.env.NODE_ENV === 'development' && (
+//   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3 text-xs text-yellow-800">
+//     <div><b>DEBUG</b> Keranjang: {products.length} item</div>
+//     <div>Quantities keys: {Object.keys(quantities).length}</div>
+//     <button
+//       onClick={refreshCart}
+//       className="mt-2 inline-flex items-center px-2 py-1 bg-yellow-100 hover:bg-yellow-200 rounded"
+//     >
+//       Force Refresh
+//     </button>
+//   </div>
+// )}
 
 
 export default Keranjang;
