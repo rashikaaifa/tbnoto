@@ -9,8 +9,7 @@ import poster2 from "../assets/img/poster2.png"
 import poster3 from "../assets/img/poster3.png"
 import perjalananImg from "../assets/img/cth4.png";
 import faq from "../assets/img/faqhome.png";
-import BerhasilFAQ from "../components/popup/BerhasilFAQ";
-import GagalFAQ from "../components/popup/GagalFAQ";
+import PopUp from "../components/popup/PopUp";
 
 const keunggulan = [
     { title: "Harga Terbaik", desc: "Material berkualitas tinggi dengan harga terjangkau." },
@@ -33,8 +32,16 @@ const Homepage = () => {
     const allowedIds = [1, 9, 6, 2, 5, 7];
 
     // pop up
-    const [isBerhasilFAQOpen, setIsBerhasilFAQOpen] = useState(false);
-    const [isGagalFAQOpen, setIsGagalFAQOpen] = useState(false);
+    const [popupOpen, setPopupOpen] = useState(false);
+    const [popupData, setPopupData] = useState({
+        title: "",
+        message: "",
+        icon: "check",
+        actionLabel: null,
+        actionHref: null,
+        countdown: null,
+        redirectTo: null,
+    });
 
     useEffect(() => {
         fetch("https://tbnoto19-admin.rplrus.com/api/barang")
@@ -105,29 +112,41 @@ const Homepage = () => {
 
     try {
         const response = await fetch("https://tbnoto19-admin.rplrus.com/api/faq", {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
+            method: "POST",
+            headers: {
+            Accept: "application/json",
             "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+            },
+            body: JSON.stringify(formData),
         });
 
         const result = await response.json();
 
-        console.log("Status Code:", response.status);
-        console.log("Response JSON:", result);
-
         if (!response.ok) {
-        // tampilkan error dari API jika ada
-        throw new Error(result.message || "Gagal mengirim data.");
+            throw new Error(result.message || "Gagal mengirim data.");
         }
 
-        setIsBerhasilFAQOpen(true);
-            setFormData({ nama: "", email: "", pertanyaan: "" });
+        // berhasil
+        setPopupData({
+            title: "Berhasil!",
+            message: "Saran/Pertanyaan Anda akan segera kami balas via email. Terima kasih.",
+            icon: "check",
+            actionLabel: "Kembali ke Beranda",
+            actionHref: "/",
+            countdown: 5,
+            redirectTo: "/", 
+        });
+        setPopupOpen(true);
+        setFormData({ nama: "", email: "", pertanyaan: "" });
+
         } catch (error) {
-            console.error("Submit Error:", error.message);
-            setIsGagalFAQOpen(true);
+        // gagal
+        setPopupData({
+            title: "Gagal!",
+            message: error.message || "Terjadi kesalahan saat mengirim.",
+            icon: "cross",
+        });
+        setPopupOpen(true);
         }
     };
 
@@ -246,30 +265,30 @@ const Homepage = () => {
                 </div>
             </section>
 
-{/* kategori produk */}
-<section id="kategori">
-    <div className="p-6 md:p-12">
-        <h2 className="text-3xl font-bold text-center mb-8">Kategori</h2>
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-            {categories.map((kategori) => (
-                <Link
-                    key={kategori.id}
-                    to={`/katalog/kategori/${kategori.nama_kategori.toLowerCase().replace(/\s+/g, '-')}`}
-                    className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-lg cursor-pointer hover:scale-105 transition-all duration-500 block"
-                >
-                    <img
-                        src={`https://tbnoto19-admin.rplrus.com/storage/${kategori.foto_kategori}`}
-                        alt={kategori.nama_kategori}
-                        className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                        <span className="text-white font-semibold text-lg">{kategori.nama_kategori}</span>
+            {/* kategori produk */}
+            <section id="kategori">
+                <div className="p-6 md:p-12">
+                    <h2 className="text-3xl font-bold text-center mb-8">Kategori</h2>
+                    <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+                        {categories.map((kategori) => (
+                            <Link
+                                key={kategori.id}
+                                to={`/katalog/kategori/${kategori.nama_kategori.toLowerCase().replace(/\s+/g, '-')}`}
+                                className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-lg cursor-pointer hover:scale-105 transition-all duration-500 block"
+                            >
+                                <img
+                                    src={`https://tbnoto19-admin.rplrus.com/storage/${kategori.foto_kategori}`}
+                                    alt={kategori.nama_kategori}
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                    <span className="text-white font-semibold text-lg">{kategori.nama_kategori}</span>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
-                </Link>
-            ))}
-        </div>
-    </div>
-</section>
+                </div>
+            </section>
 
             {/* produk unggulan */}
             <section id="unggulan">
@@ -389,7 +408,7 @@ const Homepage = () => {
             <section id="faq">
                 <div className="p-6 md:p-12">
                     <h2 className="text-2xl md:text-3xl font-semibold text-center mb-8">
-                        Formulir Saran & Perpertanyaanan
+                        Formulir Saran & Pertanyaan
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                         {/* gambar */}
@@ -470,8 +489,17 @@ const Homepage = () => {
                                 </button>
                             </div>
                         </form>
-                            <BerhasilFAQ isOpen={isBerhasilFAQOpen} onClose={() => setIsBerhasilFAQOpen(false)} />
-                            <GagalFAQ isOpen={isGagalFAQOpen} onClose={() => setIsGagalFAQOpen(false)} />
+                            <PopUp
+                                isOpen={popupOpen}
+                                onClose={() => setPopupOpen(false)}
+                                title={popupData.title}
+                                message={popupData.message}
+                                icon={popupData.icon}
+                                countdown={popupData.countdown}
+                                redirectTo={popupData.redirectTo}
+                                actionLabel={popupData.actionLabel}
+                                actionHref={popupData.actionHref}
+                            />
                         </motion.div>
                     </div>
                 </div>
