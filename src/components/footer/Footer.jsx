@@ -45,7 +45,6 @@ const Footer = () => {
                         <li><a href="/keranjang" className="">Keranjang</a></li>
                         <li><a href="/riwayat" className="">Riwayat</a></li>
                         <li><a href="/bantuan" className="">Bantuan</a></li>
-                        <li><a href="/profil" className="">Profil</a></li>
                         </ul>
                     </div>
         

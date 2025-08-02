@@ -71,15 +71,15 @@ const Homepage = () => {
     };    
 
     const mobileImages = [
-        "/assets/hero/mobile1.png",
-        "/assets/hero/mobile2.png",
-        "/assets/hero/mobile3.png",
+        "/assets/hero/mobile1.webp",
+        "/assets/hero/mobile2.webp",
+        "/assets/hero/mobile3.webp",
     ];
       
     const desktopImages = [
-        "/assets/hero/desktop1.png",
-        "/assets/hero/desktop2.png",
-        "/assets/hero/desktop3.png",
+        "/assets/hero/desktop1.webp",
+        "/assets/hero/desktop2.webp",
+        "/assets/hero/desktop3.webp",
     ];
 
     useEffect(() => {
@@ -131,9 +131,9 @@ const Homepage = () => {
             title: "Berhasil!",
             message: "Saran/Pertanyaan Anda akan segera kami balas via email. Terima kasih.",
             icon: "check",
-            actionLabel: "Kembali ke Beranda",
+            actionLabel: "Tutup",
             actionHref: "/",
-            countdown: 5,
+            countdown: "",
             redirectTo: "/", 
         });
         setPopupOpen(true);
@@ -467,7 +467,7 @@ const Homepage = () => {
                             />
                             </div>
                             <div>
-                            <label className="block mb-1 font-medium">Saran / Perpertanyaanan</label>
+                            <label className="block mb-1 font-medium">Saran / Pertanyaan</label>
                             <textarea
                                 name="question"
                                 rows="4"
@@ -499,6 +499,7 @@ const Homepage = () => {
                                 redirectTo={popupData.redirectTo}
                                 actionLabel={popupData.actionLabel}
                                 actionHref={popupData.actionHref}
+                                showClose={false}
                             />
                         </motion.div>
                     </div>
