@@ -8,9 +8,9 @@ const PopUp = ({
   onClose,
   title = "Judul",
   message = "Isi pesan",
-  icon = "check", // check, cross, warning, null
+  icon = "check",
   showClose = true,
-  countdown = null, // angka detik, null untuk tidak aktif
+  countdown = null,
   redirectTo = null,
   actionLabel = null,
   actionHref = null,
@@ -19,24 +19,22 @@ const PopUp = ({
   const navigate = useNavigate();
   const [timer, setTimer] = useState(countdown);
 
-  // no scrolling
+  // Disable scrolling saat popup terbuka
   useEffect(() => {
     if (isOpen) document.body.classList.add("overflow-hidden");
     else document.body.classList.remove("overflow-hidden");
     return () => document.body.classList.remove("overflow-hidden");
   }, [isOpen]);
 
-  // countdown
+  // Jalankan countdown
   useEffect(() => {
     if (!isOpen || countdown === null) return;
 
     setTimer(countdown); // reset timer
-
     const interval = setInterval(() => {
       setTimer((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          if (redirectTo) navigate(redirectTo);
           return 0;
         }
         return prev - 1;
@@ -44,7 +42,14 @@ const PopUp = ({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isOpen, countdown, redirectTo, navigate]);
+  }, [isOpen, countdown]);
+
+  // Redirect ketika timer habis
+  useEffect(() => {
+    if (timer === 0 && redirectTo) {
+      navigate(redirectTo);
+    }
+  }, [timer, redirectTo, navigate]);
 
   if (!isOpen) return null;
 
