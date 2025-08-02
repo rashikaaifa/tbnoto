@@ -392,3 +392,55 @@ export async function adjustProductStock(productId, delta, token) {
   if (target < 0) throw new Error('Stok tidak cukup');
   return setProductStockSmart(productId, target, resolveUkuran(raw), token);
 }
+
+// items: [{ cartId, productId, quantity, price }]
+export const checkoutCart = async (items, token, extra) => {
+  const API_BASE = 'https://tbnoto19-admin.rplrus.com/api';
+  const url = `${API_BASE}/cart/checkout`;
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+
+  // Hitung total & ongkir (3%) di sisi client jika backend tidak menghitung.
+  const subtotal = items.reduce((s, it) => s + (Number(it.price || 0) * Number(it.quantity || 1)), 0);
+  const ongkir = Math.round(subtotal * 0.03);
+
+  const body = {
+    // --- kolom sesuai DB ---
+    nama_penerima: extra?.nama_penerima ?? extra?.nama ?? '',
+    no_telepon: extra?.no_telepon ?? extra?.nomor_telepon ?? '',
+    alamat_pengiriman: extra?.alamat_pengiriman ?? extra?.alamat ?? '',
+    metode_pembayaran: (extra?.metode_pembayaran ?? extra?.metode ?? '').toLowerCase(),
+    total_harga: Number(extra?.total_harga ?? subtotal),
+    ongkir: Number(extra?.ongkir ?? ongkir),
+
+    // tergantung backend, biasanya ikut kirim detail item:
+    items: items.map(it => ({
+      cart_id: it.cartId ?? it.id,
+      barang_id: it.productId,
+      quantity: it.quantity,
+      price: it.price,
+    })),
+  };
+
+  const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
+  const txt = await res.text();
+  
+  if (!res.ok) {
+    try {
+      const j = JSON.parse(txt);
+      const msg = j?.message || 'Checkout gagal';
+      const errors = j?.errors
+        ? ' — ' + Object.entries(j.errors).map(([k, v]) => `${k}: ${Array.isArray(v) ? v[0] : v}`).join('; ')
+        : '';
+      throw new Error(`${msg}${errors}`);
+    } catch {
+      throw new Error(`Checkout gagal (HTTP ${res.status}): ${txt}`);
+    }
+  }
+
+  try { return JSON.parse(txt); } catch { return { ok: true }; }
+};

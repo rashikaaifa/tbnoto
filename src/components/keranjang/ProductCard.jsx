@@ -9,7 +9,7 @@ const ProductCard = ({
   onUpdateQuantity,
   onRemove
 }) => {
-  // Stok sisa yang diterima dari server & dikelola useCartState
+  // Stok dari server
   const stockFromServer =
     typeof product.stock === 'number'
       ? product.stock
@@ -17,8 +17,10 @@ const ProductCard = ({
       ? product.quantity
       : 0;
 
-  const canDecrement = quantity > 0;
+  // Hanya untuk tampilan: stok sisa = stok server - qty di keranjang user
+  const displayedStock = Math.max(0, stockFromServer - (quantity || 0));
 
+  const canDecrement = quantity > 0;
   const totalPrice = (product.price || 0) * (quantity || 0);
 
   const formatPrice = (price) =>
@@ -68,7 +70,7 @@ const ProductCard = ({
 
           <div className="flex items-center text-xs text-gray-600">
             <span className="mr-1 text-xs">📦</span>
-            {`Stok: ${stockFromServer}`}
+            {`Stok: ${displayedStock}`}
           </div>
 
           <div className="flex items-center text-xs text-gray-600">

@@ -1,16 +1,22 @@
-// src/pages/Keranjang.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
 import ProductCard from '../components/keranjang/ProductCard';
 import CartSummary from '../components/keranjang/CartSummary';
 import MobileSummary from '../components/keranjang/MobileSummary';
 import DeleteConfirmation from '../services/DeleteConfirmation';
+
 import { useCartState } from '../services/useCartState';
 import { useAuth } from '../contexts/AuthContext';
 
 const Keranjang = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const {
+    products,
+    selectedProducts,
+    quantities,
+
   const {
     products,
     selectedProducts,
@@ -26,6 +32,7 @@ const Keranjang = () => {
 
   const [isMobileSummaryExpanded, setIsMobileSummaryExpanded] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState({ isOpen: false, productId: null, productName: '' });
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const toggleMobileSummary = () => setIsMobileSummaryExpanded(!isMobileSummaryExpanded);
 
@@ -45,6 +52,53 @@ const Keranjang = () => {
   const handleLoginRedirect = () => navigate('/login');
 
   const summary = calculateSummary();
+
+  // === Pindahkan proses checkout ke OrderPage ===
+  const goToOrderPage = () => {
+    if (!isLoggedIn) {
+      return navigate('/login', { state: { from: '/keranjang' } });
+    }
+
+    const selected = products
+      .filter(p => selectedProducts[p.id])
+      .map(p => ({
+        id: p.id,               // cart item id
+        cartId: p.id,
+        productId: p.productId, // product id
+        quantity: quantities[p.id] || 1,
+        price: p.price || 0,
+        name: p.name,
+        image: p.image,
+        size: p.size,
+      }));
+
+    if (selected.length === 0) {
+      alert('Pilih minimal 1 barang untuk checkout.');
+      return;
+    }
+
+    // buat draft order supaya OrderPage langsung tampil
+    const subtotal = selected.reduce((s, it) => s + (it.price * it.quantity), 0);
+    const shipping = Math.round(subtotal * 0.03);
+    const total = subtotal + shipping;
+
+    const orderDraft = {
+      items: selected.map(it => ({
+        productId: it.productId,
+        name: it.name,
+        image: it.image,
+        size: it.size,
+        price: it.price,
+        qty: it.quantity,
+      })),
+      subtotal,
+      shipping,
+      total,
+    };
+
+    localStorage.setItem('pendingOrder', JSON.stringify(orderDraft));
+    navigate('/orderpage', { state: { order: orderDraft } });
+  };
 
   if (!isLoggedIn) {
     return (
@@ -161,31 +215,29 @@ const Keranjang = () => {
           </div>
 
           <div className="hidden lg:block">
-            <CartSummary summary={summary} disabled={summary.totalItems === 0} />
+            <CartSummary
+              summary={summary}
+              disabled={summary.totalItems === 0}
+              onCheckout={goToOrderPage}
+              loading={isCheckingOut}
+            />
           </div>
         </div>
 
         {/* Mobile summary */}
         <div className="block lg:hidden">
-          <MobileSummary summary={summary} isExpanded={isMobileSummaryExpanded} onToggle={toggleMobileSummary} disabled={summary.totalItems === 0} />
+          <MobileSummary
+            summary={summary}
+            isExpanded={isMobileSummaryExpanded}
+            onToggle={toggleMobileSummary}
+            disabled={summary.totalItems === 0}
+            onCheckout={goToOrderPage}
+            loading={isCheckingOut}
+          />
         </div>
       </div>
     </div>
   );
 };
-
-// {process.env.NODE_ENV === 'development' && (
-//   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3 text-xs text-yellow-800">
-//     <div><b>DEBUG</b> Keranjang: {products.length} item</div>
-//     <div>Quantities keys: {Object.keys(quantities).length}</div>
-//     <button
-//       onClick={refreshCart}
-//       className="mt-2 inline-flex items-center px-2 py-1 bg-yellow-100 hover:bg-yellow-200 rounded"
-//     >
-//       Force Refresh
-//     </button>
-//   </div>
-// )}
-
 
 export default Keranjang;

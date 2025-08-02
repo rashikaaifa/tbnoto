@@ -77,18 +77,12 @@ const ProductDetail = () => {
 
     setIsAddingToCart(true);
     try {
-      // 1) Tambah ke keranjang
+      // Tambah ke keranjang saja — stok DB tidak disentuh di frontend
       await addToCart(product.id, quantity, token);
 
-      // 2) Sesuaikan stok di DB (kurangi)
-      await adjustProductStock(product.id, -quantity, token);
-
-      // 3) Re-fetch produk agar UI stok sesuai DB
-      const fresh = await getProductById(product.id);
-      setProduct(fresh);
-
       showNotification('success', `${product.nama} berhasil ditambahkan ke keranjang!`);
-      setQuantity(fresh.stok > 0 ? 1 : 0);
+      // Opsional: reset qty ke 1 agar UX enak
+      setQuantity(1);
     } catch (e) {
       showNotification('error', e.message || 'Gagal menambahkan ke keranjang. Silakan coba lagi.');
     } finally {

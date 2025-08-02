@@ -1,7 +1,6 @@
-// src/components/keranjang/MobileSummary.jsx
 import React from 'react';
 
-const MobileSummary = ({ summary, isExpanded, onToggle, disabled }) => {
+const MobileSummary = ({ summary, isExpanded, onToggle, disabled, onCheckout, loading }) => {
   return (
     <div className="fixed bottom-0 left-0 w-full bg-white shadow-md z-50 rounded-t-lg">
       {/* Bar rangkuman harga */}
@@ -32,21 +31,19 @@ const MobileSummary = ({ summary, isExpanded, onToggle, disabled }) => {
         <div className="flex justify-between mb-1">
           <span className="text-xs text-gray-600">Ongkos Kirim (3%)</span>
           <span className="text-xs font-medium">
-            {summary.shipping === 0 
-              ? 'Gratis' 
-              : `Rp${summary.shipping.toLocaleString()}`}
+            {summary.shipping === 0 ? 'Gratis' : `Rp${summary.shipping.toLocaleString()}`}
           </span>
-        </div>  
+        </div>
       </div>
 
       {/* Tombol beli */}
       <div className="p-3 pt-2">
         <button
           className="bg-green-800 hover:bg-green-900 text-white w-full rounded-md py-2 px-4 text-sm font-semibold flex items-center justify-center gap-1 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-          disabled={disabled}
+          disabled={disabled || loading}
+          onClick={onCheckout}
         >
-          <i className="text-sm">🛒</i>
-          Beli Sekarang
+          {loading ? 'Memproses...' : (<><i className="text-sm">🛒</i> Beli Sekarang</>)}
         </button>
       </div>
     </div>
