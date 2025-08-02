@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getRiwayatUser } from "../services/riwayatService";
+import PerluMasuk from "../components/popup/PerluMasuk";
 
 export default function Riwayat() {
   const [transactions, setTransactions] = useState([]);
@@ -23,6 +24,7 @@ export default function Riwayat() {
   }, []);
 
   return (
+    <PerluMasuk>
     <div className="min-h-screen flex flex-col mt-20">
       <div className="w-full max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-6 text-left">Riwayat Transaksi</h1>
@@ -74,5 +76,6 @@ export default function Riwayat() {
         {/* Tambahkan Footer jika ada */}
       </footer>
     </div>
+    </PerluMasuk>
   );
 }

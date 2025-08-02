@@ -10,6 +10,7 @@ const PopUp = ({
   message = "Isi pesan",
   icon = "check",
   showClose = true,
+  hideClose,
   countdown = null,
   redirectTo = null,
   actionLabel = null,
@@ -71,7 +72,7 @@ const PopUp = ({
         className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md text-center relative"
       >
         {/* close icon */}
-        {showClose && (
+        {showClose && !hideClose && (
           <button className="absolute top-3 right-3 hover:text-gray-800" onClick={onClose}>
             <IoClose className="text-2xl" />
           </button>
