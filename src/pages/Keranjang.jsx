@@ -16,11 +16,6 @@ const Keranjang = () => {
     products,
     selectedProducts,
     quantities,
-
-  const {
-    products,
-    selectedProducts,
-    quantities,
     isLoading,
     error,
     toggleProductSelection,
