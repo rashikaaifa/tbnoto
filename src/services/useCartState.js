@@ -1,29 +1,22 @@
 // src/services/useCartState.js
-// Mengelola state keranjang + sinkron stok real-time (buffered)
+// Mengelola state keranjang TANPA pernah mengubah stok produk di DB.
+// Stok hanya akan berkurang oleh backend saat checkout.
 
 import { useState, useEffect } from 'react';
 import {
   getCartItems,
   removeFromCart,
   queueUpdateCartItemQuantity, // debounced PUT /api/cart/{id}
-  queueAdjustProductStock,     // debounced set stok barang
 } from '../services/productService';
 import { useAuth } from '../contexts/AuthContext';
 
 const DEBUG = false;
 
 const getStock = (item) => {
+  // stok total produk dari server
   if (typeof item?.stock === 'number') return item.stock;
   if (typeof item?.quantity === 'number') return item.quantity;
   return 0;
-};
-
-const patchProductStockInState = (items, cartItemId, delta) => {
-  return items.map((p) =>
-    p.id === cartItemId
-      ? { ...p, stock: (typeof p.stock === 'number' ? p.stock : getStock(p)) - delta }
-      : p
-  );
 };
 
 export const useCartState = () => {
@@ -67,9 +60,9 @@ export const useCartState = () => {
   };
 
   /**
-   * Update quantity cart item (delta logic, debounced):
-   * delta > 0 → stok DB berkurang; delta < 0 → stok DB bertambah.
-   * PUT ke /api/cart/{id} dan set stok di /api/barang/{productId} dilakukan via antrian (queue).
+   * Update quantity cart item (debounced):
+   * - Tidak mengubah stok produk di DB dari sisi client.
+   * - Batasi qty <= stok total dari server.
    */
   const updateQuantity = (id, amount) => {
     const item = products.find((p) => p.id === id);
@@ -78,32 +71,22 @@ export const useCartState = () => {
     const currentQty = quantities[id] || 1;
     const desired = Math.max(1, currentQty + amount);
 
-    const availableStock = getStock(item);
-    const maxAllowed = currentQty + availableStock;
-    const updatedQty = Math.min(desired, maxAllowed);
-    const delta = updatedQty - currentQty;
-    if (delta === 0) return;
+    // Batas maksimum = stok total dari server
+    const totalStock = getStock(item);
+    const updatedQty = Math.min(desired, totalStock);
+    if (updatedQty === currentQty) return;
 
-    // Optimistic UI
+    // Optimistic UI (hanya qty)
     setQuantities((prev) => ({ ...prev, [id]: updatedQty }));
-    setProducts((prev) => patchProductStockInState(prev, id, delta));
 
-    // 1) Queue update keranjang (debounced, non-blocking)
+    // Simpan ke server (debounced)
     queueUpdateCartItemQuantity(id, updatedQty, token);
-
-    // 2) Queue adjust stok produk (debounced, non-blocking)
-    if (item.productId) queueAdjustProductStock(item.productId, -delta, token);
   };
 
   const removeProduct = async (id) => {
-    const item = products.find((p) => p.id === id);
-    const qty = quantities[id] || item?.cartQuantity || 0;
-
     try {
       await removeFromCart(id, token);
-      // Kembalikan stok (dibuffer)
-      if (item?.productId && qty > 0) queueAdjustProductStock(item.productId, +qty, token);
-
+      // Hapus item dari state (tidak ada pengembalian stok ke DB dari client)
       setProducts((prev) => prev.filter((p) => p.id !== id));
       setSelectedProducts((prev) => { const n = { ...prev }; delete n[id]; return n; });
       setQuantities((prev) => { const n = { ...prev }; delete n[id]; return n; });
@@ -122,7 +105,7 @@ export const useCartState = () => {
         subtotal += (p.price || 0) * qty;
       }
     });
-    const shipping = subtotal > 1000000 ? 0 : subtotal * 0.03;
+    const shipping = subtotal > 1000000 ? 0 : Math.round(subtotal * 0.03);
     return { totalItems, subtotal, shipping, total: subtotal + shipping };
   };
 

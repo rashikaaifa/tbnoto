@@ -1,7 +1,7 @@
 // src/pages/ProductDetail.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getProductById, addToCart, adjustProductStock } from '../services/productService';
+import { getProductById, addToCart } from '../services/productService';
 import { useAuth } from '../contexts/AuthContext';
 
 // Simple Notification Component - inline
@@ -77,18 +77,12 @@ const ProductDetail = () => {
 
     setIsAddingToCart(true);
     try {
-      // 1) Tambah ke keranjang
+      // Tambah ke keranjang saja — stok DB tidak disentuh di frontend
       await addToCart(product.id, quantity, token);
 
-      // 2) Sesuaikan stok di DB (kurangi)
-      await adjustProductStock(product.id, -quantity, token);
-
-      // 3) Re-fetch produk agar UI stok sesuai DB
-      const fresh = await getProductById(product.id);
-      setProduct(fresh);
-
       showNotification('success', `${product.nama} berhasil ditambahkan ke keranjang!`);
-      setQuantity(fresh.stok > 0 ? 1 : 0);
+      // Opsional: reset qty ke 1 agar UX enak
+      setQuantity(1);
     } catch (e) {
       showNotification('error', e.message || 'Gagal menambahkan ke keranjang. Silakan coba lagi.');
     } finally {
