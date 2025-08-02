@@ -16,37 +16,39 @@ import OrderPage from './pages/OrderPage';
 import SuksesMasuk from './pages/SuksesMasuk';
 
 const AppContent = () => {
-  const location = useLocation();
-  const hideLayout = ['/daftar', '/masuk'].includes(location.pathname);
+	const location = useLocation();
+	const hideLayout = ['/daftar', '/masuk'].includes(location.pathname);
 
-  return (
-    <div className="overflow-x-hidden flex flex-col min-h-screen">
-      {!hideLayout && <Navbar />}
-      {!hideLayout && <WhatsApp />}
+	return (
+		<div className="overflow-x-hidden flex flex-col min-h-screen">
+			{!hideLayout && <Navbar />}
+			{!hideLayout && <WhatsApp />}
 
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/daftar" element={<Daftar />} />
-        <Route path="/masuk" element={<Masuk />} />
-        <Route path="/bantuan" element={<Bantuan />} />
-        <Route path="/riwayat" element={<Riwayat />} />
-        <Route path="/profil" element={<Profil />} />
-        <Route path="/keranjang" element={<Keranjang />} />
-        <Route path="/katalog" element={<ProductPage />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/orderPage" element={<OrderPage />} />
-        <Route path="/katalog/kategori/:categorySlug" element={<ProductPage />} />
-        <Route path="/login/success" element={<SuksesMasuk />} />
+			<Routes>
+				<Route path="/" element={<Homepage />} />
+				<Route path="/daftar" element={<Daftar />} />
+				<Route path="/masuk" element={<Masuk />} />
+				<Route path="/bantuan" element={<Bantuan />} />
+				<Route path="/riwayat" element={<Riwayat />} />
+				<Route path="/profil" element={<Profil />} />
+				<Route path="/keranjang" element={<Keranjang />} />
+				<Route path="/katalog" element={<ProductPage />} />
+				<Route path="/product/:id" element={<ProductDetail />} />
+				<Route path="/orderPage" element={<OrderPage />} />
+				<Route
+					path="/katalog/kategori/:categorySlug"
+					element={<ProductPage />}
+				/>
+				<Route path="/login/success" element={<SuksesMasuk />} />
+			</Routes>
 
-      </Routes>
-
-      {!hideLayout && <Footer />}
-    </div>
-  );
+			{!hideLayout && <Footer />}
+		</div>
+	);
 };
 
 const App = () => {
-  return <AppContent />;
+	return <AppContent />;
 };
 
 export default App;
