@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getRiwayatUser } from "../services/riwayatService";
-import PerluMasuk from "../components/popup/PerluMasuk";
+import PerluMasuk from "../components/popup/PerluMasuk"
 
 export default function Riwayat() {
   const [transactions, setTransactions] = useState([]);
