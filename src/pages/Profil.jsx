@@ -5,30 +5,50 @@ import { useNavigate } from 'react-router-dom';
 import profileImage from '../assets/img/lucu.jpg';
 import { GoPencil } from "react-icons/go";
 import { useAuth } from '../contexts/AuthContext';
+import PopUp from '../components/popup/PopUp';
 
 const BASE_URL = 'https://tbnoto19-admin.rplrus.com/api';
 
 const ProfilePage = () => {
   const { isLoggedIn, logout, user, updateProfile, token, setUser } = useAuth();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [popupData, setPopupData] = useState({
+    title: "",
+    message: "",
+    icon: "check",
+    actionLabel: null,
+    actionHref: null,
+    countdown: null,
+    redirectTo: null,
+  });
 
   const [isEditing, setIsEditing] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    address: '',
-  });
+  name: '',
+  email: '',
+  phone: '',
+  password: '',
+  address: '',
+});
+
+  const fields = [
+    { label: "Nama", name: "name" },
+    { label: "Email", name: "email" },
+    { label: "Nomor Telepon", name: "phone", isPhoneWithPrefix: true },
+    { label: "Kata Sandi", name: "password", isPassword: true },
+    { label: "Alamat", name: "address" },
+  ];
 
   useEffect(() => {
     if (user) {
       setFormData({
         name: user.name || '',
         email: user.email || '',
-        phone: user.phone || '',
+        phone: user.phone?.replace(/^(\+62|62|0)/, '') || '',
         password: '',
         address: user.address || '',
       });
@@ -57,23 +77,17 @@ const ProfilePage = () => {
         });
 
         const data = await res.json();
-        console.log('Foto profil diupload:', data);
-
         if (res.ok && (data.profile_photo_url || data.data?.profile_photo)) {
           const photoUrl = data.profile_photo_url || data.data?.profile_photo;
           setImagePreview(photoUrl);
-          setUser(prev => ({
-            ...prev,
-            profile_photo: photoUrl
-          }));
+          setUser(prev => ({ ...prev, profile_photo: photoUrl }));
           alert('Foto profil berhasil diupdate!');
         } else {
           alert('Gagal upload foto profil.');
-          console.error('Gagal upload foto profil:', data.message || data);
         }
       } catch (error) {
         alert('Terjadi kesalahan saat upload foto.');
-        console.error('Error saat upload foto profil:', error);
+        console.error(error);
       }
     }
   };
@@ -83,17 +97,29 @@ const ProfilePage = () => {
       const profileData = {
         name: formData.name,
         email: formData.email,
-        phone: formData.phone,
+        phone: `+62${formData.phone.replace(/^(\+62|62|0)/, '')}`,
         address: formData.address,
-        password: formData.password || undefined,
+        ...(formData.password && { password: formData.password }),
       };
 
       await updateProfile(profileData);
       setIsEditing(false);
-      alert('Data profil berhasil diperbarui.');
+      setPopupData({
+        title: "Berhasil",
+        message: "Data profil berhasil diperbarui.",
+        icon: "check",
+        countdown: 3,
+      });
+      setPopupOpen(true);
     } catch (error) {
       console.error('Gagal update profil:', error);
-      alert('Gagal update profil.');
+      setPopupData({
+        title: "Gagal",
+        message: "Gagal memperbarui data profil. Silakan coba lagi.",
+        icon: "error",
+        countdown: 3,
+      });
+      setPopupOpen(true);
     }
   };
 
@@ -102,7 +128,7 @@ const ProfilePage = () => {
       setFormData({
         name: user.name || '',
         email: user.email || '',
-        phone: user.phone || '',
+        phone: user.phone?.replace(/^(\+62|62|0)/, '') || '',
         password: '',
         address: user.address || '',
       });
@@ -151,46 +177,64 @@ const ProfilePage = () => {
         <div className="flex-1 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-              { label: "Nama", name: "name" },
-              { label: "Email", name: "email" },
-              { label: "Nomor Telepon", name: "phone" },
-              { label: "Kata Sandi", name: "password", isPassword: true },
-              { label: "Alamat", name: "address" },
-            ].map((field, idx) => (
-              <div key={idx} className={field.name === "name" || field.name === "address" || field.name === "password" ? "md:col-span-2" : ""}>
-                <label className="block text-lg font-semibold black-600 mb-2">{field.label}</label>
-                {isEditing ? (
-                  field.isPassword ? (
-                    <div className="relative">
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        name={field.name}
-                        value={formData[field.name]}
-                        onChange={handleChange}
-                        className="mt-1 w-full border rounded-lg px-4 py-3 text-lg pr-12"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute top-1/2 right-4 transform -translate-y-1/2 black-500"
-                      >
-                        {showPassword ? '🙈' : '👁️'}
-                      </button>
-                    </div>
-                  ) : (
-                    <input
-                      type="text"
-                      name={field.name}
-                      value={formData[field.name]}
-                      onChange={handleChange}
-                      className="mt-1 w-full border rounded-lg px-4 py-3 text-base"
-                    />
-                  )
-                ) : (
-                  <p className="mt-1 text-lg black-800">{field.isPassword ? '********' : formData[field.name]}</p>
-                )}
-              </div>
-            ))}
+  { label: "Nama", name: "name" },
+  { label: "Email", name: "email" },
+  { label: "Nomor Telepon", name: "phone" },
+  { label: "Kata Sandi", name: "password", isPassword: true },
+  { label: "Alamat", name: "address" },
+].map((field, idx) => {
+  const isFullWidth = ["name", "address", "password"].includes(field.name);
+  const isPhone = field.name === "phone";
+  const isPassword = field.isPassword;
+  const inputType = isPassword && showPassword ? "text" : isPassword ? "password" : "text";
+
+  return (
+    <div key={idx} className={isFullWidth ? "md:col-span-2" : ""}>
+      <label className="block text-lg font-semibold black-600 mb-2">{field.label}</label>
+      {isEditing ? (
+  <div className="relative">
+    {isPhone && (
+      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-base">
+        +62
+      </span>
+    )}
+    <input
+      type={inputType}
+      name={field.name}
+      value={
+        isPhone
+          ? formData.phone.replace(/^(\+62|62|0)/, "")
+          : formData[field.name]
+      }
+      onChange={handleChange}
+      className={`w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 ${
+        isPhone ? "pl-12" : ""
+      }`}
+      placeholder={isPhone ? "81234567890" : ""}
+    />
+    {isPassword && (
+      <button
+        type="button"
+        onClick={() => setShowPassword(!showPassword)}
+        className="absolute top-1/2 right-4 transform -translate-y-1/2 black-500"
+      >
+        {showPassword ? '🙈' : '👁️'}
+      </button>
+    )}
+  </div>
+) : (
+  <p className="mt-1 text-lg black-800">
+  {isPhone
+    ? `+62 ${formData.phone}`
+    : isPassword
+      ? '********'
+      : formData[field.name]}
+</p>
+)}
+
+    </div>
+  );
+})}
           </div>
 
           {/* Tombol aksi */}
@@ -202,12 +246,6 @@ const ProfilePage = () => {
                   className="bg-primary text-white px-8 py-3 rounded-lg font-medium transition text-base"
                 >
                   Simpan
-                </button>
-                <button
-                  onClick={handleCancel}
-                  className="border border-primary text-primary px-8 py-3 rounded-lg font-medium transition text-base"
-                >
-                  Batal
                 </button>
               </>
             ) : (
@@ -234,6 +272,17 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+      <PopUp
+                                isOpen={popupOpen}
+                                onClose={() => setPopupOpen(false)}
+                                title={popupData.title}
+                                message={popupData.message}
+                                icon={popupData.icon}
+                                countdown={popupData.countdown}
+                                redirectTo={popupData.redirectTo}
+                                actionLabel={popupData.actionLabel}
+                                actionHref={popupData.actionHref}
+                            />
     </div>
   );
 };
