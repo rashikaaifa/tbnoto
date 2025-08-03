@@ -1,6 +1,6 @@
 // src/pages/OrderPage.jsx
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { checkoutCart } from '../services/productService';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -18,7 +18,7 @@ export default function OrderPage() {
   const [telp, setTelp] = useState('');
   const [alamat, setAlamat] = useState('');
   const [metode, setMetode] = useState(''); // e.g. "cod" | "transfer_bank" | "ewallet"
-
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   // Fallback saat refresh halaman
@@ -86,7 +86,9 @@ export default function OrderPage() {
       // Simpan hasil terakhir (opsional)
       localStorage.setItem('lastOrder', JSON.stringify(res));
       alert('Pesanan berhasil dibuat!');
-      // TODO: jika ingin, redirect ke halaman riwayat/sukses
+      alert('Pesanan berhasil dibuat!');
+      navigate('/keranjang'); // arahkan kembali ke halaman keranjang
+
     } catch (e) {
       console.error(e);
       alert(e.message || 'Gagal menyelesaikan pesanan.');
