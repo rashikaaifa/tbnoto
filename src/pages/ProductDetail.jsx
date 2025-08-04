@@ -1,6 +1,6 @@
 // src/pages/ProductDetail.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getProductById, addToCart, adjustProductStock } from '../services/productService';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -33,10 +33,12 @@ const SimpleNotification = ({ show, type, message, onClose }) => {
 const ProductDetail = () => {
   const { id } = useParams();
   const { isLoggedIn, token } = useAuth();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isBuyingDirect, setIsBuyingDirect] = useState(false);
   const [notification, setNotification] = useState({ show: false, type: 'success', message: '' });
 
   const showNotification = (type, message) => setNotification({ show: true, type, message });
@@ -87,6 +89,44 @@ const ProductDetail = () => {
       showNotification('error', e.message || 'Gagal menambahkan ke keranjang. Silakan coba lagi.');
     } finally {
       setIsAddingToCart(false);
+    }
+  };
+
+  const handleDirectBuy = async () => {
+    if (!product) return;
+    if (!isLoggedIn) { showNotification('error', 'Silakan login terlebih dahulu untuk berbelanja'); return; }
+    if (product.stok === 0) { showNotification('error', 'Maaf, stok produk habis'); return; }
+    if (quantity > product.stok) { showNotification('error', `Stok hanya tersisa ${product.stok} item`); setQuantity(product.stok); return; }
+
+    setIsBuyingDirect(true);
+    try {
+      // Buat order langsung tanpa melalui keranjang
+      const orderData = {
+        items: [{
+          cartId: null, // tidak ada cart ID karena langsung beli
+          productId: product.id,
+          name: product.nama,
+          image: product.gambar,
+          price: product.harga,
+          qty: quantity,
+          quantity: quantity, // fallback
+          size: product.ukuran || '',
+          stock: product.stok
+        }],
+        total_harga: calculateTotalPrice(),
+        ongkir: Math.round(calculateTotalPrice() * 0.03),
+        total: calculateTotalPrice() + Math.round(calculateTotalPrice() * 0.03)
+      };
+
+      // Simpan order sementara untuk halaman checkout
+      localStorage.setItem('pendingOrder', JSON.stringify(orderData));
+
+      // Navigate ke halaman order
+      navigate('/orderPage', { state: { order: orderData } });
+    } catch (e) {
+      showNotification('error', e.message || 'Gagal memproses pesanan. Silakan coba lagi.');
+    } finally {
+      setIsBuyingDirect(false);
     }
   };
 
@@ -153,9 +193,11 @@ const ProductDetail = () => {
                  isAddingToCart ? 'Menambahkan...' :
                  product.stok === 0 ? 'Stok Habis' : 'Masukkan Keranjang'}
               </button>
-              <button disabled={!isLoggedIn || product.stok === 0}
+              <button onClick={handleDirectBuy} disabled={!isLoggedIn || product.stok === 0 || isBuyingDirect}
                 className="bg-green-700 text-white px-4 py-3 rounded-lg font-medium hover:bg-green-800 transition disabled:opacity-50 disabled:cursor-not-allowed">
-                {!isLoggedIn ? 'Login Dulu' : product.stok === 0 ? 'Habis' : 'Beli'}
+                {!isLoggedIn ? 'Login Dulu' : 
+                 isBuyingDirect ? 'Memproses...' :
+                 product.stok === 0 ? 'Habis' : 'Beli'}
               </button>
             </div>
 

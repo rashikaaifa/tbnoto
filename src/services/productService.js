@@ -5,6 +5,7 @@
 // - CART formatter robust
 // - Debounce/buffer untuk update qty keranjang & penyesuaian stok
 // - setProductStockSmart: PATCH payload lengkap (tanpa foto) → PUT fallback
+// - FIXED: Image URL handler untuk mencegah double URL
 // ======================================================================
 
 const API_BASE = 'https://tbnoto19-admin.rplrus.com/api';
@@ -81,7 +82,22 @@ export const invalidateCategoriesCache = () => { categoriesCache = { data: null,
 
 // -------------------- formatter produk/keranjang --------------------
 const formatProductData = (p) => {
-  const foto = (p?.foto_barang || '').replace(/^storage\//, '');
+  let foto = p?.foto_barang || '';
+  
+  // Handle image URL - cek apakah sudah berupa URL lengkap atau masih path relatif
+  let imageUrl = '/placeholder-image.jpg'; // default fallback
+  
+  if (foto) {
+    if (foto.startsWith('http://') || foto.startsWith('https://')) {
+      // Sudah berupa URL lengkap, gunakan langsung
+      imageUrl = foto;
+    } else {
+      // Masih berupa path relatif, tambahkan base URL
+      const cleanPath = foto.replace(/^storage\//, '');
+      imageUrl = `https://tbnoto19-admin.rplrus.com/storage/${cleanPath}`;
+    }
+  }
+
   return {
     id: p.id,
     nama: p.nama_barang,
@@ -89,7 +105,7 @@ const formatProductData = (p) => {
     harga: Number(p.harga ?? 0),
     stok: Number(p.stok ?? 0),
     deskripsi: p.deskripsi || '',
-    gambar: foto ? `https://tbnoto19-admin.rplrus.com/storage/${foto}` : '/placeholder-image.jpg',
+    gambar: imageUrl,
     ukuran: p.ukuran || '',
     created_at: p.created_at,
     updated_at: p.updated_at,
@@ -105,8 +121,18 @@ const formatCartData = (c) => {
   const rawStock = b.stok ?? b.stock ?? 0;
 
   let foto = c.foto_barang || b.foto_barang || b.image || '';
-  if (typeof foto === 'string') foto = foto.replace(/^storage\//, '');
-  const imageUrl = foto ? `https://tbnoto19-admin.rplrus.com/storage/${foto}` : '/placeholder-image.jpg';
+  let imageUrl = '/placeholder-image.jpg'; // default fallback
+  
+  if (foto) {
+    if (foto.startsWith('http://') || foto.startsWith('https://')) {
+      // Sudah berupa URL lengkap, gunakan langsung
+      imageUrl = foto;
+    } else {
+      // Masih berupa path relatif, tambahkan base URL
+      const cleanPath = foto.replace(/^storage\//, '');
+      imageUrl = `https://tbnoto19-admin.rplrus.com/storage/${cleanPath}`;
+    }
+  }
 
   const cartId = c.id ?? c.cart_id ?? c.pivot?.id ?? null;
   const prodId = c.barang_id ?? b.id ?? c.product_id ?? null;
