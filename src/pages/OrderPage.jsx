@@ -167,7 +167,7 @@ export default function OrderPage() {
                   Nama Lengkap <span className="text-red-500">*</span>
                 </label>
                 <input
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
                   placeholder="Masukkan nama lengkap"
                   value={nama}
                   onChange={(e) => setNama(e.target.value)}
@@ -179,7 +179,7 @@ export default function OrderPage() {
                   Nomor Telepon <span className="text-red-500">*</span>
                 </label>
                 <input
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
                   placeholder="Contoh: +62812345678 atau 081234567890"
                   value={telp}
                   onChange={(e) => {
@@ -229,7 +229,7 @@ export default function OrderPage() {
                   Alamat Lengkap <span className="text-red-500">*</span>
                 </label>
                 <textarea
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors resize-none"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 resize-none"
                   placeholder="Masukkan alamat lengkap pengiriman"
                   rows={4}
                   value={alamat}
@@ -242,7 +242,7 @@ export default function OrderPage() {
                   Metode Pembayaran <span className="text-red-500">*</span>
                 </label>
                 <select
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
                   value={metode}
                   onChange={(e) => setMetode(e.target.value)}
                 >

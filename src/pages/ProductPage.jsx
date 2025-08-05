@@ -121,7 +121,7 @@ const ProductPage = () => {
             placeholder="Cari produk..."
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
-            className={`w-full ${isMobile ? 'py-2 text-sm' : 'py-3'} px-4 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500`}
+            className={`w-full ${isMobile ? 'py-2 text-sm' : 'py-3'} px-4 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}
           />
         </div>
 
@@ -129,7 +129,7 @@ const ProductPage = () => {
           <select
             value={selectedCategory}
             onChange={(e) => handleCategorySelect(e.target.value)}
-            className={`w-full ${isMobile ? 'py-2 text-sm' : 'py-3'} px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white`}
+            className={`w-full ${isMobile ? 'py-2 text-sm' : 'py-3'} px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white`}
           >
             <option value="">Semua Kategori</option>
             {categories.map((category) => (
