@@ -1,81 +1,121 @@
 import React, { useEffect, useState } from "react";
 import { getRiwayatUser } from "../services/riwayatService";
-import PerluMasuk from "../components/popup/PerluMasuk"
+import { Link } from "react-router-dom";
 
-export default function Riwayat() {
+const RiwayatPage = () => {
   const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchRiwayat = async () => {
-      setLoading(true);
+    async function fetchData() {
       try {
-        const data = await getRiwayatUser();
-        setTransactions(data);
+        const res = await getRiwayatUser(token);
+
+        if (Array.isArray(res)) {
+          console.log("DATA API:", res);
+          setTransactions(res);
+        } else {
+          setError("Data tidak sesuai format.");
+        }
       } catch (err) {
-        setError("Gagal mengambil data riwayat transaksi.");
+        setError("Gagal mengambil data.");
       } finally {
         setLoading(false);
       }
-    };
+    }
 
-    fetchRiwayat();
-  }, []);
+    fetchData();
+  }, [token]);
+
+  // Helper function untuk format tanggal
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    try {
+      // Handle format dari API (biasanya YYYY-MM-DD HH:mm:ss)
+      const date = new Date(dateString.replace(" ", "T"));
+      return date.toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+    } catch (e) {
+      return "-";
+    }
+  };
+
+  // Helper function untuk format harga
+  const formatPrice = (price) => {
+    if (!price) return "-";
+    return `Rp ${Number(price).toLocaleString("id-ID")}`;
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <PerluMasuk>
-    <div className="min-h-screen flex flex-col mt-20">
-      <div className="w-full max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6 text-left">Riwayat Transaksi</h1>
+    <div className="min-h-screen py-10 px-4 bg-white">
+      <h2 className="text-2xl font-bold mb-6">Riwayat Transaksi</h2>
 
-        {loading && (
-          <div className="text-center text-gray-600">Memuat data...</div>
-        )}
-
-        {error && (
-          <div className="text-center text-red-600 mb-4">{error}</div>
-        )}
-
-        {!loading && transactions.length === 0 && (
-          <div className="text-center text-gray-500 mt-10">
-            <p className="text-lg font-medium mb-2">Belum ada pembelian.</p>
-            <p className="mb-4">Ayo mulai belanja kebutuhan bangunanmu!</p>
-            <a
-              href="/katalog"
-              className="inline-block bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg transition"
-            >
-              Belanja Sekarang
-            </a>
-          </div>
-        )}
-
-        {transactions.map((tx) => (
-          <div
-            key={tx.id}
-            className="border border-gray-300 bg-white p-4 rounded-lg mb-4 shadow hover:shadow-md transition"
+      {transactions.length === 0 ? (
+        <div className="text-center mt-10">
+          <p className="text-xl font-semibold text-gray-700 mb-2">
+            Belum ada pembelian.
+          </p>
+          <p className="text-gray-500 mb-4">
+            Ayo mulai belanja kebutuhan bangunanmu!
+          </p>
+          <Link
+            to="/katalog"
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-md inline-block"
           >
-            <p className="font-semibold text-green-700 mb-1">{tx.date}</p>
-            <p><span className="font-medium">Produk:</span> {tx.products}</p>
-            <p><span className="font-medium">Jumlah:</span> {tx.quantity}</p>
-            <p className="mt-2 text-sm text-gray-600">{tx.details}</p>
+            Belanja Sekarang
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {transactions.map((trx) => (
+            <div
+              key={trx.id}
+              className="border rounded-lg p-4 shadow-sm hover:shadow-md transition"
+            >
+              <p className="text-gray-700">
+                <span className="font-medium">Tanggal:</span>{" "}
+                {formatDate(trx.created_at)}
+              </p>
 
-            {tx.proof && (
-              <img
-                src={tx.proof}
-                alt="Bukti"
-                className="w-32 h-32 object-cover rounded mt-3 border"
-              />
-            )}
-          </div>
-        ))}
-      </div>
+              <p className="text-gray-700">
+                <span className="font-medium">Penerima:</span> {trx.nama_penerima || "-"}
+              </p>
+              
+              <p className="text-gray-700">
+                <span className="font-medium">Alamat:</span> {trx.alamat_pengiriman || "-"}
+              </p>
+              
+              <p className="text-gray-700">
+                <span className="font-medium">Telepon:</span> {trx.no_telepon || "-"}
+              </p>
+              
+              <p className="text-gray-700">
+                <span className="font-medium">Metode:</span> {trx.metode_pembayaran || "-"}
+              </p>
+              
+              <p className="text-gray-700">
+                <span className="font-medium">Status:</span> {trx.status_transactions || "-"}
+              </p>
+              
+              <p className="text-gray-700">
+                <span className="font-medium">Total Harga:</span>{" "}
+                {formatPrice(trx.total_harga)}
+              </p>
 
-      {/* Footer component tetap di bawah */}
-      <footer className="mt-auto">
-        {/* Tambahkan Footer jika ada */}
-      </footer>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
-    </PerluMasuk>
   );
-}
+};
+
+export default RiwayatPage;
