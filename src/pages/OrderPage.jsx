@@ -8,12 +8,12 @@ const rupiah = (n) => `Rp ${Number(n || 0).toLocaleString('id-ID')}`;
 
 export default function OrderPage() {
   const { state } = useLocation();
-  const { token } = useAuth();
+  const { token, user } = useAuth(); // Ambil user dari AuthContext
 
   // Ambil draft order dari navigate state atau localStorage
   const [order, setOrder] = useState(state?.order ?? null);
 
-  // Form fields
+  // Form fields - akan diisi otomatis dari data user
   const [nama, setNama] = useState('');
   const [telp, setTelp] = useState('');
   const [alamat, setAlamat] = useState('');
@@ -21,6 +21,26 @@ export default function OrderPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // Auto-fill form berdasarkan data user
+  useEffect(() => {
+    if (user) {
+      // Auto-fill nama dari field 'name'
+      if (user.name) {
+        setNama(user.name);
+      }
+      
+      // Auto-fill nomor telepon dari field 'phone'
+      if (user.phone) {
+        setTelp(user.phone);
+      }
+      
+      // Auto-fill alamat dari field 'address'
+      if (user.address) {
+        setAlamat(user.address);
+      }
+    }
+  }, [user]);
 
   // Fallback saat refresh halaman
   useEffect(() => {
@@ -160,6 +180,23 @@ export default function OrderPage() {
           {/* === KIRI: Alamat Pengiriman === */}
           <section className="lg:col-span-2 bg-white rounded-lg shadow-sm p-4 sm:p-6">
             <h2 className="text-lg font-semibold mb-4 text-gray-900">Alamat Pengiriman</h2>
+
+            {/* Tampilkan info jika data diambil dari profil */}
+            {user && (nama || telp || alamat) && (
+              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                <div className="flex items-start">
+                  <svg className="w-5 h-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <p className="text-sm font-medium text-blue-800">Data diambil dari profil Anda</p>
+                    <p className="text-xs text-blue-600 mt-1">
+                      Anda dapat mengubah data di bawah ini jika diperlukan
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="space-y-4">
               <div>
