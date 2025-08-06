@@ -17,7 +17,10 @@ export default function OrderPage() {
   const [nama, setNama] = useState('');
   const [telp, setTelp] = useState('');
   const [alamat, setAlamat] = useState('');
-  const [metode, setMetode] = useState(''); // e.g. "cod" | "transfer_bank" | "ewallet"
+  const [metode, setMetode] = useState(''); // e.g. "cod" | "transfer_bri" | "transfer_bca"
+  const [buktiTransfer, setBuktiTransfer] = useState(null); // File bukti transfer
+  const [previewImage, setPreviewImage] = useState(null); // Preview gambar
+  
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -49,6 +52,41 @@ export default function OrderPage() {
       if (cached) setOrder(JSON.parse(cached));
     }
   }, [order]);
+
+  // Handle file upload
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validasi tipe file
+      if (!file.type.startsWith('image/')) {
+        alert('File harus berupa gambar (JPG, PNG, etc.)');
+        return;
+      }
+      
+      // Validasi ukuran file (maksimal 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Ukuran file maksimal 5MB');
+        return;
+      }
+
+      setBuktiTransfer(file);
+      
+      // Buat preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Reset file when payment method changes
+  useEffect(() => {
+    if (metode !== 'transfer_bri' && metode !== 'transfer_bca') {
+      setBuktiTransfer(null);
+      setPreviewImage(null);
+    }
+  }, [metode]);
 
   // Jika tetap tidak ada order
   if (!order) {
@@ -130,6 +168,12 @@ export default function OrderPage() {
       return;
     }
 
+    // Validasi bukti transfer untuk metode transfer bank
+    if ((metode === 'transfer_bri' || metode === 'transfer_bca') && !buktiTransfer) {
+      alert('Silakan upload bukti transfer untuk metode pembayaran transfer bank.');
+      return;
+    }
+
     // Siapkan items utk API (pakai cart item id & product id jika tersedia)
     const itemsForApi = items.map((it) => ({
       id: it.cartId,                 // optional
@@ -141,13 +185,44 @@ export default function OrderPage() {
 
     setLoading(true);
     try {
+      // Untuk metode transfer, gunakan FormData untuk kirim file
+      let requestData;
+      let isFormData = false;
+
+      if ((metode === 'transfer_bri' || metode === 'transfer_bca') && buktiTransfer) {
+        // Gunakan FormData untuk upload file
+        requestData = new FormData();
+        requestData.append('nama_penerima', nama);
+        requestData.append('no_telepon', telp);
+        requestData.append('alamat_pengiriman', alamat);
+        requestData.append('metode_pembayaran', metode);
+        requestData.append('total_harga', subtotal);
+        requestData.append('ongkir', shipping);
+        requestData.append('bukti_transfer', buktiTransfer);
+        requestData.append('items', JSON.stringify(itemsForApi));
+        isFormData = true;
+      } else {
+        // Gunakan JSON untuk COD atau metode lain
+        requestData = {
+          nama_penerima: nama,
+          no_telepon: telp,
+          alamat_pengiriman: alamat,
+          metode_pembayaran: metode,
+          total_harga: subtotal,
+          ongkir: shipping,
+          items: itemsForApi,
+        };
+      }
+
       const res = await checkoutCart(itemsForApi, token, {
         nama_penerima: nama,
         no_telepon: telp,
         alamat_pengiriman: alamat,
-        metode_pembayaran: metode,   // kirim huruf kecil: "cod" | "transfer_bank" | "ewallet"
+        metode_pembayaran: metode,
         total_harga: subtotal,
         ongkir: shipping,
+        bukti_transfer: buktiTransfer, // Pass file to service
+        isFormData: isFormData, // Flag for service to handle FormData
       });
 
       // Simpan hasil terakhir (opsional)
@@ -330,6 +405,83 @@ export default function OrderPage() {
                             </p>
                           </div>
                         )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Field Upload Bukti Transfer */}
+                {(metode === 'transfer_bri' || metode === 'transfer_bca') && (
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Upload Bukti Transfer <span className="text-red-500">*</span>
+                    </label>
+                    
+                    <div className="space-y-3">
+                      {/* File Input */}
+                      <div className="flex items-center justify-center w-full">
+                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg className="w-8 h-8 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            <p className="mb-2 text-sm text-gray-500">
+                              <span className="font-semibold">Klik untuk upload</span> atau drag & drop
+                            </p>
+                            <p className="text-xs text-gray-500">PNG, JPG, JPEG (Maksimal 5MB)</p>
+                          </div>
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                          />
+                        </label>
+                      </div>
+
+                      {/* Preview Image */}
+                      {previewImage && (
+                        <div className="mt-3">
+                          <p className="text-sm font-medium text-gray-700 mb-2">Preview Bukti Transfer:</p>
+                          <div className="relative inline-block">
+                            <img
+                              src={previewImage}
+                              alt="Preview bukti transfer"
+                              className="max-w-full h-40 object-contain rounded-lg border border-gray-300"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setBuktiTransfer(null);
+                                setPreviewImage(null);
+                              }}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600 transition-colors"
+                            >
+                              ×
+                            </button>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">
+                            File: {buktiTransfer?.name} ({(buktiTransfer?.size / 1024).toFixed(1)} KB)
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Upload Tips */}
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
+                        <div className="flex items-start">
+                          <svg className="w-5 h-5 text-yellow-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                          <div>
+                            <p className="text-sm font-medium text-yellow-800">Tips Upload Bukti Transfer:</p>
+                            <ul className="text-xs text-yellow-700 mt-1 space-y-1">
+                              <li>• Pastikan gambar jelas dan tidak blur</li>
+                              <li>• Terlihat nominal transfer yang sesuai</li>
+                              <li>• Terlihat tanggal dan waktu transfer</li>
+                              <li>• Format file: JPG, PNG, atau JPEG</li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

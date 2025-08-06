@@ -3,6 +3,16 @@ import React from 'react';
 import ProductCard from './ProductCard';
 
 const ProductGrid = ({ products, categories }) => {
+  // Sortir produk: stok > 0 di atas, stok = 0 di bawah
+  const sortedProducts = [...products].sort((a, b) => {
+    // Jika a stok 0 dan b tidak, a ke bawah
+    if (a.stok === 0 && b.stok > 0) return 1;
+    // Jika b stok 0 dan a tidak, b ke bawah
+    if (b.stok === 0 && a.stok > 0) return -1;
+    // Jika sama-sama ada stok atau sama-sama habis, urutkan berdasarkan nama
+    return a.nama.localeCompare(b.nama);
+  });
+
   return (
     <div className="w-full">
       {products.length === 0 ? (
@@ -16,7 +26,7 @@ const ProductGrid = ({ products, categories }) => {
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 w-full">
-          {products.map((product) => (
+          {sortedProducts.map((product) => (
             <ProductCard key={product.id} product={product} categories={categories} />
           ))}
         </div>

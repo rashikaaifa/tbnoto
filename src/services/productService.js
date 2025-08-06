@@ -6,6 +6,7 @@
 // - Debounce/buffer untuk update qty keranjang & penyesuaian stok
 // - setProductStockSmart: PATCH payload lengkap (tanpa foto) → PUT fallback
 // - FIXED: Image URL handler untuk mencegah double URL
+// - ADDED: Support untuk upload bukti transfer di checkout
 // ======================================================================
 
 const API_BASE = 'https://tbnoto19-admin.rplrus.com/api';
@@ -20,6 +21,12 @@ const getAuthHeaders = (token) => ({
   'Content-Type': 'application/json',
   'Accept': 'application/json',
   ...(token && { Authorization: `Bearer ${token}` }),
+});
+
+const getAuthHeadersMultipart = (token) => ({
+  'Accept': 'application/json',
+  ...(token && { Authorization: `Bearer ${token}` }),
+  // Jangan set Content-Type untuk FormData, browser akan set otomatis dengan boundary
 });
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -419,40 +426,77 @@ export async function adjustProductStock(productId, delta, token) {
   return setProductStockSmart(productId, target, resolveUkuran(raw), token);
 }
 
+// -------------------- Checkout dengan Upload Bukti Transfer --------------------
 // items: [{ cartId, productId, quantity, price }]
+// extra: { nama_penerima, no_telepon, alamat_pengiriman, metode_pembayaran, total_harga, ongkir, bukti_transfer?, isFormData? }
 export const checkoutCart = async (items, token, extra) => {
   const API_BASE = 'https://tbnoto19-admin.rplrus.com/api';
   const url = `${API_BASE}/cart/checkout`;
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
 
   // Hitung total & ongkir (3%) di sisi client jika backend tidak menghitung.
   const subtotal = items.reduce((s, it) => s + (Number(it.price || 0) * Number(it.quantity || 1)), 0);
   const ongkir = Math.round(subtotal * 0.03);
 
-  const body = {
-    // --- kolom sesuai DB ---
-    nama_penerima: extra?.nama_penerima ?? extra?.nama ?? '',
-    no_telepon: extra?.no_telepon ?? extra?.nomor_telepon ?? '',
-    alamat_pengiriman: extra?.alamat_pengiriman ?? extra?.alamat ?? '',
-    metode_pembayaran: (extra?.metode_pembayaran ?? extra?.metode ?? '').toLowerCase(),
-    total_harga: Number(extra?.total_harga ?? subtotal),
-    ongkir: Number(extra?.ongkir ?? ongkir),
+  // Cek apakah menggunakan metode transfer bank dan ada file bukti transfer
+  const isTransferMethod = (extra?.metode_pembayaran === 'transfer_bri' || extra?.metode_pembayaran === 'transfer_bca');
+  const hasBuktiTransfer = extra?.bukti_transfer instanceof File;
 
-    // tergantung backend, biasanya ikut kirim detail item:
-    items: items.map(it => ({
-      cart_id: it.cartId ?? it.id,
-      barang_id: it.productId,
-      quantity: it.quantity,
-      price: it.price,
-    })),
-  };
+  let headers, body;
 
-  const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
+  if (isTransferMethod && hasBuktiTransfer) {
+    // Gunakan FormData untuk upload file
+    headers = getAuthHeadersMultipart(token);
+    
+    const formData = new FormData();
+    formData.append('nama_penerima', extra?.nama_penerima ?? extra?.nama ?? '');
+    formData.append('no_telepon', extra?.no_telepon ?? extra?.nomor_telepon ?? '');
+    formData.append('alamat_pengiriman', extra?.alamat_pengiriman ?? extra?.alamat ?? '');
+    formData.append('metode_pembayaran', (extra?.metode_pembayaran ?? extra?.metode ?? '').toLowerCase());
+    formData.append('total_harga', String(Number(extra?.total_harga ?? subtotal)));
+    formData.append('ongkir', String(Number(extra?.ongkir ?? ongkir)));
+    formData.append('bukti_transfer', extra.bukti_transfer);
+
+    // Kirim items sebagai JSON string atau individual fields
+    items.forEach((item, index) => {
+      formData.append(`items[${index}][cart_id]`, String(item.cartId ?? item.id ?? ''));
+      formData.append(`items[${index}][barang_id]`, String(item.productId ?? ''));
+      formData.append(`items[${index}][quantity]`, String(item.quantity ?? 1));
+      formData.append(`items[${index}][price]`, String(item.price ?? 0));
+    });
+
+    body = formData;
+    
+    if (DEBUG) console.log('[checkoutCart] Using FormData for transfer with bukti_transfer');
+  } else {
+    // Gunakan JSON untuk COD atau transfer tanpa bukti
+    headers = getAuthHeaders(token);
+    
+    const jsonBody = {
+      nama_penerima: extra?.nama_penerima ?? extra?.nama ?? '',
+      no_telepon: extra?.no_telepon ?? extra?.nomor_telepon ?? '',
+      alamat_pengiriman: extra?.alamat_pengiriman ?? extra?.alamat ?? '',
+      metode_pembayaran: (extra?.metode_pembayaran ?? extra?.metode ?? '').toLowerCase(),
+      total_harga: Number(extra?.total_harga ?? subtotal),
+      ongkir: Number(extra?.ongkir ?? ongkir),
+      items: items.map(it => ({
+        cart_id: it.cartId ?? it.id,
+        barang_id: it.productId,
+        quantity: it.quantity,
+        price: it.price,
+      })),
+    };
+
+    body = JSON.stringify(jsonBody);
+    
+    if (DEBUG) console.log('[checkoutCart] Using JSON body:', jsonBody);
+  }
+
+  const res = await fetchWithRetry(url, { 
+    method: 'POST', 
+    headers, 
+    body 
+  }, { retries: 2, baseDelay: 1000 });
+  
   const txt = await res.text();
   
   if (!res.ok) {
@@ -463,10 +507,17 @@ export const checkoutCart = async (items, token, extra) => {
         ? ' — ' + Object.entries(j.errors).map(([k, v]) => `${k}: ${Array.isArray(v) ? v[0] : v}`).join('; ')
         : '';
       throw new Error(`${msg}${errors}`);
-    } catch {
+    } catch (parseError) {
+      if (parseError instanceof Error && parseError.message.includes('Checkout gagal')) {
+        throw parseError; // Re-throw our custom error
+      }
       throw new Error(`Checkout gagal (HTTP ${res.status}): ${txt}`);
     }
   }
 
-  try { return JSON.parse(txt); } catch { return { ok: true }; }
+  try { 
+    return JSON.parse(txt); 
+  } catch { 
+    return { ok: true, message: 'Checkout berhasil' }; 
+  }
 };
