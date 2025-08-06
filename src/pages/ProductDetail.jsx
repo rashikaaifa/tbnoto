@@ -15,8 +15,8 @@ const SimpleNotification = ({ show, type, message, onClose }) => {
   if (!show) return null;
 
   const styles = type === 'success' ? 'bg-green-500 text-white'
-              : type === 'error'   ? 'bg-red-500 text-white'
-              : 'bg-blue-500 text-white';
+    : type === 'error' ? 'bg-red-500 text-white'
+      : 'bg-blue-500 text-white';
   const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
 
   return (
@@ -64,16 +64,16 @@ const ProductDetail = () => {
   // Validasi dan update quantity
   const validateAndSetQuantity = (value) => {
     if (!product) return;
-    
+
     const numValue = parseInt(value, 10);
-    
+
     if (isNaN(numValue) || numValue < 1) {
       setQuantity(1);
       setInputValue('1');
       setHasStockError(false);
       return;
     }
-    
+
     if (numValue > product.stok) {
       setQuantity(product.stok);
       setInputValue(product.stok.toString());
@@ -81,7 +81,7 @@ const ProductDetail = () => {
       showNotification('error', `Maksimal ${product.stok} item tersedia`);
       return;
     }
-    
+
     setQuantity(numValue);
     setInputValue(numValue.toString());
     setHasStockError(false); // Reset flag error jika valid
@@ -141,14 +141,14 @@ const ProductDetail = () => {
     if (!product) return;
     if (!isLoggedIn) { showNotification('error', 'Silakan login terlebih dahulu untuk berbelanja'); return; }
     if (product.stok === 0) { showNotification('error', 'Maaf, stok produk habis'); return; }
-    
+
     // ✅ PERBAIKAN: Cek ulang quantity vs stok sebelum proses addToCart
-    if (quantity > product.stok) { 
-      showNotification('error', `Stok hanya tersisa ${product.stok} item`); 
+    if (quantity > product.stok) {
+      showNotification('error', `Stok hanya tersisa ${product.stok} item`);
       setQuantity(product.stok);
       setInputValue(product.stok.toString());
       setHasStockError(true);
-      return; 
+      return;
     }
 
     // ✅ PERBAIKAN: Jika masih ada flag error stok, jangan lanjut
@@ -171,58 +171,6 @@ const ProductDetail = () => {
       showNotification('error', e.message || 'Gagal menambahkan ke keranjang. Silakan coba lagi.');
     } finally {
       setIsAddingToCart(false);
-    }
-  };
-
-  const handleDirectBuy = async () => {
-    if (!product) return;
-    if (!isLoggedIn) { showNotification('error', 'Silakan login terlebih dahulu untuk berbelanja'); return; }
-    if (product.stok === 0) { showNotification('error', 'Maaf, stok produk habis'); return; }
-    
-    // ✅ PERBAIKAN: Cek ulang quantity vs stok sebelum proses direct buy
-    if (quantity > product.stok) { 
-      showNotification('error', `Stok hanya tersisa ${product.stok} item`); 
-      setQuantity(product.stok);
-      setInputValue(product.stok.toString());
-      setHasStockError(true);
-      return; 
-    }
-
-    // ✅ PERBAIKAN: Jika masih ada flag error stok, jangan lanjut
-    if (hasStockError) {
-      showNotification('error', 'Silakan perbaiki jumlah item terlebih dahulu');
-      return;
-    }
-
-    setIsBuyingDirect(true);
-    try {
-      // Buat order langsung tanpa melalui keranjang
-      const orderData = {
-        items: [{
-          cartId: null, // tidak ada cart ID karena langsung beli
-          productId: product.id,
-          name: product.nama,
-          image: product.gambar,
-          price: product.harga,
-          qty: quantity,
-          quantity: quantity, // fallback
-          size: product.ukuran || '',
-          stock: product.stok
-        }],
-        total_harga: calculateTotalPrice(),
-        ongkir: Math.round(calculateTotalPrice() * 0.03),
-        total: calculateTotalPrice() + Math.round(calculateTotalPrice() * 0.03)
-      };
-
-      // Simpan order sementara untuk halaman checkout
-      localStorage.setItem('pendingOrder', JSON.stringify(orderData));
-
-      // Navigate ke halaman order
-      navigate('/orderPage', { state: { order: orderData } });
-    } catch (e) {
-      showNotification('error', e.message || 'Gagal memproses pesanan. Silakan coba lagi.');
-    } finally {
-      setIsBuyingDirect(false);
     }
   };
 
@@ -268,22 +216,21 @@ const ProductDetail = () => {
             <div className="flex items-center mb-6">
               <button onClick={handleDecreaseQuantity} disabled={quantity <= 1}
                 className="w-10 h-10 flex items-center justify-center rounded bg-gray-200 text-gray-700 text-xl font-medium disabled:opacity-50 hover:bg-gray-300 transition-colors">−</button>
-              
+
               <input
                 type="text"
                 value={inputValue}
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 onKeyPress={handleInputKeyPress}
-                className={`mx-4 w-16 text-center font-medium text-lg border rounded px-2 py-1 focus:outline-none focus:ring-2 transition-colors ${
-                  hasStockError 
-                    ? 'border-red-500 focus:ring-red-500 focus:border-red-500 bg-red-50' 
+                className={`mx-4 w-16 text-center font-medium text-lg border rounded px-2 py-1 focus:outline-none focus:ring-2 transition-colors ${hasStockError
+                    ? 'border-red-500 focus:ring-red-500 focus:border-red-500 bg-red-50'
                     : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-                }`}
+                  }`}
                 min="1"
                 max={product.stok}
               />
-              
+
               <button onClick={handleIncreaseQuantity} disabled={quantity >= product.stok}
                 className="w-10 h-10 flex items-center justify-center rounded bg-gray-200 text-gray-700 text-xl font-medium disabled:opacity-50 hover:bg-gray-300 transition-colors">+</button>
               <span className="ml-auto text-gray-500">Stok: {product.stok}</span>
@@ -303,36 +250,20 @@ const ProductDetail = () => {
               <span className="text-xl font-bold text-gray-900">Rp{calculateTotalPrice().toLocaleString()}</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <button 
-                onClick={handleAddToCart} 
+            <div className="mb-4">
+              <button
+                onClick={handleAddToCart}
                 disabled={isAddingToCart || product.stok === 0 || !isLoggedIn || hasStockError}
-                className="flex justify-center items-center bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                className="w-full flex justify-center items-center bg-green-700 text-white px-4 py-3 rounded-lg font-medium hover:bg-green-800 transition disabled:opacity-50 disabled:cursor-not-allowed">
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 {!isLoggedIn ? 'Login untuk Berbelanja' :
-                 isAddingToCart ? 'Menambahkan...' :
-                 product.stok === 0 ? 'Stok Habis' : 
-                 hasStockError ? 'Perbaiki Jumlah' : 'Masukkan Keranjang'}
-              </button>
-              <button 
-                onClick={handleDirectBuy} 
-                disabled={!isLoggedIn || product.stok === 0 || isBuyingDirect || hasStockError}
-                className="bg-green-700 text-white px-4 py-3 rounded-lg font-medium hover:bg-green-800 transition disabled:opacity-50 disabled:cursor-not-allowed">
-                {!isLoggedIn ? 'Login Dulu' : 
-                 isBuyingDirect ? 'Memproses...' :
-                 product.stok === 0 ? 'Habis' :
-                 hasStockError ? 'Perbaiki Jumlah' : 'Beli'}
+                  isAddingToCart ? 'Menambahkan...' :
+                    product.stok === 0 ? 'Stok Habis' :
+                      hasStockError ? 'Perbaiki Jumlah' : 'Masukkan Keranjang'}
               </button>
             </div>
-
-            <button className="w-full flex justify-center items-center border border-gray-300 bg-gray-50 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-100 transition">
-              <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              Hubungi penjual
-            </button>
           </div>
         </div>
       </div>
@@ -342,4 +273,4 @@ const ProductDetail = () => {
   );
 };
 
-export default ProductDetail; 
+export default ProductDetail;
