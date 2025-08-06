@@ -3,7 +3,7 @@ import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 
 const PaginationControl = ({ currentPage, totalPages, onPageChange, onNext, onPrev }) => {
   return (
-    <div className="flex justify-center items-center mt-10 space-x-2 text-sm">
+    <div className="flex justify-center items-center mt-10 space-x-2 text-sm mb-6">
       <span className="text-gray-700">Halaman</span>
 
           <div className="relative inline-block">
@@ -30,7 +30,7 @@ const PaginationControl = ({ currentPage, totalPages, onPageChange, onNext, onPr
         className={`rounded-full p-2 text-white transition duration-200 ${
           currentPage === 1
             ? 'bg-gray-300 cursor-not-allowed'
-            : 'bg-green-600 hover:bg-green-700'
+            : 'bg-primary'
         }`}
       >
         <HiChevronLeft size={18} />
@@ -42,7 +42,7 @@ const PaginationControl = ({ currentPage, totalPages, onPageChange, onNext, onPr
         className={`rounded-full p-2 text-white transition duration-200 ${
           currentPage === totalPages
             ? 'bg-gray-300 cursor-not-allowed'
-            : 'bg-green-600 hover:bg-green-700'
+            : 'bg-primary'
         }`}
       >
         <HiChevronRight size={18} />
