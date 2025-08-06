@@ -176,20 +176,18 @@ const RiwayatPage = () => {
                   </div>
                   
                   <div className="flex justify-between">
-                    <span className="text-gray-600 font-medium">Produk</span>
-                    <span className="text-gray-900">Kaso</span>
+                    <span className="text-gray-600 font-medium">penerima</span>
+                    <span className="text-gray-900">{trx.nama_penerima || "-"}</span>
                   </div>
                   
                   <div className="flex justify-between">
-                    <span className="text-gray-600 font-medium">Jumlah</span>
-                    <span className="text-gray-900">3</span>
+                    <span className="text-gray-600 font-medium">Alamat</span>
+                    <span className="text-gray-900">{trx.alamat_pengiriman || "-"}</span>
                   </div>
                   
                   <div className="flex justify-between">
-                    <span className="text-gray-600 font-medium">Bukti</span>
-                    <span className="text-gray-900">
-                      {trx.bukti_transfer && trx.bukti_transfer !== "#" ? trx.bukti_transfer : "--"}
-                    </span>
+                    <span className="text-gray-600 font-medium">no.telpon</span>
+                    <span className="text-gray-900">{trx.no_telepon || "-"}</span>
                   </div>
                 </div>
 
