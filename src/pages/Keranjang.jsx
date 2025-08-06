@@ -122,7 +122,7 @@ const Keranjang = () => {
 							Keranjang
 						</h1>
 						<p className="text-xs text-gray-600 mt-0.5 sm:text-sm">
-							Produk berada di keranjang maksimal selama 2 hari
+							Segera beli barang yang ada di keranjang Anda
 						</p>
 					</header>
 					<div className="flex flex-col items-center justify-center py-8 text-center bg-white rounded-lg shadow-sm my-4">
@@ -130,12 +130,13 @@ const Keranjang = () => {
 						<p className="text-sm font-medium text-gray-500 mb-4">
 							Silakan login untuk melihat keranjang Anda
 						</p>
-						<button
-							onClick={handleLoginRedirect}
-							className="bg-green-800 hover:bg-green-900 text-white py-2 px-4 rounded-md text-sm font-medium cursor-pointer transition-colors"
+						<a
+							href="/daftar"
+							className="bg-green-800 hover:bg-green-900 text-white py-2 px-4 rounded-md text-sm font-medium cursor-pointer transition-colors inline-block text-center"
 						>
 							Login Sekarang
-						</button>
+						</a>
+
 					</div>
 				</div>
 			</div>
@@ -151,7 +152,7 @@ const Keranjang = () => {
 							Keranjang
 						</h1>
 						<p className="text-xs text-gray-600 mt-0.5 sm:text-sm">
-							Produk berada di keranjang maksimal selama 2 hari
+							Segera beli barang yang ada di keranjang Anda
 						</p>
 					</header>
 					<div className="flex justify-center items-center h-60 text-gray-600 text-lg">

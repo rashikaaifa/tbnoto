@@ -20,7 +20,7 @@ export default function OrderPage() {
   const [metode, setMetode] = useState(''); // e.g. "cod" | "transfer_bri" | "transfer_bca"
   const [buktiTransfer, setBuktiTransfer] = useState(null); // File bukti transfer
   const [previewImage, setPreviewImage] = useState(null); // Preview gambar
-  
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -32,12 +32,12 @@ export default function OrderPage() {
       if (user.name) {
         setNama(user.name);
       }
-      
+
       // Auto-fill nomor telepon dari field 'phone'
       if (user.phone) {
         setTelp(user.phone);
       }
-      
+
       // Auto-fill alamat dari field 'address'
       if (user.address) {
         setAlamat(user.address);
@@ -62,7 +62,7 @@ export default function OrderPage() {
         alert('File harus berupa gambar (JPG, PNG, etc.)');
         return;
       }
-      
+
       // Validasi ukuran file (maksimal 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('Ukuran file maksimal 5MB');
@@ -70,7 +70,7 @@ export default function OrderPage() {
       }
 
       setBuktiTransfer(file);
-      
+
       // Buat preview
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -298,7 +298,7 @@ export default function OrderPage() {
                     const value = e.target.value;
                     // Hanya izinkan angka dan tanda + di awal
                     const filteredValue = value.replace(/[^0-9+]/g, '');
-                    
+
                     // Jika ada tanda +, pastikan hanya di awal dan diikuti angka
                     if (filteredValue.includes('+')) {
                       const parts = filteredValue.split('+');
@@ -319,7 +319,7 @@ export default function OrderPage() {
                     e.preventDefault();
                     const pastedText = e.clipboardData.getData('text');
                     const filteredValue = pastedText.replace(/[^0-9+]/g, '');
-                    
+
                     if (filteredValue.includes('+')) {
                       const parts = filteredValue.split('+');
                       if (parts.length > 2) {
@@ -375,17 +375,23 @@ export default function OrderPage() {
                         <p className="text-sm font-medium text-blue-800 mb-2">
                           Informasi Rekening {metode === 'transfer_bri' ? 'BRI' : 'BCA'}
                         </p>
-                        
+
                         {metode === 'transfer_bri' && (
                           <div className="space-y-2">
                             <div className="bg-white p-3 rounded border">
                               <div className="text-xs text-gray-600 mb-1">Bank BRI</div>
-                              <div className="font-mono text-sm font-semibold text-gray-900">1234-5678-9012-3456</div>
-                              <div className="text-xs text-gray-600 mt-1">a.n. Toko Online</div>
+                              <div className="font-mono text-sm font-semibold text-gray-900">1234-5678-9012-3456 
+                                <button
+                                onClick={() => navigator.clipboard.writeText('1234-5678-9012-3456')}
+                                className="ml-2 px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded"
+                              >
+                                Copy
+                              </button></div>
+                              <div className="text-xs text-gray-600 mt-1">a.n. Pemilik TB.NOTO19</div>
                             </div>
                             <p className="text-xs text-blue-600">
-                              • Transfer sesuai total pembayaran<br/>
-                              • Simpan bukti transfer<br/>
+                              • Transfer sesuai total pembayaran<br />
+                              • Simpan bukti transfer<br />
                               • Pesanan akan diproses setelah pembayaran dikonfirmasi
                             </p>
                           </div>
@@ -395,12 +401,19 @@ export default function OrderPage() {
                           <div className="space-y-2">
                             <div className="bg-white p-3 rounded border">
                               <div className="text-xs text-gray-600 mb-1">Bank BCA</div>
-                              <div className="font-mono text-sm font-semibold text-gray-900">9876-5432-1098-7654</div>
-                              <div className="text-xs text-gray-600 mt-1">a.n. Toko Online</div>
+                              <div className="font-mono text-sm font-semibold text-gray-900">9876-5432-1098-7654 
+                                <button
+                                onClick={() => navigator.clipboard.writeText('1234-5678-9012-3456')}
+                                className="ml-2 px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded"
+                              >
+                                Copy
+                              </button>
+                              </div>
+                              <div className="text-xs text-gray-600 mt-1">a.n. Pemilik TB.NOTO19</div>
                             </div>
                             <p className="text-xs text-blue-600">
-                              • Transfer sesuai total pembayaran<br/>
-                              • Simpan bukti transfer<br/>
+                              • Transfer sesuai total pembayaran<br />
+                              • Simpan bukti transfer<br />
                               • Pesanan akan diproses setelah pembayaran dikonfirmasi
                             </p>
                           </div>
@@ -416,7 +429,7 @@ export default function OrderPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Upload Bukti Transfer <span className="text-red-500">*</span>
                     </label>
-                    
+
                     <div className="space-y-3">
                       {/* File Input */}
                       <div className="flex items-center justify-center w-full">
