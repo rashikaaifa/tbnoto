@@ -10,7 +10,7 @@ const PaginationControl = ({ currentPage, totalPages, onPageChange, onNext, onPr
       <select
         value={currentPage}
         onChange={(e) => onPageChange(Number(e.target.value))}
-        className="border border-gray-300 rounded-md px-3 pr-8 py-1.5 shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+        className="border border-gray-300 rounded-md px-3 pr-8 py-1.5 shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
       >
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
           <option key={page} value={page}>{page}</option>
