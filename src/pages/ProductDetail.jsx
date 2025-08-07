@@ -218,168 +218,258 @@ const ProductDetail = () => {
 
 	if (isLoading) {
 		return (
-			<div className="flex justify-center items-center h-60 text-gray-600 text-lg">
-				Memuat detail produk...
+			<div className="min-h-screen bg-gray-50 flex justify-center items-center">
+				<div className="text-center">
+					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+					<p className="text-gray-600 text-lg font-medium">Memuat detail produk...</p>
+				</div>
 			</div>
 		);
 	}
 
 	if (!product) {
 		return (
-			<div className="max-w-7xl mx-auto px-4 py-10 text-center">
-				<h2 className="text-xl font-semibold text-gray-800 mb-4">
-					Produk tidak ditemukan
-				</h2>
-				<Link
-					to="/"
-					className="text-blue-600 hover:text-blue-800 font-medium"
-				>
-					Kembali ke halaman produk
-				</Link>
+			<div className="min-h-screen bg-gray-50 flex justify-center items-center">
+				<div className="text-center bg-white p-8 rounded-xl shadow-md max-w-md">
+					<div className="text-gray-400 mb-4">
+						<svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-8l-4-4m0 0L9 5m6 0V1"></path>
+						</svg>
+					</div>
+					<h2 className="text-2xl font-bold text-gray-800 mb-4">
+						Produk tidak ditemukan
+					</h2>
+					<p className="text-gray-600 mb-6">
+						Maaf, produk yang Anda cari tidak dapat ditemukan.
+					</p>
+					<Link
+						to="/katalog"
+						className="inline-flex items-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
+					>
+						<svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 12H5m6-7l-7 7 7 7"></path>
+						</svg>
+						Kembali ke Katalog
+					</Link>
+				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="max-w-7xl mx-auto px-4 py-6 mt-20">
-			<div className="mb-6">
-				<Link
-					to="/katalog"
-					className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium"
-				>
-					<svg
-						className="w-5 h-5 mr-2"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
+		<div className="min-h-screen bg-gray-50">
+			{/* Header Navigation */}
+			<div className="bg-white shadow-sm border-b sticky top-0 z-40">
+				<div className="max-w-7xl mx-auto px-4 py-4">
+					<Link
+						to="/katalog"
+						className="inline-flex items-center text-gray-600 hover:text-gray-900 font-medium transition-colors group"
 					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth="2"
-							d="M19 12H5M12 19l-7-7 7-7"
-						/>
-					</svg>
-					Kembali ke Katalog
-				</Link>
+						<svg
+							className="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2"
+								d="M19 12H5M12 19l-7-7 7-7"
+							/>
+						</svg>
+						Kembali ke Katalog
+					</Link>
+				</div>
 			</div>
 
-			<div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col lg:flex-row">
-				{/* Gambar */}
-				<div className="w-full lg:w-1/2 p-6">
-					<div className="aspect-square overflow-hidden rounded-lg">
-						<img
-							src={product.gambar}
-							alt={product.nama}
-							className="w-full h-full object-cover"
-						/>
-					</div>
-				</div>
-
-				{/* Info */}
-				<div className="w-full lg:w-1/2 p-6 flex flex-col">
-					<h1 className="text-2xl font-bold text-gray-900">
-						{product.nama}
-					</h1>
-					<p className="text-lg text-gray-600 mb-4">
-						{product.ukuran}
-					</p>
-					<p className="text-gray-700 mb-8">{product.deskripsi}</p>
-
-					<div className="bg-gray-50 rounded-lg p-6 mt-auto">
-						<h2 className="text-lg font-semibold text-gray-900 mb-6 text-center">
-							BUAT PESANAN
-						</h2>
-
-						<div className="flex items-center mb-6">
-							<button
-								onClick={handleDecreaseQuantity}
-								disabled={quantity <= 1}
-								className="w-10 h-10 flex items-center justify-center rounded bg-gray-200 text-gray-700 text-xl font-medium disabled:opacity-50 hover:bg-gray-300 transition-colors"
-							>
-								−
-							</button>
-
-							<input
-								type="text"
-								value={inputValue}
-								onChange={handleInputChange}
-								onBlur={handleInputBlur}
-								onKeyPress={handleInputKeyPress}
-								className={`mx-4 w-16 text-center font-medium text-lg border rounded px-2 py-1 focus:outline-none focus:ring-2 transition-colors ${
-									hasStockError
-										? 'border-red-500 focus:ring-red-500 focus:border-red-500 bg-red-50'
-										: 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-								}`}
-								min="1"
-								max={product.stok}
-							/>
-
-							<button
-								onClick={handleIncreaseQuantity}
-								disabled={quantity >= product.stok}
-								className="w-10 h-10 flex items-center justify-center rounded bg-gray-200 text-gray-700 text-xl font-medium disabled:opacity-50 hover:bg-gray-300 transition-colors"
-							>
-								+
-							</button>
-							<span className="ml-auto text-gray-500">
-								Stok: {product.stok}
-							</span>
+			{/* Main Content */}
+			<div className="max-w-7xl mx-auto px-4 py-8">
+				<div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+					<div className="flex flex-col lg:flex-row">
+						{/* Product Image Section */}
+						<div className="w-full lg:w-1/2 p-8">
+							<div className="aspect-square overflow-hidden rounded-xl bg-gray-100 shadow-inner">
+								<img
+									src={product.gambar}
+									alt={product.nama}
+									className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+								/>
+							</div>
 						</div>
 
-						{/* ✅ PERBAIKAN: Tampilkan peringatan jika ada error stok */}
-						{hasStockError && (
-							<div className="mb-4 p-3 bg-red-100 border border-red-300 rounded-lg">
-								<p className="text-sm text-red-700 font-medium">
-									⚠️ Jumlah melebihi stok tersedia. Maksimal{' '}
-									{product.stok} item.
+						{/* Product Info Section */}
+						<div className="w-full lg:w-1/2 p-8 flex flex-col">
+							{/* Product Header */}
+							<div className="mb-8">
+								<h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
+									{product.nama}
+								</h1>
+								<div className="flex items-center gap-3 mb-4">
+									<span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+										{product.ukuran}
+									</span>
+									<div className="flex items-center gap-1">
+										<span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+											product.stok > 10 
+												? 'bg-green-100 text-green-800' 
+												: product.stok > 0 
+													? 'bg-yellow-100 text-yellow-800'
+													: 'bg-red-100 text-red-800'
+										}`}>
+											<div className={`w-2 h-2 rounded-full ${
+												product.stok > 10 
+													? 'bg-green-500' 
+													: product.stok > 0 
+														? 'bg-yellow-500'
+														: 'bg-red-500'
+											}`}></div>
+											{product.stok > 0 ? `${product.stok} tersedia` : 'Stok habis'}
+										</span>
+									</div>
+								</div>
+								<p className="text-gray-700 text-lg leading-relaxed">
+									{product.deskripsi}
 								</p>
 							</div>
-						)}
 
-						<div className="flex justify-between items-center mb-6">
-							<span className="text-gray-700 font-medium">
-								Total harga:
-							</span>
-							<span className="text-xl font-bold text-gray-900">
-								Rp{calculateTotalPrice().toLocaleString()}
-							</span>
-						</div>
+							{/* Order Section */}
+							<div className="mt-auto">
+								<div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 border border-gray-200">
+									<div className="text-center mb-8">
+										<h2 className="text-2xl font-bold text-gray-900 mb-2">
+											Buat Pesanan
+										</h2>
+										<p className="text-gray-600">
+											Pilih jumlah yang diinginkan
+										</p>
+									</div>
 
-						<div className="mb-4">
-							<button
-								onClick={handleAddToCart}
-								disabled={
-									isAddingToCart ||
-									product.stok === 0 ||
-									!isLoggedIn ||
-									hasStockError
-								}
-								className="w-full flex justify-center items-center bg-green-700 text-white px-4 py-3 rounded-lg font-medium hover:bg-green-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
-							>
-								<svg
-									className="w-5 h-5 mr-2"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth="2"
-										d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-									/>
-								</svg>
-								{!isLoggedIn
-									? 'Login untuk Berbelanja'
-									: isAddingToCart
-										? 'Menambahkan...'
-										: product.stok === 0
-											? 'Stok Habis'
-											: hasStockError
-												? 'Perbaiki Jumlah'
-												: 'Masukkan Keranjang'}
-							</button>
+									{/* Quantity Selector */}
+									<div className="flex items-center justify-center mb-6">
+										<button
+											onClick={handleDecreaseQuantity}
+											disabled={quantity <= 1}
+											className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border-2 border-gray-200 text-gray-700 text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
+										>
+											−
+										</button>
+
+										<input
+											type="text"
+											value={inputValue}
+											onChange={handleInputChange}
+											onBlur={handleInputBlur}
+											onKeyPress={handleInputKeyPress}
+											className={`mx-4 w-20 h-12 text-center font-bold text-xl border-2 rounded-xl px-3 py-2 focus:outline-none focus:ring-4 transition-all shadow-sm ${
+												hasStockError
+													? 'border-red-500 focus:ring-red-500/20 focus:border-red-500 bg-red-50 text-red-700'
+													: 'border-gray-200 focus:ring-green-500/20 focus:border-green-500 bg-white'
+											}`}
+											min="1"
+											max={product.stok}
+										/>
+
+										<button
+											onClick={handleIncreaseQuantity}
+											disabled={quantity >= product.stok}
+											className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border-2 border-gray-200 text-gray-700 text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
+										>
+											+
+										</button>
+									</div>
+
+									{/* Stock Error Warning */}
+									{hasStockError && (
+										<div className="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl">
+											<div className="flex items-center">
+												<div className="flex-shrink-0">
+													<svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+														<path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+													</svg>
+												</div>
+												<div className="ml-3">
+													<p className="text-sm font-medium text-red-800">
+														Jumlah melebihi stok tersedia. Maksimal {product.stok} item.
+													</p>
+												</div>
+											</div>
+										</div>
+									)}
+
+									{/* Price Summary */}
+									<div className="bg-white rounded-xl p-6 mb-6 border border-gray-200 shadow-sm">
+										<div className="flex justify-between items-center mb-4">
+											<span className="text-gray-600 font-medium">Harga satuan:</span>
+											<span className="text-lg font-semibold text-gray-900">
+												Rp{product.harga.toLocaleString('id-ID')}
+											</span>
+										</div>
+										<div className="flex justify-between items-center mb-4">
+											<span className="text-gray-600 font-medium">Jumlah:</span>
+											<span className="text-lg font-semibold text-gray-900">
+												{quantity} item
+											</span>
+										</div>
+										<div className="border-t border-gray-200 pt-4">
+											<div className="flex justify-between items-center">
+												<span className="text-lg font-bold text-gray-900">Total harga:</span>
+												<span className="text-2xl font-bold text-green-600">
+													Rp{calculateTotalPrice().toLocaleString('id-ID')}
+												</span>
+											</div>
+										</div>
+									</div>
+
+									{/* Add to Cart Button */}
+									<button
+										onClick={handleAddToCart}
+										disabled={
+											isAddingToCart ||
+											product.stok === 0 ||
+											!isLoggedIn ||
+											hasStockError
+										}
+										className="w-full flex justify-center items-center bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-4 rounded-xl font-bold text-lg hover:from-green-700 hover:to-green-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+									>
+										{isAddingToCart ? (
+											<>
+												<div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+												Menambahkan ke Keranjang...
+											</>
+										) : (
+											<>
+												<svg
+													className="w-6 h-6 mr-3"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="currentColor"
+												>
+													<path
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														strokeWidth="2"
+														d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+													/>
+												</svg>
+												{!isLoggedIn
+													? 'Login untuk Berbelanja'
+													: product.stok === 0
+														? 'Stok Habis'
+														: hasStockError
+															? 'Perbaiki Jumlah Item'
+															: 'Masukkan ke Keranjang'}
+											</>
+										)}
+									</button>
+
+									{!isLoggedIn && (
+										<p className="text-center text-sm text-gray-500 mt-4">
+											Silakan login terlebih dahulu untuk melakukan pemesanan
+										</p>
+									)}
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
