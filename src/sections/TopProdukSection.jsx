@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../api/index';
 
 const TopProdukSection = () => {
-	const allowedIds = [1, 9, 6, 2, 5, 7];
+	const allowedIds = [13, 10, 9, 3, 4, 5]
 
 	const getKategoriName = (id) => {
 		const kategori = categories.find((item) => item.id === id);
