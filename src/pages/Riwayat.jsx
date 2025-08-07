@@ -188,7 +188,7 @@ const RiwayatPage = () => {
 									<th className="px-6 py-3">Tanggal</th>
 									<th className="px-6 py-3">Penerima</th>
 									<th className="px-6 py-3">Metode</th>
-									<th className="px-6 py-3">Produk Dibeli</th>
+									{/* <th className="px-6 py-3">Produk Dibeli</th> */}
 									<th className="px-6 py-3">Status</th>
 									<th className="px-6 py-3">Total Harga</th>
 									<th className="px-6 py-3">Aksi</th>
@@ -211,11 +211,11 @@ const RiwayatPage = () => {
 											<td className="px-6 py-4">
 												{trx.metode_pembayaran || '-'}
 											</td>
-											<td className="px-6 py-4 text-left max-w-xs">
+											{/* <td className="px-6 py-4 text-left max-w-xs">
 												<div className="truncate" title={getProductInfo(trx)}>
 													{getProductInfo(trx)}
 												</div>
-											</td>
+											</td> */}
 											<td className="px-6 py-4">
 												<span
 													className={`px-2 py-1 rounded-full text-xs font-semibold ${statusClass}`}
@@ -279,14 +279,14 @@ const RiwayatPage = () => {
 											</span>
 										</div>
 
-										<div className="flex justify-between items-start">
+										{/* <div className="flex justify-between items-start">
 											<span className="text-gray-600 font-medium">
 												Produk
 											</span>
 											<span className="text-gray-900 text-right max-w-48">
 												{getProductInfo(trx)}
 											</span>
-										</div>
+										</div> */}
 
 										<div className="flex justify-between">
 											<span className="text-gray-600 font-medium">
@@ -314,7 +314,7 @@ const RiwayatPage = () => {
 			{/* Modal Detail */}
 			{selectedTransaction && (
 				<div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-					<div className="bg-white w-full max-w-md rounded-lg shadow-lg relative max-h-96 overflow-y-auto">
+<div className="bg-white w-full max-w-md rounded-lg shadow-lg relative max-h-[90vh] overflow-y-auto">
 						<button
 							onClick={() => setSelectedTransaction(null)}
 							className="absolute top-2 right-3 mb-8 text-gray-500 hover:text-red-500 text-4xl z-10"
@@ -357,11 +357,11 @@ const RiwayatPage = () => {
 								</div>
 
 								<div className="border-b pb-2">
-									<p className="font-semibold text-gray-700 mb-1">Informasi Produk</p>
+									{/* <p className="font-semibold text-gray-700 mb-1">Informasi Produk</p>
 									<p>
 										<span className="font-semibold">Produk:</span>{' '}
 										{getProductInfo(selectedTransaction)}
-									</p>
+									</p> */}
 									{selectedTransaction.barang && (
 										<>
 											<p>
