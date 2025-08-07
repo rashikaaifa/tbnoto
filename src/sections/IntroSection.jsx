@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import perjalananImg from '../assets/img/cth4.png';
+import perjalananImg from "../assets/img/tbnoto.webp";
 
 const IntroSection = () => {
 	return (
