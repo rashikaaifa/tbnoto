@@ -285,7 +285,7 @@ const Daftar = () => {
 						</form>
 					</div>
 					<div>
-						<div className="relative text-center">
+						{/* <div className="relative text-center">
 							<span className="bg-white px-2 z-10 relative">
 								atau daftar menggunakan
 							</span>
@@ -301,7 +301,7 @@ const Daftar = () => {
 									{icon}
 								</a>
 							))}
-						</div>
+						</div> */}
 						<p className="text-center mt-4">
 							Sudah memiliki akun?{' '}
 							<a
