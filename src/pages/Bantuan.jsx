@@ -1,36 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import faqImage from '../assets/img/bntuan.jpg';
-
-const faqs = [
-	{
-		question: 'Bagaimana cara memesan produk?',
-		answer: 'Anda bisa memesan produk dengan menambahkannya ke keranjang dan melakukan checkout.',
-	},
-	{
-		question: 'Bagaimana cara melakukan pembayaran?',
-		answer: 'Pembayaran dapat dilakukan melalui transfer bank atau metode lain yang tersedia di website.',
-	},
-	{
-		question: 'Bagaimana cara mengatur ulang password akun?',
-		answer: "Klik 'Lupa Password' di halaman login dan ikuti langkah-langkahnya.",
-	},
-	{
-		question:
-			'Bagaimana cara mengemas paket untuk dikembalikan ke penjual?',
-		answer: 'Pastikan paket dalam kondisi baik, lalu hubungi penjual untuk petunjuk lebih lanjut.',
-	},
-	{
-		question: 'Apakah katalog di website sama seperti di offline store?',
-		answer: 'Katalog di website bisa berbeda dengan offline store karena stok bisa berubah sewaktu-waktu.',
-	},
-	{
-		question: 'Bagaimana cara konsultasi ke penjual?',
-		answer: 'Anda bisa menghubungi penjual melalui WhatsApp atau fitur Whatsapp yang tersedia di website.',
-	},
-];
+import api from '../api/index';
 
 const Bantuan = () => {
+	const [faqs, setFaqs] = useState([]);
 	const [openIndex, setOpenIndex] = useState(null);
+
+	useEffect(() => {
+		api.get('/bantuan')
+			.then((res) => {
+				const formatted = res.data.map((item) => ({
+					pertanyaan: item.pertanyaan,
+					jawaban: item.jawaban,
+				}));
+				setFaqs(formatted);
+			})
+			.catch((err) => {
+				console.error('Fetch bantuan error:', err);
+			});
+	}, []);
 
 	const toggleFAQ = (index) => {
 		setOpenIndex(openIndex === index ? null : index);
@@ -42,12 +30,12 @@ const Bantuan = () => {
 				Bantuan
 			</h1>
 
-			<div className="flex flex-col lg:flex-row justify-between items-start gap-8 w-full sm:w-4/5 max-w-[1400px]">
+			<div className="flex flex-col lg:flex-row justify-between items-start mb-16 gap-8 w-full sm:w-4/5 max-w-[1400px]">
 				<div className="flex justify-center items-start lg:w-2/5 w-full">
 					<img
 						src={faqImage}
 						alt="FAQ Illustration"
-						className="w-full max-w-sm"
+						className="w-full max-w-sm mr-24"
 					/>
 				</div>
 
@@ -59,14 +47,14 @@ const Bantuan = () => {
 							onClick={() => toggleFAQ(index)}
 						>
 							<div className="flex justify-between items-center font-semibold text-base sm:text-lg">
-								{faq.question}
+								{faq.pertanyaan}
 								<button className="text-[#7a0000] text-xl font-bold ml-4">
 									{openIndex === index ? '−' : '+'}
 								</button>
 							</div>
 							{openIndex === index && (
 								<p className="mt-2 text-sm sm:text-base pl-2 leading-relaxed">
-									{faq.answer}
+									{faq.jawaban}
 								</p>
 							)}
 						</div>
