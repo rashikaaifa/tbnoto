@@ -454,7 +454,8 @@ export const checkoutCart = async (items, token, extra) => {
     formData.append('metode_pembayaran', (extra?.metode_pembayaran ?? extra?.metode ?? '').toLowerCase());
     formData.append('total_harga', String(Number(extra?.total_harga ?? subtotal)));
     formData.append('ongkir', String(Number(extra?.ongkir ?? ongkir)));
-    formData.append('bukti_transfer', extra.bukti_transfer);
+    // ⚠️ PERBAIKAN: Ubah dari 'bukti_transfer' ke 'bukti_transaksi'
+    formData.append('bukti_transaksi', extra.bukti_transfer);
 
     // Kirim items sebagai JSON string atau individual fields
     items.forEach((item, index) => {
@@ -466,7 +467,7 @@ export const checkoutCart = async (items, token, extra) => {
 
     body = formData;
     
-    if (DEBUG) console.log('[checkoutCart] Using FormData for transfer with bukti_transfer');
+    if (DEBUG) console.log('[checkoutCart] Using FormData for transfer with bukti_transaksi');
   } else {
     // Gunakan JSON untuk COD atau transfer tanpa bukti
     headers = getAuthHeaders(token);
