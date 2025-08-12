@@ -230,16 +230,16 @@ const ProductDetail = () => {
 	if (!product) {
 		return (
 			<div className="min-h-screen bg-gray-50 flex justify-center items-center">
-				<div className="text-center bg-white p-8 rounded-xl shadow-md max-w-md">
-					<div className="text-gray-400 mb-4">
+				<div className="text-center bg-white p-6 rounded-xl shadow-md max-w-md">
+					<div className="text-gray-400 mb-3">
 						<svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-8l-4-4m0 0L9 5m6 0V1"></path>
 						</svg>
 					</div>
-					<h2 className="text-2xl font-bold text-gray-800 mb-4">
+					<h2 className="text-xl font-bold text-gray-800 mb-3">
 						Produk tidak ditemukan
 					</h2>
-					<p className="text-gray-600 mb-6">
+					<p className="text-gray-600 mb-5">
 						Maaf, produk yang Anda cari tidak dapat ditemukan.
 					</p>
 					<Link
@@ -260,7 +260,7 @@ const ProductDetail = () => {
 		<div className="min-h-screen bg-gray-50">
 			{/* Header Navigation */}
 			<div className="bg-white shadow-sm border-b sticky top-0 z-40">
-				<div className="max-w-7xl mx-auto px-4 py-4">
+				<div className="max-w-7xl mx-auto px-4 py-3">
 					<Link
 						to="/katalog"
 						className="inline-flex items-center text-gray-600 hover:text-gray-900 font-medium transition-colors group"
@@ -284,12 +284,12 @@ const ProductDetail = () => {
 			</div>
 
 			{/* Main Content */}
-			<div className="max-w-7xl mx-auto px-4 py-8">
-				<div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+			<div className="max-w-7xl mx-auto px-4 py-6">
+				<div className="bg-white rounded-xl shadow-lg overflow-hidden">
 					<div className="flex flex-col lg:flex-row">
 						{/* Product Image Section */}
-						<div className="w-full lg:w-1/2 p-8">
-							<div className="aspect-square overflow-hidden rounded-xl bg-gray-100 shadow-inner">
+						<div className="w-full lg:w-1/2 p-6">
+							<div className="aspect-square overflow-hidden rounded-lg bg-gray-100 shadow-inner">
 								<img
 									src={product.gambar}
 									alt={product.nama}
@@ -299,58 +299,56 @@ const ProductDetail = () => {
 						</div>
 
 						{/* Product Info Section */}
-						<div className="w-full lg:w-1/2 p-8 flex flex-col">
+						<div className="w-full lg:w-1/2 p-6 flex flex-col">
 							{/* Product Header */}
-							<div className="mb-8">
-								<h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
+							<div className="mb-5">
+								<h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
 									{product.nama}
 								</h1>
-								<div className="flex items-center gap-3 mb-4">
-									<span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+								<div className="flex items-center gap-2 mb-3">
+									<span className="inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
 										{product.ukuran}
 									</span>
-									<div className="flex items-center gap-1">
-										<span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+									<span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium ${
+										product.stok > 10 
+											? 'bg-green-100 text-green-800' 
+											: product.stok > 0 
+												? 'bg-yellow-100 text-yellow-800'
+												: 'bg-red-100 text-red-800'
+									}`}>
+										<div className={`w-1.5 h-1.5 rounded-full ${
 											product.stok > 10 
-												? 'bg-green-100 text-green-800' 
+												? 'bg-green-500' 
 												: product.stok > 0 
-													? 'bg-yellow-100 text-yellow-800'
-													: 'bg-red-100 text-red-800'
-										}`}>
-											<div className={`w-2 h-2 rounded-full ${
-												product.stok > 10 
-													? 'bg-green-500' 
-													: product.stok > 0 
-														? 'bg-yellow-500'
-														: 'bg-red-500'
-											}`}></div>
-											{product.stok > 0 ? `${product.stok} tersedia` : 'Stok habis'}
-										</span>
-									</div>
+													? 'bg-yellow-500'
+													: 'bg-red-500'
+										}`}></div>
+										{product.stok > 0 ? `${product.stok} tersedia` : 'Stok habis'}
+									</span>
 								</div>
-								<p className="text-gray-700 text-lg leading-relaxed">
+								<p className="text-gray-700 leading-relaxed">
 									{product.deskripsi}
 								</p>
 							</div>
 
 							{/* Order Section */}
 							<div className="mt-auto">
-								<div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 border border-gray-200">
-									<div className="text-center mb-8">
-										<h2 className="text-2xl font-bold text-gray-900 mb-2">
+								<div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-5 border border-gray-200">
+									<div className="text-center mb-5">
+										<h2 className="text-xl font-bold text-gray-900 mb-1">
 											Buat Pesanan
 										</h2>
-										<p className="text-gray-600">
+										<p className="text-gray-600 text-sm">
 											Pilih jumlah yang diinginkan
 										</p>
 									</div>
 
 									{/* Quantity Selector */}
-									<div className="flex items-center justify-center mb-6">
+									<div className="flex items-center justify-center mb-4">
 										<button
 											onClick={handleDecreaseQuantity}
 											disabled={quantity <= 1}
-											className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border-2 border-gray-200 text-gray-700 text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
+											className="w-10 h-10 flex items-center justify-center rounded-lg bg-white border-2 border-gray-200 text-gray-700 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
 										>
 											−
 										</button>
@@ -361,7 +359,7 @@ const ProductDetail = () => {
 											onChange={handleInputChange}
 											onBlur={handleInputBlur}
 											onKeyPress={handleInputKeyPress}
-											className={`mx-4 w-20 h-12 text-center font-bold text-xl border-2 rounded-xl px-3 py-2 focus:outline-none focus:ring-4 transition-all shadow-sm ${
+											className={`mx-3 w-16 h-10 text-center font-bold text-lg border-2 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 transition-all ${
 												hasStockError
 													? 'border-red-500 focus:ring-red-500/20 focus:border-red-500 bg-red-50 text-red-700'
 													: 'border-gray-200 focus:ring-green-500/20 focus:border-green-500 bg-white'
@@ -373,7 +371,7 @@ const ProductDetail = () => {
 										<button
 											onClick={handleIncreaseQuantity}
 											disabled={quantity >= product.stok}
-											className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border-2 border-gray-200 text-gray-700 text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
+											className="w-10 h-10 flex items-center justify-center rounded-lg bg-white border-2 border-gray-200 text-gray-700 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
 										>
 											+
 										</button>
@@ -381,14 +379,14 @@ const ProductDetail = () => {
 
 									{/* Stock Error Warning */}
 									{hasStockError && (
-										<div className="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl">
+										<div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
 											<div className="flex items-center">
 												<div className="flex-shrink-0">
-													<svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+													<svg className="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20">
 														<path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
 													</svg>
 												</div>
-												<div className="ml-3">
+												<div className="ml-2">
 													<p className="text-sm font-medium text-red-800">
 														Jumlah melebihi stok tersedia. Maksimal {product.stok} item.
 													</p>
@@ -398,23 +396,23 @@ const ProductDetail = () => {
 									)}
 
 									{/* Price Summary */}
-									<div className="bg-white rounded-xl p-6 mb-6 border border-gray-200 shadow-sm">
-										<div className="flex justify-between items-center mb-4">
+									<div className="bg-white rounded-lg p-4 mb-4 border border-gray-200">
+										<div className="flex justify-between items-center mb-2">
 											<span className="text-gray-600 font-medium">Harga satuan:</span>
-											<span className="text-lg font-semibold text-gray-900">
+											<span className="font-semibold text-gray-900">
 												Rp{product.harga.toLocaleString('id-ID')}
 											</span>
 										</div>
-										<div className="flex justify-between items-center mb-4">
+										<div className="flex justify-between items-center mb-2">
 											<span className="text-gray-600 font-medium">Jumlah:</span>
-											<span className="text-lg font-semibold text-gray-900">
+											<span className="font-semibold text-gray-900">
 												{quantity} item
 											</span>
 										</div>
-										<div className="border-t border-gray-200 pt-4">
+										<div className="border-t border-gray-200 pt-2">
 											<div className="flex justify-between items-center">
-												<span className="text-lg font-bold text-gray-900">Total harga:</span>
-												<span className="text-2xl font-bold text-green-600">
+												<span className="font-bold text-gray-900">Total harga:</span>
+												<span className="text-xl font-bold text-green-600">
 													Rp{calculateTotalPrice().toLocaleString('id-ID')}
 												</span>
 											</div>
@@ -430,7 +428,7 @@ const ProductDetail = () => {
 											!isLoggedIn ||
 											hasStockError
 										}
-										className="w-full flex justify-center items-center bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-4 rounded-xl font-bold text-lg hover:from-green-700 hover:to-green-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+										className="w-full flex justify-center items-center bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg font-bold hover:from-green-700 hover:to-green-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
 									>
 										{isAddingToCart ? (
 											<>
@@ -440,7 +438,7 @@ const ProductDetail = () => {
 										) : (
 											<>
 												<svg
-													className="w-6 h-6 mr-3"
+													className="w-5 h-5 mr-2"
 													viewBox="0 0 24 24"
 													fill="none"
 													stroke="currentColor"
@@ -464,7 +462,7 @@ const ProductDetail = () => {
 									</button>
 
 									{!isLoggedIn && (
-										<p className="text-center text-sm text-gray-500 mt-4">
+										<p className="text-center text-sm text-gray-500 mt-3">
 											Silakan login terlebih dahulu untuk melakukan pemesanan
 										</p>
 									)}
