@@ -78,10 +78,10 @@ const Masuk = () => {
 			} else {
 				setPopupData({
 					title: 'Gagal!',
-					message: 'Mohon cek koneksi internet.',
+					message: 'Mohon cek data yang Anda input.',
 					icon: 'cross',
 					actionLabel: 'Tutup',
-					actionHref: '/',
+					actionHref: '/masuk',
 					countdown: '5',
 					redirectTo: '/',
 				});
@@ -110,7 +110,7 @@ const Masuk = () => {
 			className="min-h-screen bg-cover bg-center px-8"
 			style={{ backgroundImage: `url(${bgImage})` }}
 		>
-			<div className="flex flex-col md:flex-row items-center justify-end min-h-screen max-w-7xl mx-auto px-4">
+			<div className="flex flex-col md:flex-row items-center justify-center md:justify-end min-h-screen max-w-7xl mx-auto px-4">
 				<motion.div
 					animate={{ opacity: 1, y: 1 }}
 					className="p-6 w-full max-w-2xl md:mr-12 md:mt-8 flex flex-col"
@@ -161,7 +161,7 @@ const Masuk = () => {
 									}
 									className="absolute top-[38px] right-4 text-xl"
 								>
-									{showPassword ? '🙈' : '👁️'}
+									{showPassword ? '🔒' : '👁️'}
 								</button>
 							</div>
 							{error && (

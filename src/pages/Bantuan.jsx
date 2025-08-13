@@ -35,7 +35,7 @@ const Bantuan = () => {
 					<img
 						src={faqImage}
 						alt="FAQ Illustration"
-						className="w-full max-w-sm mr-24"
+						className="w-full max-w-sm mr-4 lg:mr-24"
 					/>
 				</div>
 
