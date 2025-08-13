@@ -214,7 +214,7 @@ const getQuantity = (transaction) => {
 					</button>
 					<div className="p-6">
 						<h3 className="text-xl font-bold mb-6">
-							Bukti Transaksi #{selectedTransaction.id}
+							Bukti Transaksi
 						</h3>
 						
 						{/* Informasi Transaksi - DIPERBAIKI */}
@@ -403,17 +403,17 @@ const getQuantity = (transaction) => {
 												</td>
 												<td className="px-6 py-4 text-center border-r-0">
 													<div className="flex gap-2 justify-center">
-														<button
+														{/* <button
 															onClick={() => setSelectedTransaction(trx)}
 															className="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-md"
 														>
 															Detail
-														</button>
+														</button> */}
 														<button
 															onClick={() => handleViewProof(trx)}
-															className="text-sm text-white bg-green-600 hover:bg-green-700 px-3 py-1 rounded-md"
+															className="text-sm text-white bg-blue-600 px-3 py-1 rounded-md"
 														>
-															Bukti
+															Detail
 														</button>
 													</div>
 												</td>
@@ -486,12 +486,12 @@ const getQuantity = (transaction) => {
 											>
 												Detail
 											</button>
-											<button
+											{/* <button
 												onClick={() => handleViewProof(trx)}
 												className="flex-1 bg-green-600 text-white text-sm font-medium py-2 px-4 rounded-xl transition-colors hover:bg-green-700"
 											>
 												Bukti
-											</button>
+											</button> */}
 										</div>
 									</div>
 								);
