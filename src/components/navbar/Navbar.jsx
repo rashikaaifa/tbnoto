@@ -130,9 +130,9 @@ const Navbar = () => {
 							</a>
 						)}
 						{!isLoggedIn ? (
-							<a href="/daftar">
+							<a href="/masuk">
 								<button className="font-medium bg-white text-primary px-4 py-2 rounded-full border-2 border-transparent hover:border-white hover:bg-transparent hover:text-white transition">
-									Registrasi
+									Masuk
 								</button>
 							</a>
 						) : (

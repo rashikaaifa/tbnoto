@@ -124,12 +124,12 @@ const Daftar = () => {
 			} else {
 				setPopupData({
 					title: 'Gagal!',
-					message: 'Mohon cek koneksi internet.',
+					message: 'Mohon cek koneksi internet serta data Anda.',
 					icon: 'cross',
 					actionLabel: 'Tutup',
 					actionHref: '/',
 					countdown: '5',
-					redirectTo: '/',
+					redirectTo: '/daftar',
 				});
 			}
 
@@ -163,7 +163,7 @@ const Daftar = () => {
 			<div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-end min-h-screen max-w-7xl mx-auto">
 				<motion.div
 					animate={{ opacity: 1, y: 1 }}
-					className="p-6 w-full max-w-2xl md:mr-12 md:mt-8 flex flex-col"
+					className="p-6 w-full max-w-2xl md:mr-12 md:mt-12 flex flex-col"
 				>
 					<h2 className="text-xl md:text-3xl font-semibold mb-6">
 						Buat Akun Baru
@@ -237,7 +237,7 @@ const Daftar = () => {
 									value={formData.password}
 									onChange={handleChange}
 									minLength={8}
-									placeholder="Min: 8 karakter, 1 kapital, 1 angka"
+									placeholder="8 karakter, 1 kapital, 1 angka"
 									className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
 									required
 								/>
@@ -248,18 +248,18 @@ const Daftar = () => {
 									}
 									className="absolute top-[38px] right-4 text-xl"
 								>
-									{showPassword ? '🙈' : '👁️'}
+									{showPassword ? '🔒' : '👁️'}
 								</button>
 							</div>
 							<div className="relative">
-								<label className="block mb-1">Kata Sandi</label>
+								<label className="block mb-1">Konfirmasi Kata Sandi</label>
 								<input
 									type={showPassword ? 'text' : 'password'}
 									name="confirmPassword"
 									value={formData.confirmPassword}
 									onChange={handleChange}
 									minLength={8}
-									placeholder="Min: 8 karakter, 1 kapital, 1 angka"
+									placeholder="Serupa dengan kata sandi"
 									className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
 									required
 								/>
@@ -270,7 +270,7 @@ const Daftar = () => {
 									}
 									className="absolute top-[38px] right-4 text-xl"
 								>
-									{showPassword ? '🙈' : '👁️'}
+									{showPassword ? '🔒' : '👁️'}
 								</button>
 							</div>
 							{error && (

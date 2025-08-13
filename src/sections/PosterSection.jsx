@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import poster1 from '../assets/img/poster1.webp';
+import poster2 from '../assets/img/poster2.webp';
+import poster3 from '../assets/img/poster3.webp';
 import { FaChevronRight } from 'react-icons/fa6';
 import { FaChevronLeft } from 'react-icons/fa6';
 
 const posters = [
-	{ id: 1, image: '/public/assets/poster/poster1.webp', alt: 'Poster 1' },
-	{ id: 2, image: '/public/assets/poster/poster2.webp', alt: 'Poster 2' },
-	{ id: 3, image: '/public/assets/poster/poster3.webp', alt: 'Poster 3' },
+	{ id: 1, image: poster1, alt: 'Poster 1' },
+	{ id: 2, image: poster2, alt: 'Poster 2' },
+	{ id: 3, image: poster3, alt: 'Poster 3' },
 ];
 
 const PosterSection = () => {
@@ -35,7 +37,7 @@ const PosterSection = () => {
 	return (
 		<section id="poster">
 			<div className="p-6 md:p-12">
-				<div className="relative w-full aspect-[16/9] md:h-[400px] overflow-hidden rounded-2xl shadow-xl">
+				<div className="relative w-full aspect-[8/3] md:h-auto overflow-hidden rounded-2xl shadow-xl">
 					<div
 						className="flex transition-transform duration-700 ease-in-out w-full h-full"
 						style={{

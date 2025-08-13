@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const HeroSection = () => {
-	const [currentPoster] = useState(0);
+	const [currentPoster, setCurrentPoster] = useState(0);
 
 	const mobileImages = [
 		'/assets/hero/mobile1.webp',
@@ -15,6 +15,13 @@ const HeroSection = () => {
 		'/assets/hero/desktop2.webp',
 		'/assets/hero/desktop3.webp',
 	];
+
+	useEffect(() => {
+		const Interval = setInterval(() => {
+			setCurrentPoster((prev) => (prev + 1) % mobileImages.length);
+		}, 4000);
+		return () => clearInterval(Interval);
+	}, []);
 
 	return (
 		<section id="hero">

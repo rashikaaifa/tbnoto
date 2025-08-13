@@ -58,8 +58,6 @@ const PopUp = ({
 				return 'M5 13l4 4L19 7';
 			case 'cross':
 				return 'M6 6L18 18M6 18L18 6';
-			case 'warning':
-				return 'M12 9v2m0 4h.01M12 5.5l6.16 10.5H5.84L12 5.5z';
 			default:
 				return null;
 		}
