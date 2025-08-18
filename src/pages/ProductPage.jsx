@@ -15,7 +15,7 @@ const ProductPage = () => {
 	const [categories, setCategories] = useState([]);
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const itemsPerPage = 6;
+	const itemsPerPage = 18;
 
 	useEffect(() => {
 		const handleResize = () => setIsMobile(window.innerWidth < 768);

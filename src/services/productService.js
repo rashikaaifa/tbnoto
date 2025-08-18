@@ -429,92 +429,96 @@ export async function adjustProductStock(productId, delta, token) {
 // -------------------- Checkout dengan Upload Bukti Transfer --------------------
 // items: [{ cartId, productId, quantity, price }]
 // extra: { nama_penerima, no_telepon, alamat_pengiriman, metode_pembayaran, total_harga, ongkir, bukti_transfer?, isFormData? }
-// checkoutCart.js
 export const checkoutCart = async (items, token, extra) => {
-  const API_BASE = "https://tbnoto19-admin.rplrus.com/api";
+  const API_BASE = 'https://tbnoto19-admin.rplrus.com/api';
   const url = `${API_BASE}/cart/checkout`;
 
-  // Hitung subtotal & ongkir (3%)
-  const subtotal = items.reduce((sum, it) => sum + (Number(it.price) * Number(it.quantity)), 0);
+  // Hitung total & ongkir (3%) di sisi client jika backend tidak menghitung.
+  const subtotal = items.reduce((s, it) => s + (Number(it.price || 0) * Number(it.quantity || 1)), 0);
   const ongkir = Math.round(subtotal * 0.03);
 
-  const isTransferMethod = ["transfer_bri", "transfer_bca"].includes(extra?.metode_pembayaran);
-  const hasBukti = extra?.bukti_transaksi instanceof File;
+  // Cek apakah menggunakan metode transfer bank dan ada file bukti transfer
+  const isTransferMethod = (extra?.metode_pembayaran === 'transfer_bri' || extra?.metode_pembayaran === 'transfer_bca');
+  const hasBuktiTransfer = extra?.bukti_transfer instanceof File;
 
   let headers, body;
 
-  if (isTransferMethod && hasBukti) {
-    // ========== Transfer dengan upload bukti ==========
+  if (isTransferMethod && hasBuktiTransfer) {
+    // Gunakan FormData untuk upload file
     headers = getAuthHeadersMultipart(token);
+    
     const formData = new FormData();
+    formData.append('nama_penerima', extra?.nama_penerima ?? extra?.nama ?? '');
+    formData.append('no_telepon', extra?.no_telepon ?? extra?.nomor_telepon ?? '');
+    formData.append('alamat_pengiriman', extra?.alamat_pengiriman ?? extra?.alamat ?? '');
+    formData.append('metode_pembayaran', (extra?.metode_pembayaran ?? extra?.metode ?? '').toLowerCase());
+    formData.append('total_harga', String(Number(extra?.total_harga ?? subtotal)));
+    formData.append('ongkir', String(Number(extra?.ongkir ?? ongkir)));
+    // ⚠️ PERBAIKAN: Ubah dari 'bukti_transfer' ke 'bukti_transaksi'
+    formData.append('bukti_transaksi', extra.bukti_transfer);
 
-    formData.append("nama_penerima", extra.nama_penerima);
-    formData.append("no_telepon", extra.no_telepon);
-    formData.append("alamat_pengiriman", extra.alamat_pengiriman);
-    formData.append("metode_pembayaran", extra.metode_pembayaran.toLowerCase());
-    formData.append("total_harga", String(extra.total_harga ?? subtotal));
-    formData.append("ongkir", String(extra.ongkir ?? ongkir));
-
-    if (extra.bukti_transaksi) {
-      formData.append("bukti_transaksi", extra.bukti_transaksi);
-    }
-
+    // Kirim items sebagai JSON string atau individual fields
     items.forEach((item, index) => {
-      formData.append(`items[${index}][cart_id]`, String(item.cartId));
-      formData.append(`items[${index}][barang_id]`, String(item.productId));
-      formData.append(`items[${index}][quantity]`, String(item.quantity));
-      formData.append(`items[${index}][harga_satuan]`, String(item.price));
+      formData.append(`items[${index}][cart_id]`, String(item.cartId ?? item.id ?? ''));
+      formData.append(`items[${index}][barang_id]`, String(item.productId ?? ''));
+      formData.append(`items[${index}][quantity]`, String(item.quantity ?? 1));
+      formData.append(`items[${index}][price]`, String(item.price ?? 0));
     });
 
     body = formData;
+    
+    if (DEBUG) console.log('[checkoutCart] Using FormData for transfer with bukti_transaksi');
   } else {
-    // ========== COD atau transfer tanpa bukti ==========
+    // Gunakan JSON untuk COD atau transfer tanpa bukti
     headers = getAuthHeaders(token);
+    
     const jsonBody = {
-      nama_penerima: extra.nama_penerima,
-      no_telepon: extra.no_telepon,
-      alamat_pengiriman: extra.alamat_pengiriman,
-      metode_pembayaran: extra.metode_pembayaran.toLowerCase(),
-      total_harga: Number(extra.total_harga ?? subtotal),
-      ongkir: Number(extra.ongkir ?? ongkir),
+      nama_penerima: extra?.nama_penerima ?? extra?.nama ?? '',
+      no_telepon: extra?.no_telepon ?? extra?.nomor_telepon ?? '',
+      alamat_pengiriman: extra?.alamat_pengiriman ?? extra?.alamat ?? '',
+      metode_pembayaran: (extra?.metode_pembayaran ?? extra?.metode ?? '').toLowerCase(),
+      total_harga: Number(extra?.total_harga ?? subtotal),
+      ongkir: Number(extra?.ongkir ?? ongkir),
       items: items.map(it => ({
-        cart_id: it.cartId,
+        cart_id: it.cartId ?? it.id,
         barang_id: it.productId,
         quantity: it.quantity,
-        harga_satuan: it.price,
+        price: it.price,
       })),
     };
+
     body = JSON.stringify(jsonBody);
+    
+    if (DEBUG) console.log('[checkoutCart] Using JSON body:', jsonBody);
   }
 
-  // Request ke backend
-  const res = await fetchWithRetry(
-    url,
-    { method: "POST", headers, body },
-    { retries: 2, baseDelay: 1000 }
-  );
-
+  const res = await fetchWithRetry(url, { 
+    method: 'POST', 
+    headers, 
+    body 
+  }, { retries: 2, baseDelay: 1000 });
+  
   const txt = await res.text();
-
+  
   if (!res.ok) {
     try {
       const j = JSON.parse(txt);
-      const msg = j?.message || "Checkout gagal";
+      const msg = j?.message || 'Checkout gagal';
       const errors = j?.errors
-        ? " — " +
-          Object.entries(j.errors)
-            .map(([k, v]) => `${k}: ${Array.isArray(v) ? v[0] : v}`)
-            .join("; ")
-        : "";
+        ? ' — ' + Object.entries(j.errors).map(([k, v]) => `${k}: ${Array.isArray(v) ? v[0] : v}`).join('; ')
+        : '';
       throw new Error(`${msg}${errors}`);
-    } catch {
+    } catch (parseError) {
+      if (parseError instanceof Error && parseError.message.includes('Checkout gagal')) {
+        throw parseError; // Re-throw our custom error
+      }
       throw new Error(`Checkout gagal (HTTP ${res.status}): ${txt}`);
     }
   }
 
-  try {
-    return JSON.parse(txt);
-  } catch {
-    return { ok: true, message: "Checkout berhasil" };
+  try { 
+    return JSON.parse(txt); 
+  } catch { 
+    return { ok: true, message: 'Checkout berhasil' }; 
   }
 };

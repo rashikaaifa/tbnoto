@@ -13,7 +13,6 @@ import Keranjang from './pages/Keranjang';
 import ProductPage from './pages/ProductPage';
 import ProductDetail from './pages/ProductDetail';
 import OrderPage from './pages/OrderPage';
-import SuksesMasuk from './pages/SuksesMasuk';
 
 const AppContent = () => {
 	const location = useLocation();
@@ -39,7 +38,6 @@ const AppContent = () => {
 					path="/katalog/kategori/:categorySlug"
 					element={<ProductPage />}
 				/>
-				<Route path="/login/success" element={<SuksesMasuk />} />
 			</Routes>
 
 			{!hideLayout && <Footer />}

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import profileImage from '../assets/img/lucu.jpg';
-import { GoPencil } from 'react-icons/go';
 import { useAuth } from '../contexts/AuthContext';
 import PopUp from '../components/popup/PopUp';
 
@@ -71,19 +69,23 @@ const ProfilePage = () => {
 			await updateProfile(profileData);
 			setIsEditing(false);
 			setPopupData({
-				title: 'Berhasil',
+				title: 'Berhasil!',
 				message: 'Data profil berhasil diperbarui.',
 				icon: 'check',
-				countdown: 3,
+				actionLabel: 'Tutup',
+				actionHref: '/profil',
+				redirectTo: '/',
 			});
 			setPopupOpen(true);
 		} catch (error) {
 			console.error('Gagal update profil:', error);
 			setPopupData({
-				title: 'Gagal',
+				title: 'Gagal!',
 				message: 'Gagal memperbarui data profil. Silakan coba lagi.',
-				icon: 'error',
-				countdown: 3,
+				icon: 'cross',
+				actionLabel: 'Tutup',
+				actionHref: '/profil',
+				redirectTo: '/',
 			});
 			setPopupOpen(true);
 		}
@@ -103,13 +105,13 @@ const ProfilePage = () => {
 	};
 
 	return (
-		<div className="flex justify-center items-center flex-col py-28">
+		<div className="flex justify-center items-center flex-col mt-28 mb-8">
 			<h1 className="text-2xl sm:text-4xl font-bold mb-8 text-center">
 				Profil
 			</h1>
 
-			<div className="w-full max-w-4xl bg-white rounded-2xl p-10">
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-8">
+			<div className="w-full max-w-4xl bg-white rounded-2xl p-10 mx-auto">
+				<div className="grid gap-x-8 gap-y-8 ml-0 md:ml-28">
 					{fields.map((field, idx) => {
 						const isPhone = field.name === 'phone';
 						const isPassword = field.name === 'password';
@@ -133,7 +135,7 @@ const ProfilePage = () => {
 									<div className="relative">
 										{isPhone && (
 											<span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-base">
-												+62
+												+62 
 											</span>
 										)}
 										<input
@@ -149,7 +151,7 @@ const ProfilePage = () => {
 											}
 											onChange={handleChange}
 											className={`w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500 ${
-												isPhone ? 'pl-10' : ''
+												isPhone ? 'pl-14' : ''
 											}`}
 											placeholder={
 												isPhone ? '81234567890' : ''
@@ -165,7 +167,7 @@ const ProfilePage = () => {
 												}
 												className="absolute top-1/2 right-4 transform -translate-y-1/2"
 											>
-												{showPassword ? '🙈' : '👁️'}
+												{showPassword ? '🔒' : '👁️'}
 											</button>
 										)}
 									</div>
@@ -215,17 +217,16 @@ const ProfilePage = () => {
 					)}
 				</div>
 			</div>
-
 			<PopUp
 				isOpen={popupOpen}
 				onClose={() => setPopupOpen(false)}
 				title={popupData.title}
 				message={popupData.message}
 				icon={popupData.icon}
-				countdown={popupData.countdown}
 				redirectTo={popupData.redirectTo}
 				actionLabel={popupData.actionLabel}
 				actionHref={popupData.actionHref}
+				showClose={false}
 			/>
 		</div>
 	);
