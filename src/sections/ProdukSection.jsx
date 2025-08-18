@@ -43,20 +43,21 @@ const ProdukSection = () => {
 							<Link
 								to={`/product/${product.id}`}
 								key={product.id}
-								className="bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500 block"
+								className="bg-white p-3 rounded-xl border shadow-md cursor-pointer hover:scale-105 transition-all duration-500 grid grid-rows-[auto_1fr_auto] h-full"
 							>
 								<img
 									src={`https://tbnoto19-admin.rplrus.com/storage/${product.foto_barang}`}
 									alt={product.nama_barang}
 									className="w-full h-32 object-cover rounded-lg mb-2"
 								/>
-								<h3 className="font-semibold text-lg">
+								<h3 className="font-semibold text-lg mb-1">
 									{product.nama_barang}
 								</h3>
-								<p className="text-sm">{product.ukuran}</p>
-								<p className="text-md">
-									Rp
-									{Number(product.harga).toLocaleString()}
+								<p className="text-sm text-gray-700 mb-1 ">
+									{product.ukuran}
+								</p>
+								<p className="text-md font-medium mb-1">
+									Rp{Number(product.harga).toLocaleString()} /{product.satuan_harga}
 								</p>
 							</Link>
 						);

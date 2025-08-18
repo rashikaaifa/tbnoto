@@ -9,7 +9,6 @@ const ProfilePage = () => {
 	const { isLoggedIn, logout, user, updateProfile, token, setUser } =
 		useAuth();
 	const navigate = useNavigate();
-	const [showPassword, setShowPassword] = useState(false);
 
 	const [popupOpen, setPopupOpen] = useState(false);
 	const [popupData, setPopupData] = useState({
@@ -23,12 +22,10 @@ const ProfilePage = () => {
 	});
 
 	const [isEditing, setIsEditing] = useState(false);
-	const [imagePreview, setImagePreview] = useState(null);
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
 		phone: '',
-		password: '',
 		address: '',
 	});
 
@@ -36,7 +33,6 @@ const ProfilePage = () => {
 		{ label: 'Nama', name: 'name' },
 		{ label: 'Email', name: 'email' },
 		{ label: 'Nomor Telepon', name: 'phone', isPhoneWithPrefix: true },
-		{ label: 'Kata Sandi', name: 'password', isPassword: true },
 		{ label: 'Alamat', name: 'address' },
 	];
 
@@ -46,7 +42,6 @@ const ProfilePage = () => {
 				name: user.name || '',
 				email: user.email || '',
 				phone: user.phone?.replace(/^(\+62|62|0)/, '') || '',
-				password: '',
 				address: user.address || '',
 			});
 		}
@@ -63,7 +58,6 @@ const ProfilePage = () => {
 				email: formData.email,
 				phone: `+62${formData.phone.replace(/^(\+62|62|0)/, '')}`,
 				address: formData.address,
-				...(formData.password && { password: formData.password }),
 			};
 
 			await updateProfile(profileData);
@@ -97,7 +91,6 @@ const ProfilePage = () => {
 				name: user.name || '',
 				email: user.email || '',
 				phone: user.phone?.replace(/^(\+62|62|0)/, '') || '',
-				password: '',
 				address: user.address || '',
 			});
 		}
@@ -106,7 +99,7 @@ const ProfilePage = () => {
 
 	return (
 		<div className="flex justify-center items-center flex-col mt-28 mb-8">
-			<h1 className="text-2xl sm:text-4xl font-bold mb-8 text-center">
+			<h1 className="text-2xl sm:text-4xl font-bold mb-2 text-center">
 				Profil
 			</h1>
 
@@ -114,13 +107,8 @@ const ProfilePage = () => {
 				<div className="grid gap-x-8 gap-y-8 ml-0 md:ml-28">
 					{fields.map((field, idx) => {
 						const isPhone = field.name === 'phone';
-						const isPassword = field.name === 'password';
-						const inputType = isPassword
-							? showPassword
-								? 'text'
-								: 'password'
-							: 'text';
-						const spanFullRow = field.name === 'name';
+						const spanFullRow =
+							field.name === 'name' || field.name == 'address';
 
 						return (
 							<div
@@ -135,11 +123,15 @@ const ProfilePage = () => {
 									<div className="relative">
 										{isPhone && (
 											<span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-base">
-												+62 
+												+62
 											</span>
 										)}
 										<input
-											type={inputType}
+											type={
+												field.name === 'email'
+													? 'email'
+													: 'text'
+											}
 											name={field.name}
 											value={
 												isPhone
@@ -157,27 +149,12 @@ const ProfilePage = () => {
 												isPhone ? '81234567890' : ''
 											}
 										/>
-										{isPassword && (
-											<button
-												type="button"
-												onClick={() =>
-													setShowPassword(
-														!showPassword
-													)
-												}
-												className="absolute top-1/2 right-4 transform -translate-y-1/2"
-											>
-												{showPassword ? '🔒' : '👁️'}
-											</button>
-										)}
 									</div>
 								) : (
 									<p className="mt-1 text-lg">
 										{isPhone
 											? `+62 ${formData.phone}`
-											: isPassword
-												? '********'
-												: formData[field.name]}
+											: formData[field.name]}
 									</p>
 								)}
 							</div>

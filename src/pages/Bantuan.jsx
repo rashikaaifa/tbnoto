@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import faqImage from '../assets/img/bntuan.jpg';
+import faqImage from '../assets/img/bantuan.jpg';
 import api from '../api/index';
 
 const Bantuan = () => {

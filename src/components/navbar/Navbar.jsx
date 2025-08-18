@@ -192,6 +192,11 @@ const Navbar = () => {
 									<a href="/riwayat">Riwayat</a>
 								</li>
 							)}
+							{isLoggedIn && (
+								<li className="p-4 border-b hover:bg-gray-200">
+									<a href="/keranjang">Keranjang</a>
+								</li>
+							)}
 							<li className="p-4 border-b hover:bg-gray-200">
 								<a href="/bantuan">Bantuan</a>
 							</li>
