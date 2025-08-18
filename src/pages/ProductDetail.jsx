@@ -221,7 +221,9 @@ const ProductDetail = () => {
 			<div className="min-h-screen bg-gray-50 flex justify-center items-center">
 				<div className="text-center">
 					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-					<p className="text-gray-600 text-lg font-medium">Memuat detail produk...</p>
+					<p className="text-gray-600 text-lg font-medium">
+						Memuat detail produk...
+					</p>
 				</div>
 			</div>
 		);
@@ -232,8 +234,18 @@ const ProductDetail = () => {
 			<div className="min-h-screen bg-gray-50 flex justify-center items-center">
 				<div className="text-center bg-white p-6 rounded-xl shadow-md max-w-md">
 					<div className="text-gray-400 mb-3">
-						<svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-8l-4-4m0 0L9 5m6 0V1"></path>
+						<svg
+							className="w-16 h-16 mx-auto"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2"
+								d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-8l-4-4m0 0L9 5m6 0V1"
+							></path>
 						</svg>
 					</div>
 					<h2 className="text-xl font-bold text-gray-800 mb-3">
@@ -246,8 +258,18 @@ const ProductDetail = () => {
 						to="/katalog"
 						className="inline-flex items-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
 					>
-						<svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 12H5m6-7l-7 7 7 7"></path>
+						<svg
+							className="w-5 h-5 mr-2"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2"
+								d="M19 12H5m6-7l-7 7 7 7"
+							></path>
 						</svg>
 						Kembali ke Katalog
 					</Link>
@@ -309,21 +331,27 @@ const ProductDetail = () => {
 									<span className="inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
 										{product.ukuran}
 									</span>
-									<span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium ${
-										product.stok > 10 
-											? 'bg-green-100 text-green-800' 
-											: product.stok > 0 
-												? 'bg-yellow-100 text-yellow-800'
-												: 'bg-red-100 text-red-800'
-									}`}>
-										<div className={`w-1.5 h-1.5 rounded-full ${
-											product.stok > 10 
-												? 'bg-green-500' 
-												: product.stok > 0 
-													? 'bg-yellow-500'
-													: 'bg-red-500'
-										}`}></div>
-										{product.stok > 0 ? `${product.stok} tersedia` : 'Stok habis'}
+									<span
+										className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium ${
+											product.stok > 10
+												? 'bg-green-100 text-green-800'
+												: product.stok > 0
+													? 'bg-yellow-100 text-yellow-800'
+													: 'bg-red-100 text-red-800'
+										}`}
+									>
+										<div
+											className={`w-1.5 h-1.5 rounded-full ${
+												product.stok > 10
+													? 'bg-green-500'
+													: product.stok > 0
+														? 'bg-yellow-500'
+														: 'bg-red-500'
+											}`}
+										></div>
+										{product.stok > 0
+											? `${product.stok} tersedia`
+											: 'Stok habis'}
 									</span>
 								</div>
 								<p className="text-gray-700 leading-relaxed">
@@ -382,13 +410,23 @@ const ProductDetail = () => {
 										<div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
 											<div className="flex items-center">
 												<div className="flex-shrink-0">
-													<svg className="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-														<path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+													<svg
+														className="w-4 h-4 text-red-400"
+														fill="currentColor"
+														viewBox="0 0 20 20"
+													>
+														<path
+															fillRule="evenodd"
+															d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+															clipRule="evenodd"
+														/>
 													</svg>
 												</div>
 												<div className="ml-2">
 													<p className="text-sm font-medium text-red-800">
-														Jumlah melebihi stok tersedia. Maksimal {product.stok} item.
+														Jumlah melebihi stok
+														tersedia. Maksimal{' '}
+														{product.stok} item.
 													</p>
 												</div>
 											</div>
@@ -398,22 +436,34 @@ const ProductDetail = () => {
 									{/* Price Summary */}
 									<div className="bg-white rounded-lg p-4 mb-4 border border-gray-200">
 										<div className="flex justify-between items-center mb-2">
-											<span className="text-gray-600 font-medium">Harga satuan:</span>
+											<span className="text-gray-600 font-medium">
+												Harga satuan:
+											</span>
 											<span className="font-semibold text-gray-900">
-												Rp{product.harga.toLocaleString('id-ID')}
+												Rp
+												{product.harga.toLocaleString(
+													'id-ID'
+												)}
 											</span>
 										</div>
 										<div className="flex justify-between items-center mb-2">
-											<span className="text-gray-600 font-medium">Jumlah:</span>
+											<span className="text-gray-600 font-medium">
+												Jumlah:
+											</span>
 											<span className="font-semibold text-gray-900">
 												{quantity} item
 											</span>
 										</div>
 										<div className="border-t border-gray-200 pt-2">
 											<div className="flex justify-between items-center">
-												<span className="font-bold text-gray-900">Total harga:</span>
+												<span className="font-bold text-gray-900">
+													Total harga:
+												</span>
 												<span className="text-xl font-bold text-green-600">
-													Rp{calculateTotalPrice().toLocaleString('id-ID')}
+													Rp
+													{calculateTotalPrice().toLocaleString(
+														'id-ID'
+													)}
 												</span>
 											</div>
 										</div>
@@ -463,7 +513,8 @@ const ProductDetail = () => {
 
 									{!isLoggedIn && (
 										<p className="text-center text-sm text-gray-500 mt-3">
-											Silakan login terlebih dahulu untuk melakukan pemesanan
+											Silakan login terlebih dahulu untuk
+											melakukan pemesanan
 										</p>
 									)}
 								</div>

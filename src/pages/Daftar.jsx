@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FcGoogle } from 'react-icons/fc';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import bgImage from '../assets/img/background.png';
 import { useAuth } from '../contexts/AuthContext';
@@ -248,11 +248,17 @@ const Daftar = () => {
 									}
 									className="absolute top-[38px] right-4 text-xl"
 								>
-									{showPassword ? '🔒' : '👁️'}
+									{showPassword ? (
+										<FiEyeOff size={20} />
+									) : (
+										<FiEye size={20} />
+									)}
 								</button>
 							</div>
 							<div className="relative">
-								<label className="block mb-1">Konfirmasi Kata Sandi</label>
+								<label className="block mb-1">
+									Konfirmasi Kata Sandi
+								</label>
 								<input
 									type={showPassword ? 'text' : 'password'}
 									name="confirmPassword"
@@ -270,7 +276,11 @@ const Daftar = () => {
 									}
 									className="absolute top-[38px] right-4 text-xl"
 								>
-									{showPassword ? '🔒' : '👁️'}
+									{showPassword ? (
+										<FiEyeOff size={20} />
+									) : (
+										<FiEye size={20} />
+									)}
 								</button>
 							</div>
 							{error && (

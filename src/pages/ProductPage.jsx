@@ -5,7 +5,7 @@ import PaginationControl from '../components/katalog/PaginationControl';
 import { getProducts, getProductCategories } from '../services/productService';
 
 const ProductPage = () => {
-	const { categorySlug } = useParams(); // Ambil parameter kategori dari URL
+	const { categorySlug } = useParams();
 	const [products, setProducts] = useState([]);
 	const [filteredProducts, setFilteredProducts] = useState([]);
 	const [searchTerm, setSearchTerm] = useState('');
@@ -183,7 +183,7 @@ const ProductPage = () => {
 				</div>
 			)}
 
-			{/* Pagination Control */}
+			{/* pagination */}
 			{totalPages > 0 && (
 				<PaginationControl
 					currentPage={currentPage}

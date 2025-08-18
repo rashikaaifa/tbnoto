@@ -17,7 +17,7 @@ const PerluMasuk = ({ children }) => {
 					isOpen={showPopup}
 					title="Masuk untuk melanjutkan akses!"
 					message="Jangan lewatkan pengalaman  berbelanja terbaik."
-					icon="warning"
+					icon="cross"
 					actionLabel="Masuk"
 					actionHref="/daftar"
 					hideClose={true}
