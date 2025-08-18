@@ -53,13 +53,14 @@ export default function OrderPage() {
     }
   }, [order]);
 
-  // Handle file upload
+  // Handle file upload dengan validasi yang lebih baik
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       // Validasi tipe file
-      if (!file.type.startsWith('image/')) {
-        alert('File harus berupa gambar (JPG, PNG, etc.)');
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('File harus berupa gambar (JPG, PNG, WEBP)');
         return;
       }
 
@@ -87,6 +88,26 @@ export default function OrderPage() {
       setPreviewImage(null);
     }
   }, [metode]);
+
+  // Copy to clipboard function
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      // Show temporary feedback
+      const event = new CustomEvent('show-toast', {
+        detail: { message: 'Nomor rekening disalin!', type: 'success' }
+      });
+      window.dispatchEvent(event);
+    }).catch(() => {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Nomor rekening disalin: ' + text);
+    });
+  };
 
   // Jika tetap tidak ada order
   if (!order) {
@@ -161,10 +182,17 @@ export default function OrderPage() {
     </div>
   );
 
-  // Kirim checkout ke backend dgn field sesuai DB
+  // ✅ FIXED: Kirim checkout ke backend dengan field yang benar
   const handlePlaceOrder = async () => {
-    if (!nama || !telp || !alamat || !metode) {
+    // Validasi form
+    if (!nama.trim() || !telp.trim() || !alamat.trim() || !metode) {
       alert('Lengkapi Nama Penerima, Nomor Telepon, Alamat, dan Metode Pembayaran.');
+      return;
+    }
+
+    // Validasi nomor telepon
+    if (telp.trim().length < 10) {
+      alert('Nomor telepon minimal 10 digit.');
       return;
     }
 
@@ -174,64 +202,61 @@ export default function OrderPage() {
       return;
     }
 
-    // Siapkan items utk API (pakai cart item id & product id jika tersedia)
+    // ✅ PERBAIKAN: Pastikan hanya checkout item yang ada di order.items
+    // (sudah difilter dari CartPage berdasarkan selectedItems)
+    if (!items || items.length === 0) {
+      alert('Tidak ada item untuk checkout.');
+      return;
+    }
+
+    // Siapkan items untuk API - gunakan data dari order yang sudah difilter
     const itemsForApi = items.map((it) => ({
-      id: it.cartId,                 // optional
-      cartId: it.cartId,             // optional
-      productId: it.productId,       // optional (tergantung backend)
+      id: it.cartId,
+      cartId: it.cartId,
+      productId: it.productId,
       quantity: it.qty ?? it.quantity ?? 1,
       price: Number(it.price || 0),
     }));
 
     setLoading(true);
     try {
-      // Untuk metode transfer, gunakan FormData untuk kirim file
-      let requestData;
-      let isFormData = false;
-
-      if ((metode === 'transfer_bri' || metode === 'transfer_bca') && buktiTransfer) {
-        // Gunakan FormData untuk upload file
-        requestData = new FormData();
-        requestData.append('nama_penerima', nama);
-        requestData.append('no_telepon', telp);
-        requestData.append('alamat_pengiriman', alamat);
-        requestData.append('metode_pembayaran', metode);
-        requestData.append('total_harga', subtotal);
-        requestData.append('ongkir', shipping);
-        requestData.append('bukti_transfer', buktiTransfer);
-        requestData.append('items', JSON.stringify(itemsForApi));
-        isFormData = true;
-      } else {
-        // Gunakan JSON untuk COD atau metode lain
-        requestData = {
-          nama_penerima: nama,
-          no_telepon: telp,
-          alamat_pengiriman: alamat,
-          metode_pembayaran: metode,
-          total_harga: subtotal,
-          ongkir: shipping,
-          items: itemsForApi,
-        };
-      }
-
+      // Kirim ke checkoutCart dengan data yang sudah difilter
       const res = await checkoutCart(itemsForApi, token, {
-        nama_penerima: nama,
-        no_telepon: telp,
-        alamat_pengiriman: alamat,
+        nama_penerima: nama.trim(),
+        no_telepon: telp.trim(),
+        alamat_pengiriman: alamat.trim(),
         metode_pembayaran: metode,
         total_harga: subtotal,
         ongkir: shipping,
-        bukti_transfer: buktiTransfer, // Pass file to service
-        isFormData: isFormData, // Flag for service to handle FormData
+        bukti_transaksi: buktiTransfer,
       });
 
+      // Hapus draft order dari localStorage
+      localStorage.removeItem('pendingOrder');
+      
       // Simpan hasil terakhir (opsional)
       localStorage.setItem('lastOrder', JSON.stringify(res));
+      
       setShowSuccessModal(true);
 
     } catch (e) {
-      console.error(e);
-      alert(e.message || 'Gagal menyelesaikan pesanan.');
+      console.error('Checkout error:', e);
+      
+      // Improved error handling
+      let errorMessage = 'Gagal menyelesaikan pesanan.';
+      
+      if (e.message.includes('401') || e.message.includes('unauthorized')) {
+        errorMessage = 'Sesi Anda telah berakhir. Silakan login kembali.';
+        setTimeout(() => navigate('/login'), 2000);
+      } else if (e.message.includes('422') || e.message.includes('validation')) {
+        errorMessage = 'Data yang dimasukkan tidak valid. Periksa kembali formulir Anda.';
+      } else if (e.message.includes('413') || e.message.includes('file too large')) {
+        errorMessage = 'File bukti transfer terlalu besar. Maksimal 5MB.';
+      } else if (e.message) {
+        errorMessage = e.message;
+      }
+      
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -279,7 +304,7 @@ export default function OrderPage() {
                   Nama Lengkap <span className="text-red-500">*</span>
                 </label>
                 <input
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                   placeholder="Masukkan nama lengkap"
                   value={nama}
                   onChange={(e) => setNama(e.target.value)}
@@ -291,7 +316,7 @@ export default function OrderPage() {
                   Nomor Telepon <span className="text-red-500">*</span>
                 </label>
                 <input
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                   placeholder="Contoh: +62812345678 atau 081234567890"
                   value={telp}
                   onChange={(e) => {
@@ -341,7 +366,7 @@ export default function OrderPage() {
                   Alamat Lengkap <span className="text-red-500">*</span>
                 </label>
                 <textarea
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 resize-none"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 resize-none"
                   placeholder="Masukkan alamat lengkap pengiriman"
                   rows={4}
                   value={alamat}
@@ -354,7 +379,7 @@ export default function OrderPage() {
                   Metode Pembayaran <span className="text-red-500">*</span>
                 </label>
                 <select
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                   value={metode}
                   onChange={(e) => setMetode(e.target.value)}
                 >
@@ -380,13 +405,16 @@ export default function OrderPage() {
                           <div className="space-y-2">
                             <div className="bg-white p-3 rounded border">
                               <div className="text-xs text-gray-600 mb-1">Bank BRI</div>
-                              <div className="font-mono text-sm font-semibold text-gray-900">1234-5678-9012-3456 
+                              <div className="font-mono text-sm font-semibold text-gray-900 flex items-center">
+                                1234-5678-9012-3456 
                                 <button
-                                onClick={() => navigator.clipboard.writeText('1234-5678-9012-3456')}
-                                className="ml-2 px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded"
-                              >
-                                Copy
-                              </button></div>
+                                  onClick={() => copyToClipboard('1234567890123456')}
+                                  className="ml-2 px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded transition-colors"
+                                  title="Copy nomor rekening"
+                                >
+                                  Copy
+                                </button>
+                              </div>
                               <div className="text-xs text-gray-600 mt-1">a.n. Pemilik TB.NOTO19</div>
                             </div>
                             <p className="text-xs text-blue-600">
@@ -401,13 +429,15 @@ export default function OrderPage() {
                           <div className="space-y-2">
                             <div className="bg-white p-3 rounded border">
                               <div className="text-xs text-gray-600 mb-1">Bank BCA</div>
-                              <div className="font-mono text-sm font-semibold text-gray-900">9876-5432-1098-7654 
+                              <div className="font-mono text-sm font-semibold text-gray-900 flex items-center">
+                                9876-5432-1098-7654 
                                 <button
-                                onClick={() => navigator.clipboard.writeText('1234-5678-9012-3456')}
-                                className="ml-2 px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded"
-                              >
-                                Copy
-                              </button>
+                                  onClick={() => copyToClipboard('9876543210987654')}
+                                  className="ml-2 px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded transition-colors"
+                                  title="Copy nomor rekening"
+                                >
+                                  Copy
+                                </button>
                               </div>
                               <div className="text-xs text-gray-600 mt-1">a.n. Pemilik TB.NOTO19</div>
                             </div>
@@ -469,6 +499,7 @@ export default function OrderPage() {
                                 setPreviewImage(null);
                               }}
                               className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600 transition-colors"
+                              title="Hapus file"
                             >
                               ×
                             </button>
@@ -516,6 +547,9 @@ export default function OrderPage() {
                         src={it.image}
                         alt={it.name || it.productName || 'Produk'}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = '/placeholder-image.jpg';
+                        }}
                       />
                     ) : (
                       <div className="text-xs text-gray-400">IMG</div>
@@ -566,8 +600,31 @@ export default function OrderPage() {
                   'Selesaikan Pesanan'
                 )}
               </button>
+
+              {/* Informasi keamanan */}
+              <div className="mt-3 text-xs text-gray-500 text-center">
+                <div className="flex items-center justify-center space-x-1">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Transaksi aman & terenkripsi</span>
+                </div>
+              </div>
             </div>
           </aside>
+        </div>
+
+        {/* Back to cart button */}
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => navigate('/keranjang')}
+            className="inline-flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Kembali ke Keranjang</span>
+          </button>
         </div>
       </div>
 
