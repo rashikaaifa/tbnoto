@@ -185,7 +185,7 @@ const Footer = () => {
 			<div className="bg-black text-center text-white py-4 mt-4">
 				<p className="text-sm">
 					Copyright © 2025{' '}
-					<a href="#" className="text-blue-400 ">
+					<a href="/" className="text-blue-400 ">
 						Tambah Barokah
 					</a>
 					. All rights reserved.
