@@ -49,14 +49,15 @@ const TopProdukSection = () => {
 									alt={product.nama_barang}
 									className="w-full h-32 object-cover rounded-lg mb-2"
 								/>
-								<h3 className="font-semibold text-lg mb-1">
+								<h2 className="font-semibold text-lg mb-1">
 									{product.nama_barang}
-								</h3>
-								<p className="text-sm text-gray-700 mb-1 ">
+								</h2>
+								<p className="text-md text-gray-700 mb-1">
 									{product.ukuran}
 								</p>
 								<p className="text-md font-medium mb-1">
-									Rp{Number(product.harga).toLocaleString()} /{product.satuan_harga}
+									Rp{Number(product.harga).toLocaleString()} /
+									{product.satuan_harga}
 								</p>
 							</Link>
 						);

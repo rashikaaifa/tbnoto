@@ -42,7 +42,7 @@ const IntroSection = () => {
 							triplek dan menjadikannya fokus utama toko. Dengan
 							nama{' '}
 							<span className="text-primary font-semibold">
-								TB. Noto-19
+								TB. Noto 19
 							</span>
 							, kami hadir untuk menyediakan bahan bangunan
 							berkualitas dengan harga yang lebih terjangkau.

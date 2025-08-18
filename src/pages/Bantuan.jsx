@@ -30,12 +30,12 @@ const Bantuan = () => {
 				Bantuan
 			</h1>
 
-			<div className="flex flex-col lg:flex-row justify-between items-start mb-16 gap-8 w-full sm:w-4/5 max-w-[1400px]">
+			<div className="flex flex-col lg:flex-row justify-between items-start mb-16 gap-8 w-full sm:w-4/5 max-w-[1800px]">
 				<div className="flex justify-center items-start lg:w-2/5 w-full">
 					<img
 						src={faqImage}
 						alt="FAQ Illustration"
-						className="w-full max-w-sm mr-4 lg:mr-24"
+						className="w-full max-w mr-4 lg:mr-24"
 					/>
 				</div>
 

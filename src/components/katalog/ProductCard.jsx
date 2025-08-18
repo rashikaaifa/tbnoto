@@ -1,9 +1,7 @@
-// ProductCard.jsx - Perbarui untuk menggunakan kategori dari API
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 const ProductCard = ({ product, categories }) => {
-	// Fungsi untuk mendapatkan nama kategori dari API
 	const getKategoriName = (kategoriId) => {
 		const category = categories.find(
 			(cat) => cat.id.toString() === kategoriId
@@ -11,14 +9,15 @@ const ProductCard = ({ product, categories }) => {
 		return category ? category.nama_kategori : 'Kategori Tidak Diketahui';
 	};
 
-	// Cek apakah stok habis
 	const isOutOfStock = product.stok === 0;
+	console.log('PRODUCT:', product);
 
 	return (
 		<div className={`relative ${isOutOfStock ? 'order-last' : ''}`}>
 			<Link
 				to={`/product/${product.id}`}
-				className={`bg-white p-3 rounded-xl border shadow-md text-left cursor-pointer hover:scale-105 transition-all duration-500 block relative ${
+				key={product.id}
+				className={`bg-white p-3 rounded-xl border shadow-md cursor-pointer hover:scale-105 transition-all duration-500 grid grid-rows-[auto_1fr_auto] h-full ${
 					isOutOfStock
 						? 'opacity-60 pointer-events-none cursor-not-allowed'
 						: ''
@@ -44,11 +43,11 @@ const ProductCard = ({ product, categories }) => {
 
 				<div className="flex flex-col justify-between min-h-[100px]">
 					<div className="mb-1">
-						<h3
+						<h2
 							className={`font-semibold text-lg ${isOutOfStock ? 'text-gray-600' : ''}`}
 						>
 							{product.nama}
-						</h3>
+						</h2>
 						<p
 							className={`text-sm ${isOutOfStock ? 'text-gray-600' : ''}`}
 						>
@@ -58,7 +57,8 @@ const ProductCard = ({ product, categories }) => {
 					<p
 						className={`text-md ${isOutOfStock ? 'text-gray-600' : ''}`}
 					>
-						Rp{product.harga.toLocaleString()} /{product.satuan_harga}
+						Rp{Number(product.harga).toLocaleString()} /{' '}
+						{product.satuan_harga}
 					</p>
 				</div>
 			</Link>

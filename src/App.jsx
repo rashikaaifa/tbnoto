@@ -13,6 +13,7 @@ import Keranjang from './pages/Keranjang';
 import ProductPage from './pages/ProductPage';
 import ProductDetail from './pages/ProductDetail';
 import OrderPage from './pages/OrderPage';
+import ProtectedRoute from './ProtectedRoute';
 
 const AppContent = () => {
 	const location = useLocation();
@@ -28,12 +29,26 @@ const AppContent = () => {
 				<Route path="/daftar" element={<Daftar />} />
 				<Route path="/masuk" element={<Masuk />} />
 				<Route path="/bantuan" element={<Bantuan />} />
-				<Route path="/riwayat" element={<Riwayat />} />
 				<Route path="/profil" element={<Profil />} />
-				<Route path="/keranjang" element={<Keranjang />} />
 				<Route path="/katalog" element={<ProductPage />} />
 				<Route path="/product/:id" element={<ProductDetail />} />
 				<Route path="/orderPage" element={<OrderPage />} />
+				<Route
+					path="/riwayat"
+					element={
+						<ProtectedRoute>
+							<Riwayat />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/keranjang"
+					element={
+						<ProtectedRoute>
+							<Keranjang />
+						</ProtectedRoute>
+					}
+				/>
 				<Route
 					path="/katalog/kategori/:categorySlug"
 					element={<ProductPage />}
