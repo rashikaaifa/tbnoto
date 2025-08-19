@@ -122,6 +122,7 @@ const formatProductData = (p) => {
 		nama: p.nama_barang,
 		kategori: p.kategori_id ? String(p.kategori_id) : '',
 		harga: Number(p.harga ?? 0),
+		satuan: p.satuan_harga || p.satuan || '?',
 		stok: Number(p.stok ?? 0),
 		deskripsi: p.deskripsi || '',
 		gambar: imageUrl,

@@ -57,8 +57,8 @@ const ProductCard = ({ product, categories }) => {
 					<p
 						className={`text-md ${isOutOfStock ? 'text-gray-600' : ''}`}
 					>
-						Rp{Number(product.harga).toLocaleString()} /{' '}
-						{product.satuan_harga}
+						Rp{Number(product.harga).toLocaleString()} /{product.satuan ?? '?'}
+						
 					</p>
 				</div>
 			</Link>
