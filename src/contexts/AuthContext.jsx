@@ -71,6 +71,8 @@ export const AuthProvider = ({ children }) => {
 
 	const updateProfile = async (profileData) => {
 		try {
+			console.log('ProfileData yang dikirim:', profileData);
+
 			const res = await fetch(`${BASE_URL}/profile`, {
 				method: 'PUT',
 				headers: {
@@ -80,18 +82,19 @@ export const AuthProvider = ({ children }) => {
 				},
 				body: JSON.stringify(profileData),
 			});
+
 			const data = await res.json();
-			if (res.ok && data?.data) {
-				setUser(data.data);
-				console.log('Profil berhasil diperbarui:', data.data);
+			console.log('Response update profile:', data);
+
+			if (res.ok) {
+				await fetchProfile(token);
+				return data.data || data.user || data;
 			} else {
-				console.error(
-					'Gagal memperbarui profil:',
-					data?.message || data
-				);
+				throw new Error(data?.message || 'Update profile gagal');
 			}
 		} catch (error) {
 			console.error('Error saat update profil:', error);
+			throw error;
 		}
 	};
 
