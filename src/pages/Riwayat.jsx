@@ -28,6 +28,7 @@ const RiwayatPage = () => {
 									? trx.barang[0].nama_barang
 									: trx.nama_barang ||
 										'Produk tidak diketahui'),
+							deskripsi: trx.deskripsi || 'Tidak ada deskripsi',
 							status:
 								trx.status ||
 								trx.status_transactions ||
@@ -276,6 +277,14 @@ const RiwayatPage = () => {
 										{getProductInfo(selectedTransaction)}
 									</p>
 								</div>
+								<div>
+									<label className="text-sm font-medium text-gray-500">
+										Deskripsi
+									</label>
+									<p className="text-md">
+										{selectedTransaction.deskripsi || '-'}
+									</p>
+								</div>
 							</div>
 							<div className="space-y-3">
 								<div>
@@ -458,6 +467,9 @@ const RiwayatPage = () => {
 											Pembelian Barang
 										</th>
 										<th className="px-6 py-3">
+											Deskripsi
+										</th>
+										<th className="px-6 py-3">
 											Metode Pembayaran
 										</th>
 										<th className="px-6 py-3">
@@ -488,6 +500,12 @@ const RiwayatPage = () => {
 													title={getProductInfo(trx)}
 												>
 													{getProductInfo(trx)}
+												</td>
+												<td
+													className="px-6 py-4 max-w-xs truncate"
+													title={trx.deskripsi || 'Tidak ada deskripsi'}
+												>
+													{trx.deskripsi || 'Tidak ada deskripsi'}
 												</td>
 												<td className="px-6 py-4">
 													{trx.metode_pembayaran ||
@@ -556,6 +574,15 @@ const RiwayatPage = () => {
 												</span>
 												<span className="text-gray-900 text-right max-w-[200px] truncate">
 													{getProductInfo(trx)}
+												</span>
+											</div>
+
+											<div className="flex justify-between">
+												<span className="text-gray-600 font-medium">
+													Deskripsi
+												</span>
+												<span className="text-gray-900 text-right max-w-[200px] truncate">
+													{trx.deskripsi || 'Tidak ada deskripsi'}
 												</span>
 											</div>
 
