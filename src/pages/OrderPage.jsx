@@ -23,10 +23,11 @@ export default function OrderPage() {
 	// Ambil draft order dari navigate state atau localStorage
 	const [order, setOrder] = useState(state?.order ?? null);
 
-	// Form fields - akan diisi otomatis dari data user
+	// Form fields - akan diisi otomatis dari data user (read-only)
 	const [nama, setNama] = useState('');
 	const [telp, setTelp] = useState('');
 	const [alamat, setAlamat] = useState('');
+	const [deskripsi, setDeskripsi] = useState(''); // Field baru untuk deskripsi
 	const [metode, setMetode] = useState(''); // e.g. "cod" | "transfer_bri" | "transfer_bca"
 	const [buktiTransfer, setBuktiTransfer] = useState(null); // File bukti transfer
 	const [previewImage, setPreviewImage] = useState(null); // Preview gambar
@@ -35,7 +36,7 @@ export default function OrderPage() {
 	const [loading, setLoading] = useState(false);
 	const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-	// Auto-fill form berdasarkan data user
+	// Auto-fill form berdasarkan data user (read-only)
 	useEffect(() => {
 		if (user) {
 			// Auto-fill nama dari field 'name'
@@ -62,6 +63,40 @@ export default function OrderPage() {
 			if (cached) setOrder(JSON.parse(cached));
 		}
 	}, [order]);
+
+	// Hitung total untuk validasi COD
+	const items = order?.items || [];
+	const subtotal =
+		order?.total_harga != null
+			? Number(order.total_harga)
+			: items.reduce(
+					(s, it) =>
+						s +
+						Number(it.price || 0) *
+							Number(it.qty ?? it.quantity ?? 1),
+					0
+				);
+
+	const shipping =
+		order?.ongkir != null
+			? Number(order.ongkir)
+			: Math.round(subtotal * 0.03);
+
+	const total =
+		order?.total != null ? Number(order.total) : subtotal + shipping;
+
+	// Reset metode pembayaran COD jika total kurang dari 600rb
+	useEffect(() => {
+		// Jika user sudah pilih COD tapi total kurang dari 600rb, reset ke kosong
+		if (metode === 'cod' && total < 600000) {
+			setMetode('');
+			// Tampilkan notifikasi
+			showPopup(
+				'Metode Pembayaran Diubah',
+				'COD tidak tersedia untuk pesanan di bawah Rp 600.000. Silakan pilih metode transfer bank.'
+			);
+		}
+	}, [total, metode]);
 
 	// Handle file upload dengan validasi yang lebih baik
 	const handleFileChange = (e) => {
@@ -153,27 +188,6 @@ export default function OrderPage() {
 		);
 	}
 
-	// Render ringkasan berdasarkan draft order
-	const items = order.items || [];
-	const subtotal =
-		order.total_harga != null
-			? Number(order.total_harga)
-			: items.reduce(
-					(s, it) =>
-						s +
-						Number(it.price || 0) *
-							Number(it.qty ?? it.quantity ?? 1),
-					0
-				);
-
-	const shipping =
-		order.ongkir != null
-			? Number(order.ongkir)
-			: Math.round(subtotal * 0.03);
-
-	const total =
-		order.total != null ? Number(order.total) : subtotal + shipping;
-
 	// ✅ FIXED: Kirim checkout ke backend dengan field yang benar
 	const handlePlaceOrder = async () => {
 		// Validasi form
@@ -222,11 +236,12 @@ export default function OrderPage() {
 
 		setLoading(true);
 		try {
-			// Kirim ke checkoutCart dengan data yang sudah difilter
+			// Kirim ke checkoutCart dengan data yang sudah difilter, termasuk deskripsi
 			const res = await checkoutCart(itemsForApi, token, {
 				nama_penerima: nama.trim(),
 				no_telepon: telp.trim(),
 				alamat_pengiriman: alamat.trim(),
+				deskripsi: deskripsi.trim(), // Tambahkan deskripsi
 				metode_pembayaran: metode,
 				total_harga: subtotal,
 				ongkir: shipping,
@@ -317,8 +332,7 @@ export default function OrderPage() {
 											Data diambil dari profil Anda
 										</p>
 										<p className="text-xs text-blue-600 mt-1">
-											Anda dapat mengubah data di bawah
-											ini jika diperlukan
+											Data tidak dapat diubah di halaman ini. Untuk mengubah data profil, silakan kunjungi halaman profil Anda.
 										</p>
 									</div>
 								</div>
@@ -332,10 +346,11 @@ export default function OrderPage() {
 									<span className="text-red-500">*</span>
 								</label>
 								<input
-									className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-									placeholder="Masukkan nama lengkap"
+									className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-100 text-gray-600 cursor-not-allowed"
+									placeholder="Nama akan diambil dari profil"
 									value={nama}
-									onChange={(e) => setNama(e.target.value)}
+									readOnly
+									disabled
 								/>
 							</div>
 
@@ -345,81 +360,11 @@ export default function OrderPage() {
 									<span className="text-red-500">*</span>
 								</label>
 								<input
-									className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-									placeholder="Contoh: +62812345678 atau 081234567890"
+									className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-100 text-gray-600 cursor-not-allowed"
+									placeholder="Nomor telepon akan diambil dari profil"
 									value={telp}
-									onChange={(e) => {
-										const value = e.target.value;
-										// Hanya izinkan angka dan tanda + di awal
-										const filteredValue = value.replace(
-											/[^0-9+]/g,
-											''
-										);
-
-										// Jika ada tanda +, pastikan hanya di awal dan diikuti angka
-										if (filteredValue.includes('+')) {
-											const parts =
-												filteredValue.split('+');
-											if (parts.length > 2) {
-												// Jika ada lebih dari satu +, ambil hanya yang pertama
-												setTelp(
-													'+' +
-														parts[1].replace(
-															/[^0-9]/g,
-															''
-														)
-												);
-											} else if (
-												filteredValue.startsWith('+')
-											) {
-												setTelp(filteredValue);
-											} else {
-												// Jika + tidak di awal, hilangkan
-												setTelp(
-													filteredValue.replace(
-														/\+/g,
-														''
-													)
-												);
-											}
-										} else {
-											setTelp(filteredValue);
-										}
-									}}
-									onPaste={(e) => {
-										e.preventDefault();
-										const pastedText =
-											e.clipboardData.getData('text');
-										const filteredValue =
-											pastedText.replace(/[^0-9+]/g, '');
-
-										if (filteredValue.includes('+')) {
-											const parts =
-												filteredValue.split('+');
-											if (parts.length > 2) {
-												setTelp(
-													'+' +
-														parts[1].replace(
-															/[^0-9]/g,
-															''
-														)
-												);
-											} else if (
-												filteredValue.startsWith('+')
-											) {
-												setTelp(filteredValue);
-											} else {
-												setTelp(
-													filteredValue.replace(
-														/\+/g,
-														''
-													)
-												);
-											}
-										} else {
-											setTelp(filteredValue);
-										}
-									}}
+									readOnly
+									disabled
 								/>
 							</div>
 
@@ -429,12 +374,29 @@ export default function OrderPage() {
 									<span className="text-red-500">*</span>
 								</label>
 								<textarea
-									className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 resize-none"
-									placeholder="Masukkan alamat lengkap pengiriman"
+									className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-100 text-gray-600 cursor-not-allowed resize-none"
+									placeholder="Alamat akan diambil dari profil"
 									rows={4}
 									value={alamat}
-									onChange={(e) => setAlamat(e.target.value)}
+									readOnly
+									disabled
 								/>
+							</div>
+
+							<div>
+								<label className="block text-sm font-medium text-gray-700 mb-2">
+									Deskripsi Pesanan
+								</label>
+								<textarea
+									className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 resize-none"
+									placeholder="Tambahkan catatan penting untuk pesanan Anda (contoh: alamat lengkap, link google maps, nama penerima di lapangan, dll)"
+									rows={3}
+									value={deskripsi}
+									onChange={(e) => setDeskripsi(e.target.value)}
+								/>
+								<p className="text-xs text-gray-500 mt-1">
+									Maksimal 255 karakter
+								</p>
 							</div>
 
 							<div>
@@ -442,6 +404,35 @@ export default function OrderPage() {
 									Metode Pembayaran{' '}
 									<span className="text-red-500">*</span>
 								</label>
+								
+								{/* Tampilkan peringatan jika total kurang dari 600rb */}
+								{total < 600000 && (
+									<div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+										<div className="flex items-start">
+											<svg
+												className="w-5 h-5 text-yellow-500 mt-0.5 mr-2 flex-shrink-0"
+												fill="currentColor"
+												viewBox="0 0 20 20"
+											>
+												<path
+													fillRule="evenodd"
+													d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+													clipRule="evenodd"
+												/>
+											</svg>
+											<div>
+												<p className="text-sm font-medium text-yellow-800">
+													Informasi Pembayaran
+												</p>
+												<p className="text-xs text-yellow-700 mt-1">
+													Untuk pesanan di bawah Rp 600.000, hanya tersedia metode transfer bank.
+													COD (Cash on Delivery) tersedia untuk pesanan minimal Rp 600.000.
+												</p>
+											</div>
+										</div>
+									</div>
+								)}
+								
 								<select
 									className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
 									value={metode}
@@ -450,9 +441,14 @@ export default function OrderPage() {
 									<option value="">
 										Pilih metode pembayaran
 									</option>
-									<option value="cod">
-										COD (Cash on Delivery)
-									</option>
+									
+									{/* COD hanya muncul jika total >= 600rb */}
+									{total >= 600000 && (
+										<option value="cod">
+											COD (Cash on Delivery) - Min. Rp 600.000
+										</option>
+									)}
+									
 									<option value="transfer_bri">
 										Transfer Bank BRI
 									</option>
@@ -795,6 +791,28 @@ export default function OrderPage() {
 									{rupiah(total)}
 								</span>
 							</div>
+
+							{/* Tampilkan informasi COD jika total >= 600rb */}
+							{total >= 600000 && (
+								<div className="mt-3 p-2 bg-green-50 border border-green-200 rounded-md">
+									<div className="flex items-center">
+										<svg
+											className="w-4 h-4 text-green-500 mr-2 flex-shrink-0"
+											fill="currentColor"
+											viewBox="0 0 20 20"
+										>
+											<path
+												fillRule="evenodd"
+												d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+												clipRule="evenodd"
+											/>
+										</svg>
+										<p className="text-xs text-green-700">
+											✓ COD tersedia untuk pesanan ini
+										</p>
+									</div>
+								</div>
+							)}
 
 							<button
 								className="mt-4 w-full bg-green-800 hover:bg-green-900 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-md py-3 text-sm font-semibold transition-colors"

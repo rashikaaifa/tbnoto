@@ -556,7 +556,7 @@ export async function adjustProductStock(productId, delta, token) {
 
 // -------------------- Checkout dengan Upload Bukti Transfer --------------------
 // items: [{ cartId, productId, quantity, price }]
-// extra: { nama_penerima, no_telepon, alamat_pengiriman, metode_pembayaran, total_harga, ongkir, bukti_transfer?, isFormData? }
+// extra: { nama_penerima, no_telepon, alamat_pengiriman, deskripsi, metode_pembayaran, total_harga, ongkir, bukti_transfer?, isFormData? }
 // checkoutCart.js
 export const checkoutCart = async (items, token, extra) => {
 	const API_BASE = 'https://tbnoto19-admin.rplrus.com/api';
@@ -584,6 +584,12 @@ export const checkoutCart = async (items, token, extra) => {
 		formData.append('nama_penerima', extra.nama_penerima);
 		formData.append('no_telepon', extra.no_telepon);
 		formData.append('alamat_pengiriman', extra.alamat_pengiriman);
+		
+		// Tambahkan deskripsi ke FormData
+		if (extra.deskripsi && extra.deskripsi.trim()) {
+			formData.append('deskripsi', extra.deskripsi.trim());
+		}
+		
 		formData.append(
 			'metode_pembayaran',
 			extra.metode_pembayaran.toLowerCase()
@@ -626,6 +632,12 @@ export const checkoutCart = async (items, token, extra) => {
 				harga_satuan: it.price,
 			})),
 		};
+
+		// Tambahkan deskripsi ke JSON body jika ada
+		if (extra.deskripsi && extra.deskripsi.trim()) {
+			jsonBody.deskripsi = extra.deskripsi.trim();
+		}
+
 		body = JSON.stringify(jsonBody);
 	}
 
