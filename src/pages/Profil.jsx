@@ -6,8 +6,7 @@ import PopUp from '../components/popup/PopUp';
 const BASE_URL = 'https://tbnoto19-admin.rplrus.com/api';
 
 const ProfilePage = () => {
-	const { isLoggedIn, logout, user, updateProfile, token, setUser } =
-		useAuth();
+	const { isLoggedIn, logout, user, updateProfile } = useAuth();
 	const navigate = useNavigate();
 
 	const [popupOpen, setPopupOpen] = useState(false);
@@ -22,11 +21,15 @@ const ProfilePage = () => {
 	});
 
 	const [isEditing, setIsEditing] = useState(false);
+	const [kotaList, setKotaList] = useState([]);
+	const [kecamatanList, setKecamatanList] = useState([]);
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
 		phone: '',
 		address: '',
+		kota_id: '',
+		kecamatan_id: '',
 	});
 
 	const fields = [
@@ -34,7 +37,29 @@ const ProfilePage = () => {
 		{ label: 'Email', name: 'email' },
 		{ label: 'Nomor Telepon', name: 'phone', isPhoneWithPrefix: true },
 		{ label: 'Alamat', name: 'address' },
+		{ label: 'Kota', name: 'kota_id' },
+		{ label: 'Kecamatan', name: 'kecamatan_id' },
 	];
+
+	useEffect(() => {
+		fetch(`${BASE_URL}/kota`)
+			.then((res) => res.json())
+			.then((data) => setKotaList(data))
+			.catch((err) => console.error(err));
+	}, []);
+
+	useEffect(() => {
+		if (formData.kota_id) {
+			fetch(`${BASE_URL}/kecamatan/${formData.kota_id}`)
+				.then((res) => res.json())
+				.then((data) =>
+					setKecamatanList(
+						Array.isArray(data) ? data : data.data || []
+					)
+				)
+				.catch((err) => console.error(err));
+		}
+	}, [formData.kota_id]);
 
 	useEffect(() => {
 		if (user) {
@@ -43,9 +68,17 @@ const ProfilePage = () => {
 				email: user.email || '',
 				phone: user.phone?.replace(/^(\+62|62|0)/, '') || '',
 				address: user.address || '',
+				kota_id: user.kota_id || '',
+				kecamatan_id: user.kecamatan_id || '',
 			});
 		}
 	}, [user]);
+
+	const getKotaName = (id) =>
+		kotaList.find((k) => String(k.id) === String(id))?.nama_kota || '-';
+	const getKecamatanName = (id) =>
+		kecamatanList.find((k) => String(k.id) === String(id))
+			?.nama_kecamatan || '-';
 
 	const handleChange = (e) => {
 		setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -58,9 +91,20 @@ const ProfilePage = () => {
 				email: formData.email,
 				phone: `+62${formData.phone.replace(/^(\+62|62|0)/, '')}`,
 				address: formData.address,
+				kota_id: formData.kota_id,
+				kecamatan_id: formData.kecamatan_id,
 			};
 
-			await updateProfile(profileData);
+			const updatedUser = await updateProfile(profileData);
+			setFormData({
+				name: updatedUser.name || '',
+				email: updatedUser.email || '',
+				phone: updatedUser.phone?.replace(/^(\+62|62|0)/, '') || '',
+				address: updatedUser.address || '',
+				kota_id: updatedUser.kota_id || '',
+				kecamatan_id: updatedUser.kecamatan_id || '',
+			});
+
 			setIsEditing(false);
 			setPopupData({
 				title: 'Berhasil!',
@@ -85,18 +129,6 @@ const ProfilePage = () => {
 		}
 	};
 
-	const handleCancel = () => {
-		if (user) {
-			setFormData({
-				name: user.name || '',
-				email: user.email || '',
-				phone: user.phone?.replace(/^(\+62|62|0)/, '') || '',
-				address: user.address || '',
-			});
-		}
-		setIsEditing(false);
-	};
-
 	return (
 		<div className="flex justify-center items-center flex-col mt-28 mb-8">
 			<h1 className="text-2xl sm:text-4xl font-bold mb-2 text-center">
@@ -107,8 +139,10 @@ const ProfilePage = () => {
 				<div className="grid gap-x-8 gap-y-8 ml-0 md:ml-28">
 					{fields.map((field, idx) => {
 						const isPhone = field.name === 'phone';
+						const isKota = field.name === 'kota_id';
+						const isKecamatan = field.name === 'kecamatan_id';
 						const spanFullRow =
-							field.name === 'name' || field.name == 'address';
+							field.name === 'name' || field.name === 'address';
 
 						return (
 							<div
@@ -120,41 +154,82 @@ const ProfilePage = () => {
 								</label>
 
 								{isEditing ? (
-									<div className="relative">
-										{isPhone && (
-											<span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-base">
-												+62
-											</span>
+									<>
+										{isKota ? (
+											<select
+												name="kota_id"
+												value={formData.kota_id}
+												onChange={handleChange}
+												className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+											>
+												<option value="">
+													-- Pilih Kota --
+												</option>
+												{kotaList.map((kota) => (
+													<option
+														key={kota.id}
+														value={kota.id}
+													>
+														{kota.nama_kota}
+													</option>
+												))}
+											</select>
+										) : isKecamatan ? (
+											<select
+												name="kecamatan_id"
+												value={formData.kecamatan_id}
+												onChange={handleChange}
+												className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+											>
+												<option value="">
+													-- Pilih Kecamatan --
+												</option>
+												{kecamatanList.map((kec) => (
+													<option
+														key={kec.id}
+														value={kec.id}
+													>
+														{kec.nama_kecamatan}
+													</option>
+												))}
+											</select>
+										) : (
+											<input
+												type={
+													field.name === 'email'
+														? 'email'
+														: 'text'
+												}
+												name={field.name}
+												value={
+													isPhone
+														? formData.phone.replace(
+																/^(\+62|62|0)/,
+																''
+															)
+														: formData[field.name]
+												}
+												onChange={handleChange}
+												className={`w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500 ${
+													isPhone ? 'pl-14' : ''
+												}`}
+												placeholder={
+													isPhone ? '81234567890' : ''
+												}
+											/>
 										)}
-										<input
-											type={
-												field.name === 'email'
-													? 'email'
-													: 'text'
-											}
-											name={field.name}
-											value={
-												isPhone
-													? formData.phone.replace(
-															/^(\+62|62|0)/,
-															''
-														)
-													: formData[field.name]
-											}
-											onChange={handleChange}
-											className={`w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500 ${
-												isPhone ? 'pl-14' : ''
-											}`}
-											placeholder={
-												isPhone ? '81234567890' : ''
-											}
-										/>
-									</div>
+									</>
 								) : (
 									<p className="mt-1 text-lg">
 										{isPhone
 											? `+62 ${formData.phone}`
-											: formData[field.name]}
+											: isKota
+												? getKotaName(formData.kota_id)
+												: isKecamatan
+													? getKecamatanName(
+															formData.kecamatan_id
+														)
+													: formData[field.name]}
 									</p>
 								)}
 							</div>
@@ -162,7 +237,6 @@ const ProfilePage = () => {
 					})}
 				</div>
 
-				{/* Tombol Aksi */}
 				<div className="flex justify-center gap-6 pt-10">
 					{isEditing ? (
 						<button

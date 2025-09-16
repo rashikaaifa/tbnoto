@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import bgImage from '../assets/img/background.png';
@@ -26,9 +26,39 @@ const Daftar = () => {
 		address: '',
 		password: '',
 		confirmPassword: '',
+		kota_id: '',
+		kecamatan_id: '',
 	});
 
 	const [error, setError] = useState('');
+
+	const [kotaList, setKotaList] = useState([]);
+	const [kecamatanList, setKecamatanList] = useState([]);
+
+	useEffect(() => {
+		fetch('https://tbnoto19-admin.rplrus.com/api/kota')
+			.then((res) => res.json())
+			.then((data) => setKotaList(data))
+			.catch((err) => console.error(err));
+	}, []);
+
+	useEffect(() => {
+		if (formData.kota_id) {
+			fetch(
+				`https://tbnoto19-admin.rplrus.com/api/kecamatan/${formData.kota_id}`
+			)
+				.then((res) => res.json())
+				.then((data) => {
+					console.log('Response kecamatan:', data);
+					setKecamatanList(
+						Array.isArray(data) ? data : data.data || []
+					);
+				})
+				.catch((err) => console.error('Fetch kecamatan error:', err));
+		} else {
+			setKecamatanList([]);
+		}
+	}, [formData.kota_id]);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -104,11 +134,14 @@ const Daftar = () => {
 						address: formData.address,
 						password: formData.password,
 						password_confirmation: formData.confirmPassword,
+						kota_id: formData.kota_id,
+						kecamatan_id: formData.kecamatan_id,
 					}),
 				}
 			);
 
 			const data = await response.json();
+			console.log('Register response:', data);
 
 			if (response.ok) {
 				login(data.token);
@@ -143,6 +176,8 @@ const Daftar = () => {
 					address: '',
 					password: '',
 					confirmPassword: '',
+					kota_id: '',
+					kecamatan_id: '',
 				});
 			}, 5000);
 		} catch (error) {
@@ -228,6 +263,41 @@ const Daftar = () => {
 									value={formData.address}
 									onChange={handleChange}
 								/>
+							</div>
+							<div>
+								<label className="block mb-1">Kota</label>
+								<select
+									name="kota_id"
+									value={formData.kota_id}
+									onChange={handleChange}
+									required
+									className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+								>
+									<option value="">Pilih Kota</option>
+									{kotaList.map((kota) => (
+										<option key={kota.id} value={kota.id}>
+											{kota.nama_kota}
+										</option>
+									))}
+								</select>
+							</div>
+							<div>
+								<label className="block mb-1">Kecamatan</label>
+								<select
+									name="kecamatan_id"
+									value={formData.kecamatan_id}
+									onChange={handleChange}
+									required
+									disabled={!formData.kota_id}
+									className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+								>
+									<option value="">Pilih Kecamatan</option>
+									{kecamatanList.map((kec) => (
+										<option key={kec.id} value={kec.id}>
+											{kec.nama_kecamatan}
+										</option>
+									))}
+								</select>
 							</div>
 							<div className="relative">
 								<label className="block mb-1">Kata Sandi</label>
